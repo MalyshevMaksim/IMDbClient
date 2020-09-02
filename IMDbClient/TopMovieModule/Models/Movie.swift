@@ -9,11 +9,11 @@
 import Foundation
 
 struct TopMovies: Decodable {
-    var items: [MovieDetail]
+    var items: [Movie]
     var errorMessage: String
 }
 
-struct MovieDetail: Decodable, Hashable {
+struct Movie: Decodable, Hashable {
     var id: String
     var rank: String
     var title: String

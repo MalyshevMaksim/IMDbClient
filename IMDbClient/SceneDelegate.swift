@@ -9,7 +9,6 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
     var window: UIWindow?
 
 
@@ -19,9 +18,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let movieViewController = AssemblyBuilder().makeTopMovieController()
-        let navigation = UINavigationController(rootViewController: movieViewController)
-        window?.rootViewController = navigation
+        let navigationController = UINavigationController()
+        let assembly = TopMovieAssembly()
+        let router = Router(assembly: assembly, navigationController: navigationController)
+        let movieViewController = TopMovieAssembly().makeMainViewController(navigationController: navigationController, router: router)
+        
+        window?.rootViewController = navigationController
         window?.windowScene = windowScene
         window?.backgroundColor = .systemBackground
         window?.makeKeyAndVisible()
@@ -54,7 +56,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
-
 }
-
