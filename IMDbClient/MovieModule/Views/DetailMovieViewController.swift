@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-class DetailTopMovieController: UIViewController {
-    var presenter: DetailTopMoviePresenter!
+class DetailMovieController: UIViewController, ViewControllerProtocol {
+    var presenter: MoviePresenterProtocol!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,15 +119,9 @@ class DetailTopMovieController: UIViewController {
     }
 }
 
-extension DetailTopMovieController: MovieViewProtocol {
+extension DetailMovieController {
     func success() {
-        let url = presenter.movie.image
-        poster.downloadImage(from: url)
-        name.text = presenter.movie.title
-        rating.text = presenter.movie.imDbRating
-        releaseDate.text = presenter.movie.releaseDate
-        contentRating.text = presenter.movie.contentRating
-        movieLenght.text = presenter.movie.runtimeStr
+        
     }
     
     func failure(error: Error) {

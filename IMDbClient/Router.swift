@@ -9,23 +9,28 @@
 import Foundation
 import UIKit
 
+
+/* The class responsible for navigating the application. For example, if the user selects a cell in the table,
+   then the responsibility for creating and displaying the detailed view passes to the router. As a property,
+   it has a link to the assembly builder to determine which module is being navigated through */
+
 class Router {
-    var assembly: AssemblyBuilderProtocol!
-    var navigationController: UINavigationController!
+    var assembly: MovieAssemblyBuilderProtocol
+    var rootNavigationController: UINavigationController
     
-    init(assembly: AssemblyBuilderProtocol, navigationController: UINavigationController) {
+    init(assembly: MovieAssemblyBuilderProtocol, rootNavigationController: UINavigationController) {
         self.assembly = assembly
-        self.navigationController = navigationController
-        initial()
+        self.rootNavigationController = rootNavigationController
+        initialNavigationController()
     }
     
-    func initial() {
-        let mainViewController = assembly.makeMainViewController(navigationController: navigationController, router: self)
-        navigationController.viewControllers = [mainViewController]
+    func initialNavigationController() {
+        let mainViewController = assembly.makeMainViewController(navigationController: rootNavigationController, router: self)
+        rootNavigationController.viewControllers = [mainViewController]
     }
     
-    func showDetail(movieId: String) {
-        let detailViewController = assembly.makeDetailViewController(movieId: movieId)
-        navigationController.pushViewController(detailViewController, animated: true)
+    func showDetail(movie: Movie) {
+        let detailViewController = assembly.makeDetailViewController(movie: movie)
+        rootNavigationController.pushViewController(detailViewController, animated: true)
     }
 }

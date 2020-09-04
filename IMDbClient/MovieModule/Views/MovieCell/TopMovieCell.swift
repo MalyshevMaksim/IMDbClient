@@ -9,12 +9,11 @@
 import Foundation
 import UIKit
 
-class MovieCell: UITableViewCell {
+class TopMovieCell: UITableViewCell {
     static var reuseIdentifier = "MovieTableCell"
     
     lazy var title: UILabel = {
         let label = UILabel()
-        label.text = "12345"
         label.font = UIFont.boldSystemFont(ofSize: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -37,7 +36,6 @@ class MovieCell: UITableViewCell {
     
     lazy var ratingCount: UILabel = {
         let label = UILabel()
-        label.text = "based on 200 000 user ratings"
         label.font = UIFont.preferredFont(forTextStyle: .caption2)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -45,8 +43,8 @@ class MovieCell: UITableViewCell {
     
     lazy var crew: UILabel = {
         let label = UILabel()
-        label.text = "Crew: "
         label.textColor = .secondaryLabel
+        label.numberOfLines = 2
         label.font = UIFont.preferredFont(forTextStyle: .caption1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -88,8 +86,9 @@ class MovieCell: UITableViewCell {
             ratingCount.topAnchor.constraint(equalTo: ratingTagView.bottomAnchor, constant: 5),
             ratingCount.leadingAnchor.constraint(equalTo: ratingTagView.leadingAnchor),
             
-            crew.topAnchor.constraint(equalTo: ratingCount.bottomAnchor, constant: 10),
+            crew.bottomAnchor.constraint(equalTo: poster.bottomAnchor),
             crew.leadingAnchor.constraint(equalTo: ratingCount.leadingAnchor),
+            crew.trailingAnchor.constraint(equalTo: title.trailingAnchor),
             
             contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: poster.lastBaselineAnchor, multiplier: 0)
         ])

@@ -10,7 +10,7 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-
+    
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -18,12 +18,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let navigationController = UINavigationController()
-        let assembly = TopMovieAssembly()
-        let router = Router(assembly: assembly, navigationController: navigationController)
-        let movieViewController = TopMovieAssembly().makeMainViewController(navigationController: navigationController, router: router)
+        let movieNavigationController = UINavigationController()
+        movieNavigationController.tabBarItem = UITabBarItem(title: "Movie", image: UIImage(systemName: "film"), selectedImage: nil)
+        let assembly = MovieModuleAssembly()
+        let router = Router(assembly: assembly, rootNavigationController: movieNavigationController)
+        _ = MovieModuleAssembly().makeMainViewController(navigationController: movieNavigationController, router: router)
         
-        window?.rootViewController = navigationController
+        let TVserievNavigationController = UINavigationController()
+        TVserievNavigationController.tabBarItem = UITabBarItem(title: "TV series", image: UIImage(systemName: "tv"), selectedImage: nil)
+        let TVAssembly = TVShowModuleAssembly()
+        let TVrouter = Router(assembly: TVAssembly, rootNavigationController: TVserievNavigationController)
+        _ = MovieModuleAssembly().makeMainViewController(navigationController: TVserievNavigationController, router: TVrouter)
+        
+        let tabBarController = UITabBarController()
+        tabBarController.setViewControllers([movieNavigationController, TVserievNavigationController], animated: true)
+
+        window?.rootViewController = tabBarController
         window?.windowScene = windowScene
         window?.backgroundColor = .systemBackground
         window?.makeKeyAndVisible()
