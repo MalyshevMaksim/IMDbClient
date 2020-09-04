@@ -10,10 +10,10 @@ import Foundation
 import UIKit
 
 class TopMoviePresenter {
-    var view: TopMovieViewController!
-    var networkService: NetworkService!
-    var topMovies: TopMovies?
-    var router: Router!
+    private var view: TopMovieViewController!
+    private var networkService: NetworkService!
+    private var topMovies: TopMovies?
+    private var router: Router!
     
     init(view: TopMovieViewController, networkService: NetworkService, router: Router) {
         self.view = view
@@ -22,8 +22,17 @@ class TopMoviePresenter {
         getTopMovies()
     }
     
-    func showDetail(for movieId: String) {
+    func showDetailMovie(from indexPath: IndexPath) {
+        guard let movieId = topMovies?.items[indexPath.row].id else { return }
         router.showDetail(movieId: movieId)
+    }
+    
+    func showMovie() {
+        
+    }
+    
+    func getCountOfMovie() -> Int {
+        return topMovies?.items.count ?? 0
     }
     
     func getTopMovies() {

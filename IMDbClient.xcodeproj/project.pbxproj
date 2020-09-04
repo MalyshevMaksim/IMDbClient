@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B50E622A25011F6A000AD4EF /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50E622925011F6A000AD4EF /* ActivityIndicatorView.swift */; };
+		B50E622C2501215F000AD4EF /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50E622B2501215F000AD4EF /* MovieCell.swift */; };
 		B52142E525005759008B319A /* DetailMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52142E425005759008B319A /* DetailMovie.swift */; };
 		B5DEA81824FF571200A5580A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DEA81724FF571200A5580A /* AppDelegate.swift */; };
 		B5DEA81A24FF571200A5580A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DEA81924FF571200A5580A /* SceneDelegate.swift */; };
@@ -22,9 +24,12 @@
 		B5DEA84C24FFDDBB00A5580A /* DetailTopMoviePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DEA84B24FFDDBB00A5580A /* DetailTopMoviePresenter.swift */; };
 		B5DEA84E24FFDDE100A5580A /* DetailTopMovieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DEA84D24FFDDE100A5580A /* DetailTopMovieViewController.swift */; };
 		B5DEA85024FFE36D00A5580A /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DEA84F24FFE36D00A5580A /* Router.swift */; };
+		B5F91FE92501552900CE2F35 /* TagLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F91FE82501552900CE2F35 /* TagLabelView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B50E622925011F6A000AD4EF /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
+		B50E622B2501215F000AD4EF /* MovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
 		B52142E425005759008B319A /* DetailMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMovie.swift; sourceTree = "<group>"; };
 		B5DEA81424FF571200A5580A /* IMDbClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IMDbClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5DEA81724FF571200A5580A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -42,6 +47,7 @@
 		B5DEA84B24FFDDBB00A5580A /* DetailTopMoviePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTopMoviePresenter.swift; sourceTree = "<group>"; };
 		B5DEA84D24FFDDE100A5580A /* DetailTopMovieViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTopMovieViewController.swift; sourceTree = "<group>"; };
 		B5DEA84F24FFE36D00A5580A /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		B5F91FE82501552900CE2F35 /* TagLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagLabelView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +127,9 @@
 			children = (
 				B5DEA81B24FF571200A5580A /* TopMovieViewController.swift */,
 				B5DEA84D24FFDDE100A5580A /* DetailTopMovieViewController.swift */,
+				B50E622925011F6A000AD4EF /* ActivityIndicatorView.swift */,
+				B50E622B2501215F000AD4EF /* MovieCell.swift */,
+				B5F91FE82501552900CE2F35 /* TagLabelView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -213,6 +222,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B50E622C2501215F000AD4EF /* MovieCell.swift in Sources */,
+				B5F91FE92501552900CE2F35 /* TagLabelView.swift in Sources */,
 				B5DEA84E24FFDDE100A5580A /* DetailTopMovieViewController.swift in Sources */,
 				B5DEA84C24FFDDBB00A5580A /* DetailTopMoviePresenter.swift in Sources */,
 				B5DEA84924FF9B3500A5580A /* UIImageView.swift in Sources */,
@@ -224,6 +235,7 @@
 				B5DEA84224FF5E6200A5580A /* AssemblyBuilder.swift in Sources */,
 				B5DEA85024FFE36D00A5580A /* Router.swift in Sources */,
 				B5DEA83D24FF581A00A5580A /* TopMoviePresenter.swift in Sources */,
+				B50E622A25011F6A000AD4EF /* ActivityIndicatorView.swift in Sources */,
 				B52142E525005759008B319A /* DetailMovie.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

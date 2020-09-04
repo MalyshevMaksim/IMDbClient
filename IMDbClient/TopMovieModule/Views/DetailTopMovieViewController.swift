@@ -9,17 +9,6 @@
 import Foundation
 import UIKit
 
-extension UIColor {
-    static func color(dict: [String : Any]) -> UIColor? {
-        guard let red = dict["red"] as? NSNumber,
-              let green = dict["green"] as? NSNumber,
-              let blue = dict["blue"] as? NSNumber else {
-            return nil
-        }
-        return UIColor(red: CGFloat(truncating: red) / 255.0, green: CGFloat(truncating: green) / 255.0, blue: CGFloat(truncating: blue) / 255.0, alpha: 1)
-    }
-}
-
 class DetailTopMovieController: UIViewController {
     var presenter: DetailTopMoviePresenter!
     
@@ -133,7 +122,7 @@ class DetailTopMovieController: UIViewController {
 extension DetailTopMovieController: MovieViewProtocol {
     func success() {
         let url = presenter.movie.image
-        poster.download(from: url)
+        poster.downloadImage(from: url)
         name.text = presenter.movie.title
         rating.text = presenter.movie.imDbRating
         releaseDate.text = presenter.movie.releaseDate

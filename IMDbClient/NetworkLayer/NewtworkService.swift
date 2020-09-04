@@ -11,7 +11,7 @@ import UIKit
 
 class NetworkService {
     func getTopMovies(completion: @escaping (Result<TopMovies?, Error>) -> ()) {
-        var request = URLRequest(url: URL(string: "https://imdb-api.com/en/API/Top250Movies/k_288fbjOY")!,timeoutInterval: Double.infinity)
+        var request = URLRequest(url: URL(string: "https://imdb-api.com/en/API/Top250Movies/k_7k80gZKE")!,timeoutInterval: Double.infinity)
         request.httpMethod = "GET"
         
         URLSession.shared.dataTask(with: request) { data, response, error in
@@ -19,7 +19,6 @@ class NetworkService {
                 completion(.failure(error))
                 return
             }
-            
             do {
                 let movieJson = try JSONDecoder().decode(TopMovies.self, from: data!)
                 completion(.success(movieJson))

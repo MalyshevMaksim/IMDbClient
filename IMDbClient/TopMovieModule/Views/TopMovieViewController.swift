@@ -10,11 +10,20 @@ import UIKit
 
 class TopMovieViewController: UITableViewController {
     var presenter: TopMoviePresenter!
+    let activityIndicator = ActivityIndicatorVew(frame: CGRect(x: 0, y: 0, width: 90, height: 90))
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationController()
         setupTableView()
+        setupActivityIndicator()
+    }
+    
+    // Activity indicator will be displayed until data is downloaded from the Internet
+    private func setupActivityIndicator() {
+        activityIndicator.center = view.center
+        view.addSubview(activityIndicator)
+        activityIndicator.start()
     }
     
     private func setupNavigationController() {
@@ -35,99 +44,29 @@ extension TopMovieViewController: MovieViewProtocol {
         print(error)
     }
     
+    // After successfully executing the network request and receiving data, we display the table and hide the activit
     func success() {
-        tableView.reloadData()
+        UIView.transition(with: tableView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.tableView.reloadData()
+        })
+        activityIndicator.stop()
     }
 }
 
 extension TopMovieViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter.topMovies?.items.count ?? 0
+        return presenter.getCountOfMovie()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let movieId = presenter.topMovies?.items[indexPath.row].id else { return }
-        presenter.showDetail(for: movieId)
+        presenter.showDetailMovie(from: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MovieCell.reuseIdentifier) as! MovieCell
-        cell.poster.download(from: (presenter.topMovies?.items[indexPath.row].image)!)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieCell.reuseIdentifier) as? MovieCell else {
+            fatalError("12345")
+        }
+        presenter.showMovie()
         return cell
-    }
-}
-
-class MovieCell: UITableViewCell {
-    static var reuseIdentifier = "MovieTableCell"
-    
-    lazy var title: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 17)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    lazy var poster: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleToFill
-        imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = 5
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    lazy var rating: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    lazy var starStack: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        let imageView = UIImageView(image: UIImage(systemName: "star.fill"))
-        imageView.tintColor = .systemOrange
-        
-        stackView.addArrangedSubview(imageView)
-        stackView.addArrangedSubview(rating)
-        stackView.spacing = 5
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    private func setupSubviews() {
-        contentView.addSubview(title)
-        contentView.addSubview(poster)
-        contentView.addSubview(starStack)
-    }
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupCell()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupCell() {
-        setupSubviews()
-        
-        NSLayoutConstraint.activate([
-            poster.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            poster.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
-            poster.widthAnchor.constraint(equalToConstant: 90),
-            poster.heightAnchor.constraint(equalToConstant: 130),
-
-            title.leadingAnchor.constraint(equalTo: poster.trailingAnchor, constant: 15),
-            title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            
-            starStack.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10),
-            starStack.leadingAnchor.constraint(equalTo: title.leadingAnchor),
-            
-            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: poster.lastBaselineAnchor, multiplier: 0)
-        ])
     }
 }
