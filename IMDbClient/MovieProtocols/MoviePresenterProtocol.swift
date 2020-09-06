@@ -12,7 +12,7 @@ import UIKit
 protocol MoviePresenterProtocol {
     var topRatedMovies: [Movie]? { get set }
     var mostPopularMovies: [Movie]? { get set }
-    var networkService: NetworkServiceProtocol { get set }
+    var networkService: MovieNetworkServiceProtocol { get set }
     
     func tapOnTheMovie(from indexPath: IndexPath)
     func loadTopRatedMovies()

@@ -30,7 +30,7 @@ class DetailTopMoviePresenter: MoviePresenterProtocol {
     
     var mostPopularMovies: [Movie]?
     
-    var networkService: NetworkServiceProtocol
+    var networkService: MovieNetworkServiceProtocol
     
     var movies: [Movie]?
     
@@ -57,7 +57,7 @@ class DetailTopMoviePresenter: MoviePresenterProtocol {
        return 0
    }
     
-    init(view: ViewControllerProtocol, networkService: NetworkServiceProtocol) {
+    init(view: ViewControllerProtocol, networkService: MovieNetworkServiceProtocol) {
         self.view = view
         self.networkService = networkService
     }

@@ -18,25 +18,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let movieNavigationController = UINavigationController()
-        movieNavigationController.tabBarItem = UITabBarItem(title: "Movie", image: UIImage(systemName: "film"), selectedImage: nil)
-        let assembly = MovieModuleAssembly()
-        let router = Router(assembly: assembly, rootNavigationController: movieNavigationController)
-        _ = MovieModuleAssembly().makeMainViewController(navigationController: movieNavigationController, router: router)
-        
-        let TVserievNavigationController = UINavigationController()
-        TVserievNavigationController.tabBarItem = UITabBarItem(title: "TV series", image: UIImage(systemName: "tv"), selectedImage: nil)
-        let TVAssembly = TVShowModuleAssembly()
-        let TVrouter = Router(assembly: TVAssembly, rootNavigationController: TVserievNavigationController)
-        _ = MovieModuleAssembly().makeMainViewController(navigationController: TVserievNavigationController, router: TVrouter)
+        let movieNavigationController = makeNavigationController(assembly: MovieModuleAssembly(), title: "Movies", icon: "film")
+        let TVserievNavigationController = makeNavigationController(assembly: TVShowModuleAssembly(), title: "TV series", icon: "tv")
+        let comingSoonNavigationController = makeNavigationController(assembly: TVShowModuleAssembly(), title: "Coming", icon: "clock")
+        let searchNavigationController = makeNavigationController(assembly: TVShowModuleAssembly(), title: "Search", icon: "magnifyingglass")
         
         let tabBarController = UITabBarController()
-        tabBarController.setViewControllers([movieNavigationController, TVserievNavigationController], animated: true)
+        tabBarController.setViewControllers([movieNavigationController, TVserievNavigationController, comingSoonNavigationController, searchNavigationController], animated: true)
 
         window?.rootViewController = tabBarController
         window?.windowScene = windowScene
         window?.backgroundColor = .systemBackground
         window?.makeKeyAndVisible()
+    }
+    
+    func makeNavigationController(assembly: MovieAssemblyBuilderProtocol, title: String, icon: String) -> UINavigationController {
+        let navigationController = UINavigationController()
+        navigationController.tabBarItem = UITabBarItem(title: title, image: UIImage(systemName: icon), selectedImage: nil)
+        let router = Router(assembly: assembly, rootNavigationController: navigationController)
+        _ = MovieModuleAssembly().makeMainViewController(navigationController: navigationController, router: router)
+        return navigationController
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

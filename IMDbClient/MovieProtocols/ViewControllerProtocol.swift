@@ -8,6 +8,9 @@
 
 import Foundation
 
+
+// Protocol defining actions upon successful download of data from the network or from a failure
+
 protocol ViewControllerProtocol {
     func success()
     func failure(error: Error)

@@ -14,9 +14,9 @@ class MoviePresenter: MoviePresenterProtocol {
     var topRatedMovies: [Movie]?
     var mostPopularMovies: [Movie]?
     var router: Router
-    var networkService: NetworkServiceProtocol
+    var networkService: MovieNetworkServiceProtocol
     
-    init(view: ViewControllerProtocol, networkService: NetworkServiceProtocol, router: Router) {
+    init(view: ViewControllerProtocol, networkService: MovieNetworkServiceProtocol, router: Router) {
         self.view = view
         self.networkService = networkService
         self.router = router

@@ -8,16 +8,14 @@
 
 import Foundation
 
-class TVShowNetworkService: NetworkServiceProtocol {
+class TVShowNetworkService: MovieNetworkServiceProtocol {
     func getTopRatedMovies(completion: @escaping (Result<TopMovies?, Error>) -> ()) {
-        var request = URLRequest(url: URL(string: "https://imdb-api.com/en/API/Top250TVs/k_288fbjOY")!,timeoutInterval: Double.infinity)
-        request.httpMethod = "GET"
+        let request = URLRequest(url: URL(string: "https://imdb-api.com/en/API/Top250TVs/k_TqCmDS42")!,timeoutInterval: Double.infinity)
         requestTask(with: request, completion: completion)
     }
     
     func getMostPopularMovies(completion: @escaping (Result<TopMovies?, Error>) -> ()) {
-        var request = URLRequest(url: URL(string: "https://imdb-api.com/en/API/MostPopularTVs/k_288fbjOY")!,timeoutInterval: Double.infinity)
-        request.httpMethod = "GET"
+        let request = URLRequest(url: URL(string: "https://imdb-api.com/en/API/MostPopularTVs/k_TqCmDS42")!,timeoutInterval: Double.infinity)
         requestTask(with: request, completion: completion)
     }
 }

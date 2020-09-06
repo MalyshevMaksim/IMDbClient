@@ -8,12 +8,12 @@
 
 import Foundation
 
-protocol NetworkServiceProtocol {
+protocol MovieNetworkServiceProtocol {
     func getTopRatedMovies(completion: @escaping (Result<TopMovies?, Error>) -> ())
     func getMostPopularMovies(completion: @escaping (Result<TopMovies?, Error>) -> ())
 }
 
-extension NetworkServiceProtocol {
+extension MovieNetworkServiceProtocol {
     func requestTask(with request: URLRequest, completion: @escaping (Result<TopMovies?, Error>) -> ()) {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
