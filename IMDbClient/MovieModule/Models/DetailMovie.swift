@@ -16,4 +16,5 @@ struct DetailMovie: Decodable {
     var year: String
     var releaseDate: String
     var contentRating: String
+    var plot: String
 }

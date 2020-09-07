@@ -29,8 +29,8 @@ class Router {
         rootNavigationController.viewControllers = [mainViewController]
     }
     
-    func showDetail(movie: Movie) {
-        let detailViewController = assembly.makeDetailViewController(movie: movie)
+    func showDetail(movieId: String) {
+        let detailViewController = assembly.makeDetailViewController(movieId: movieId)
         rootNavigationController.pushViewController(detailViewController, animated: true)
     }
 }

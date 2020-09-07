@@ -11,11 +11,12 @@ import UIKit
 
 extension UIImageView {
     func downloadImage(from url: String) {
+        image = nil
         guard let url = URL(string: url) else { fatalError("Error") }
         
         let activityIndicator = UIActivityIndicatorView(style: .medium)
         activityIndicator.startAnimating()
-        activityIndicator.center = self.center
+        activityIndicator.center = center
         activityIndicator.hidesWhenStopped = true
         addSubview(activityIndicator)
         

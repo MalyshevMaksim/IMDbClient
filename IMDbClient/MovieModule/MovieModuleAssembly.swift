@@ -19,10 +19,9 @@ class MovieModuleAssembly: MovieAssemblyBuilderProtocol {
         return view
     }
     
-    func makeDetailViewController(movie: Movie) -> UIViewController {
-        let view = DetailMovieController()
-        let networkService = MovieNetworkService()
-        let presenter = DetailTopMoviePresenter(view: view, networkService: networkService)
+    func makeDetailViewController(movieId: String) -> UIViewController {
+        let view = DetailMovieViewController()
+        let presenter = DetailMoviePresenter(view: view, movieId: movieId)
         view.presenter = presenter
         return view
     }

@@ -54,7 +54,7 @@ class MovieViewController: UITableViewController, ViewControllerProtocol {
         segmentControl.frame = CGRect(x: frame.minX + 15, y: frame.minY - 50, width: frame.width - 30, height: 35)
         segmentControl.selectedSegmentIndex = 0
         tableView.addSubview(segmentControl)
-        tableView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: segmentControl.frame.height + 15, left: 0, bottom: 0, right: 0)
         segmentControl.addTarget(self, action: #selector(selected(_:)), for: .valueChanged)
     }
     
@@ -114,7 +114,10 @@ extension MovieViewController {
             movie = presenter.mostPopularMovies![indexPath.row]
         }
         
-        cell.poster.downloadImage(from: movie.image)
+        let lowResolutionPoster = "https://imdb-api.com/images/192x264/"
+        let lowResolutionPosterEndpoint = (movie.image as NSString).lastPathComponent
+        
+        cell.poster.downloadImage(from: lowResolutionPoster + lowResolutionPosterEndpoint)
         cell.title.text = movie.fullTitle
         cell.crew.text = "Crew: \(movie.crew)"
         

@@ -26,7 +26,7 @@ class MoviePresenter: MoviePresenterProtocol {
     
     func tapOnTheMovie(from indexPath: IndexPath) {
         let movie = topRatedMovies![indexPath.row]
-        router.showDetail(movie: movie)
+        router.showDetail(movieId: movie.id)
     }
     
     func loadTopRatedMovies() {

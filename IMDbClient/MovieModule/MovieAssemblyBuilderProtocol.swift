@@ -14,5 +14,5 @@ import UIKit
 
 protocol MovieAssemblyBuilderProtocol {
     func makeMainViewController(navigationController: UINavigationController, router: Router) -> UIViewController
-    func makeDetailViewController(movie: Movie) -> UIViewController
+    func makeDetailViewController(movieId: String) -> UIViewController
 }
