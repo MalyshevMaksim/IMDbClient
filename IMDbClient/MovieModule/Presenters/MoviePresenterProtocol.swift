@@ -15,6 +15,6 @@ protocol MoviePresenterProtocol {
     var networkService: MovieNetworkServiceStrategy { get set }
     
     func tapOnTheMovie(from indexPath: IndexPath)
-    func loadTopRatedMovies()
-    func loadMostPopularMovies()
+    func downloadTopRated()
+    func downloadMostPopular()
 }

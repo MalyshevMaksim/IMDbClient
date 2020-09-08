@@ -20,8 +20,8 @@ class MoviePresenter: MoviePresenterProtocol {
         self.view = view
         self.networkService = networkService
         self.router = router
-        loadTopRatedMovies()
-        loadMostPopularMovies()
+        downloadTopRated()
+        downloadMostPopular()
     }
     
     func tapOnTheMovie(from indexPath: IndexPath) {
@@ -29,7 +29,7 @@ class MoviePresenter: MoviePresenterProtocol {
         router.showDetail(movieId: movie.id)
     }
     
-    func loadTopRatedMovies() {
+    func downloadTopRated() {
         networkService.downloadTopRated { [weak self] results in
             guard let self = self else { return }
             
@@ -45,7 +45,7 @@ class MoviePresenter: MoviePresenterProtocol {
         }
     }
     
-    func loadMostPopularMovies() {
+    func downloadMostPopular() {
         networkService.downloadMostPopular { [weak self] results in
             guard let self = self else { return }
             

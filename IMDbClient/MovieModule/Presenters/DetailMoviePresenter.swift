@@ -15,7 +15,7 @@ class DetailMoviePresenter: DetailMoviePresenterProtocol {
     var movieId: String
     
     func downloadDetailMovie(with movieId: String) {
-        URLSession.shared.dataTask(with: URL(string: "https://imdb-api.com/en/API/Title/k_288fbjOY/\(movieId)")!) { data, response, error in
+        URLSession.shared.dataTask(with: URL(string: "https://imdb-api.com/en/API/Title/k_7k80gZKE/\(movieId)")!) { data, response, error in
             do {
                 let jsonData = try JSONDecoder().decode(DetailMovie.self, from: data!)
                 self.detailMovie = jsonData

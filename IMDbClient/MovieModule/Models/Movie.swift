@@ -8,11 +8,6 @@
 
 import Foundation
 
-struct MovieList: Decodable {
-    var items: [Movie]
-    var errorMessage: String
-}
-
 struct Movie: Decodable, Hashable {
     var id: String
     var rank: String

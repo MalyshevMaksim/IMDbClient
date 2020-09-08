@@ -65,9 +65,9 @@ class MovieViewController: UITableViewController, ViewControllerProtocol {
     @objc private func refresh(_ sender: Any) {
         switch segmentControl.selectedSegmentIndex {
         case 0:
-            presenter.loadTopRatedMovies()
+            presenter.downloadTopRated()
         default:
-            presenter.loadMostPopularMovies()
+            presenter.downloadMostPopular()
         }
     }
 }
@@ -114,10 +114,7 @@ extension MovieViewController {
             movie = presenter.mostPopular!.items[indexPath.row]
         }
         
-        let lowResolutionPoster = "https://imdb-api.com/images/192x264/"
-        let lowResolutionPosterEndpoint = (movie.image as NSString).lastPathComponent
-        
-        cell.poster.downloadImage(from: lowResolutionPoster + lowResolutionPosterEndpoint)
+        cell.poster.downloadImage(from: movie.image)
         cell.title.text = movie.fullTitle
         cell.crew.text = "Crew: \(movie.crew)"
         

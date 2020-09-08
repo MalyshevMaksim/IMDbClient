@@ -22,6 +22,7 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
     lazy var poster: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = .black
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 10
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -34,6 +35,7 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
         view.clipsToBounds = false
         view.layer.shadowRadius = 20
         view.layer.shadowOpacity = 0.45
+        view.addSubview(poster)
         return view
     }()
     
@@ -138,29 +140,45 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
         return label
     }()
     
+    lazy var starStack: RatingStackView = {
+        let starStack = RatingStackView(with: 5.0)
+        starStack.translatesAutoresizingMaskIntoConstraints = false
+        return starStack
+    }()
+    
     private func setupSubviews() {
-        view.addSubview(poster)
         view.addSubview(name)
         view.addSubview(rating)
         view.addSubview(stackView)
         view.addSubview(storyline)
         view.addSubview(story)
+        view.addSubview(starStack)
+        view.addSubview(shadowView)
     }
     
     private func setupView() {
         setupSubviews()
         
         NSLayoutConstraint.activate([
-            poster.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            poster.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            poster.heightAnchor.constraint(equalToConstant: view.bounds.width * 0.6),
-            name.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: 25),
+            shadowView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 10),
+            shadowView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            shadowView.widthAnchor.constraint(equalToConstant: view.bounds.width * 0.5),
+            shadowView.heightAnchor.constraint(equalToConstant: view.bounds.width * 0.66),
+            poster.widthAnchor.constraint(equalToConstant: view.bounds.width * 0.5),
+            poster.heightAnchor.constraint(equalToConstant: view.bounds.width * 0.66),
+            
+            name.topAnchor.constraint(equalTo: shadowView.bottomAnchor, constant: 25),
             name.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             rating.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 15),
             rating.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            stackView.topAnchor.constraint(equalTo: rating.bottomAnchor, constant: 20),
+            starStack.topAnchor.constraint(equalTo: rating.bottomAnchor, constant: 5),
+            starStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            starStack.widthAnchor.constraint(equalToConstant: 100),
+            starStack.heightAnchor.constraint(equalToConstant: 30),
+            
+            stackView.topAnchor.constraint(equalTo: starStack.bottomAnchor, constant: 20),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             
@@ -176,7 +194,6 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
 
 extension DetailMovieViewController {
     func success() {
-        
         let lowResolutionPoster = "https://imdb-api.com/images/600x800/"
         let lowResolutionPosterEndpoint = (presenter.detailMovie.image as NSString).lastPathComponent
         

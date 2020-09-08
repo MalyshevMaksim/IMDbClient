@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class MovieModuleAssembly: MovieAssemblyBuilderProtocol {
+class MovieModuleAssembly: MovieAssemblyBuilderStrategy {
     func makeMainViewController(navigationController: UINavigationController, router: Router) -> UIViewController {
         let view = MovieViewController()
         view.title = "Movies"

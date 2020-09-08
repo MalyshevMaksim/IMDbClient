@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		B50E622A25011F6A000AD4EF /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50E622925011F6A000AD4EF /* ActivityIndicatorView.swift */; };
 		B50E622C2501215F000AD4EF /* TopMovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50E622B2501215F000AD4EF /* TopMovieCell.swift */; };
+		B518C1C72507AE8500CC21A9 /* MovieList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B518C1C62507AE8500CC21A9 /* MovieList.swift */; };
+		B518C1C92507B0AB00CC21A9 /* RatingStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B518C1C82507B0AB00CC21A9 /* RatingStackView.swift */; };
 		B52142E525005759008B319A /* DetailMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52142E425005759008B319A /* DetailMovie.swift */; };
 		B58E1A172502D5AD00D70337 /* TVShowNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58E1A162502D5AD00D70337 /* TVShowNetworkService.swift */; };
 		B58E1A192502DB2300D70337 /* TVShowModuleAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58E1A182502DB2300D70337 /* TVShowModuleAssembly.swift */; };
@@ -33,7 +35,7 @@
 		B5F91FE92501552900CE2F35 /* TagLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F91FE82501552900CE2F35 /* TagLabelView.swift */; };
 		B5F91FEC2501D25100CE2F35 /* MoviePresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F91FEB2501D25100CE2F35 /* MoviePresenterProtocol.swift */; };
 		B5F91FEE2501D2A200CE2F35 /* ViewControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F91FED2501D2A200CE2F35 /* ViewControllerProtocol.swift */; };
-		B5F91FF02501D6C600CE2F35 /* MovieAssemblyBuilderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F91FEF2501D6C600CE2F35 /* MovieAssemblyBuilderProtocol.swift */; };
+		B5F91FF02501D6C600CE2F35 /* MovieAssemblyBuilderStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F91FEF2501D6C600CE2F35 /* MovieAssemblyBuilderStrategy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 /* Begin PBXFileReference section */
 		B50E622925011F6A000AD4EF /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		B50E622B2501215F000AD4EF /* TopMovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopMovieCell.swift; sourceTree = "<group>"; };
+		B518C1C62507AE8500CC21A9 /* MovieList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieList.swift; sourceTree = "<group>"; };
+		B518C1C82507B0AB00CC21A9 /* RatingStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingStackView.swift; sourceTree = "<group>"; };
 		B52142E425005759008B319A /* DetailMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMovie.swift; sourceTree = "<group>"; };
 		B58E1A162502D5AD00D70337 /* TVShowNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowNetworkService.swift; sourceTree = "<group>"; };
 		B58E1A182502DB2300D70337 /* TVShowModuleAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowModuleAssembly.swift; sourceTree = "<group>"; };
@@ -77,7 +81,7 @@
 		B5F91FE82501552900CE2F35 /* TagLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagLabelView.swift; sourceTree = "<group>"; };
 		B5F91FEB2501D25100CE2F35 /* MoviePresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviePresenterProtocol.swift; sourceTree = "<group>"; };
 		B5F91FED2501D2A200CE2F35 /* ViewControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerProtocol.swift; sourceTree = "<group>"; };
-		B5F91FEF2501D6C600CE2F35 /* MovieAssemblyBuilderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieAssemblyBuilderProtocol.swift; sourceTree = "<group>"; };
+		B5F91FEF2501D6C600CE2F35 /* MovieAssemblyBuilderStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieAssemblyBuilderStrategy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,8 +144,9 @@
 				B5DEA81724FF571200A5580A /* AppDelegate.swift */,
 				B5DEA84A24FF9B3A00A5580A /* Extensions */,
 				B5DEA81924FF571200A5580A /* SceneDelegate.swift */,
-				B5F91FED2501D2A200CE2F35 /* ViewControllerProtocol.swift */,
+				B5F91FEF2501D6C600CE2F35 /* MovieAssemblyBuilderStrategy.swift */,
 				B5DEA84F24FFE36D00A5580A /* Router.swift */,
+				B5F91FED2501D2A200CE2F35 /* ViewControllerProtocol.swift */,
 				B5DEA84024FF597B00A5580A /* NetworkLayer */,
 				B5DEA83B24FF580000A5580A /* MovieModule */,
 				B5DEA81D24FF571200A5580A /* Main.storyboard */,
@@ -155,7 +160,6 @@
 		B5DEA83B24FF580000A5580A /* MovieModule */ = {
 			isa = PBXGroup;
 			children = (
-				B5F91FEF2501D6C600CE2F35 /* MovieAssemblyBuilderProtocol.swift */,
 				B5DEA84124FF5E6200A5580A /* MovieModuleAssembly.swift */,
 				B58E1A182502DB2300D70337 /* TVShowModuleAssembly.swift */,
 				B5DEA84324FF66E600A5580A /* Presenters */,
@@ -191,6 +195,7 @@
 			children = (
 				B5DEA81B24FF571200A5580A /* MovieViewController.swift */,
 				B5DEA84D24FFDDE100A5580A /* DetailMovieViewController.swift */,
+				B518C1C82507B0AB00CC21A9 /* RatingStackView.swift */,
 				B50E622925011F6A000AD4EF /* ActivityIndicatorView.swift */,
 				B5F91FEA2501CF0C00CE2F35 /* MovieCell */,
 			);
@@ -201,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				B5DEA83924FF573400A5580A /* Movie.swift */,
+				B518C1C62507AE8500CC21A9 /* MovieList.swift */,
 				B52142E425005759008B319A /* DetailMovie.swift */,
 			);
 			path = Models;
@@ -345,8 +351,10 @@
 				B5DEA83A24FF573400A5580A /* Movie.swift in Sources */,
 				B5DEA83F24FF596500A5580A /* MovieNewtworkService.swift in Sources */,
 				B5DEA81824FF571200A5580A /* AppDelegate.swift in Sources */,
+				B518C1C72507AE8500CC21A9 /* MovieList.swift in Sources */,
 				B5DEA81A24FF571200A5580A /* SceneDelegate.swift in Sources */,
-				B5F91FF02501D6C600CE2F35 /* MovieAssemblyBuilderProtocol.swift in Sources */,
+				B518C1C92507B0AB00CC21A9 /* RatingStackView.swift in Sources */,
+				B5F91FF02501D6C600CE2F35 /* MovieAssemblyBuilderStrategy.swift in Sources */,
 				B5DEA84224FF5E6200A5580A /* MovieModuleAssembly.swift in Sources */,
 				B5DEA85024FFE36D00A5580A /* Router.swift in Sources */,
 				B5F91FEC2501D25100CE2F35 /* MoviePresenterProtocol.swift in Sources */,

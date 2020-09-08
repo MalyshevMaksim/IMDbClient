@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
     
-    func makeNavigationController(assembly: MovieAssemblyBuilderProtocol, title: String, icon: String) -> UINavigationController {
+    func makeNavigationController(assembly: MovieAssemblyBuilderStrategy, title: String, icon: String) -> UINavigationController {
         let navigationController = UINavigationController()
         navigationController.tabBarItem = UITabBarItem(title: title, image: UIImage(systemName: icon), selectedImage: nil)
         let router = Router(assembly: assembly, rootNavigationController: navigationController)
