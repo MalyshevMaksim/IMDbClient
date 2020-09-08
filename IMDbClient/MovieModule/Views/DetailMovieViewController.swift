@@ -115,7 +115,7 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
         stackView.addArrangedSubview(movieLenghtStack)
         stackView.addArrangedSubview(contentRatingStack)
         stackView.addArrangedSubview(releaseDateStack)
-        stackView.distribution = .equalSpacing
+        stackView.distribution = .equalCentering
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -152,6 +152,8 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
         
         NSLayoutConstraint.activate([
             poster.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            poster.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            poster.heightAnchor.constraint(equalToConstant: view.bounds.width * 0.6),
             name.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: 25),
             name.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
@@ -167,7 +169,7 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
             
             story.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             story.topAnchor.constraint(equalTo: storyline.bottomAnchor, constant: 10),
-            story.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10)
+            story.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
     }
 }

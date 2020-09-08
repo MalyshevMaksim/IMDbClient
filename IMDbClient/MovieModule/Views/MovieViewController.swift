@@ -91,9 +91,9 @@ extension MovieViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch segmentControl.selectedSegmentIndex {
         case 0:
-            return presenter.topRatedMovies?.count ?? 0
+            return presenter.topRated?.items.count ?? 0
         default:
-            return presenter.mostPopularMovies?.count ?? 0
+            return presenter.mostPopular?.items.count ?? 0
         }
     }
     
@@ -109,9 +109,9 @@ extension MovieViewController {
         
         switch segmentControl.selectedSegmentIndex {
         case 0:
-            movie = presenter.topRatedMovies![indexPath.row]
+            movie = presenter.topRated!.items[indexPath.row]
         default:
-            movie = presenter.mostPopularMovies![indexPath.row]
+            movie = presenter.mostPopular!.items[indexPath.row]
         }
         
         let lowResolutionPoster = "https://imdb-api.com/images/192x264/"

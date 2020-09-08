@@ -11,12 +11,12 @@ import UIKit
 
 class MoviePresenter: MoviePresenterProtocol {
     var view: ViewControllerProtocol
-    var topRatedMovies: [Movie]?
-    var mostPopularMovies: [Movie]?
+    var topRated: MovieList?
+    var mostPopular: MovieList?
     var router: Router
-    var networkService: MovieNetworkServiceProtocol
+    var networkService: MovieNetworkServiceStrategy
     
-    init(view: ViewControllerProtocol, networkService: MovieNetworkServiceProtocol, router: Router) {
+    init(view: ViewControllerProtocol, networkService: MovieNetworkServiceStrategy, router: Router) {
         self.view = view
         self.networkService = networkService
         self.router = router
@@ -25,18 +25,18 @@ class MoviePresenter: MoviePresenterProtocol {
     }
     
     func tapOnTheMovie(from indexPath: IndexPath) {
-        let movie = topRatedMovies![indexPath.row]
+        let movie = topRated!.items[indexPath.row]
         router.showDetail(movieId: movie.id)
     }
     
     func loadTopRatedMovies() {
-        networkService.getTopRatedMovies { [weak self] results in
+        networkService.downloadTopRated { [weak self] results in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
                 switch results {
                     case .success(let receivedMovies):
-                        self.topRatedMovies = receivedMovies!.items
+                        self.topRated = receivedMovies
                         self.view.success()
                     case .failure(let error):
                         self.view.failure(error: error)
@@ -46,13 +46,13 @@ class MoviePresenter: MoviePresenterProtocol {
     }
     
     func loadMostPopularMovies() {
-        networkService.getMostPopularMovies { [weak self] results in
+        networkService.downloadMostPopular { [weak self] results in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
                 switch results {
                     case .success(let receivedMovies):
-                        self.mostPopularMovies = receivedMovies!.items
+                        self.mostPopular = receivedMovies
                         self.view.success()
                     case .failure(let error):
                         self.view.failure(error: error)
