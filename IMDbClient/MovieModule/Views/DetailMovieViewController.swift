@@ -14,7 +14,6 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
         setupView()
     }
@@ -29,38 +28,34 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
         return imageView
     }()
     
-    lazy var shadowView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.clipsToBounds = false
-        view.layer.shadowRadius = 20
-        view.layer.shadowOpacity = 0.45
-        view.addSubview(poster)
-        return view
-    }()
-    
-    lazy var name: UILabel = {
+    lazy var movieTitle: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 21, weight: .heavy)
         label.textColor = UIColor(red: 24/255, green: 52/255, blue: 77/255, alpha: 1)
-        return label
-    }()
-    
-    lazy var rating: UILabel = {
-        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+     }()
+
+     lazy var rating: UILabel = {
+        let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 26, weight: .heavy)
         label.textColor = UIColor(red: 110/255, green: 130/255, blue: 144/255, alpha: 1)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
+     }()
+    
+    lazy var starStack: RatingStackView = {
+        let starStack = RatingStackView(with: 5.0)
+        starStack.translatesAutoresizingMaskIntoConstraints = false
+        return starStack
     }()
     
     private func makeLabel(text: String?) -> UILabel {
         let label = UILabel()
         label.text = text
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         label.textColor = UIColor(red: 110/255, green: 130/255, blue: 144/255, alpha: 1)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }
     
@@ -125,69 +120,74 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
     lazy var storyline: UILabel = {
         let label = UILabel()
         label.text = "Storyline"
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
         label.textColor = UIColor(red: 24/255, green: 52/255, blue: 77/255, alpha: 1)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     lazy var story: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
         label.textColor = UIColor(red: 110/255, green: 130/255, blue: 144/255, alpha: 1)
         label.numberOfLines = .max
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    lazy var starStack: RatingStackView = {
-        let starStack = RatingStackView(with: 5.0)
-        starStack.translatesAutoresizingMaskIntoConstraints = false
-        return starStack
-    }()
+
+     let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+     }()
     
     private func setupSubviews() {
-        view.addSubview(name)
-        view.addSubview(rating)
-        view.addSubview(stackView)
-        view.addSubview(storyline)
-        view.addSubview(story)
-        view.addSubview(starStack)
-        view.addSubview(shadowView)
+        view.addSubview(scrollView)
+        scrollView.addSubview(poster)
+        scrollView.addSubview(movieTitle)
+        scrollView.addSubview(rating)
+        scrollView.addSubview(starStack)
+        scrollView.addSubview(stackView)
+        scrollView.addSubview(storyline)
+        scrollView.addSubview(story)
     }
     
     private func setupView() {
         setupSubviews()
         
         NSLayoutConstraint.activate([
-            shadowView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 10),
-            shadowView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            shadowView.widthAnchor.constraint(equalToConstant: view.bounds.width * 0.5),
-            shadowView.heightAnchor.constraint(equalToConstant: view.bounds.width * 0.66),
-            poster.widthAnchor.constraint(equalToConstant: view.bounds.width * 0.5),
-            poster.heightAnchor.constraint(equalToConstant: view.bounds.width * 0.66),
+            scrollView.leftAnchor.constraint(equalTo: view.layoutMarginsGuide.leftAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.rightAnchor.constraint(equalTo: view.layoutMarginsGuide.rightAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
             
-            name.topAnchor.constraint(equalTo: shadowView.bottomAnchor, constant: 25),
-            name.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            poster.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            poster.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            poster.widthAnchor.constraint(equalToConstant: view.bounds.size.width * 0.5),
+            poster.heightAnchor.constraint(equalToConstant: view.bounds.size.width * 0.66),
             
-            rating.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 15),
-            rating.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            movieTitle.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            movieTitle.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: 20),
             
-            starStack.topAnchor.constraint(equalTo: rating.bottomAnchor, constant: 5),
-            starStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            starStack.widthAnchor.constraint(equalToConstant: 100),
-            starStack.heightAnchor.constraint(equalToConstant: 30),
+            rating.topAnchor.constraint(equalTo: movieTitle.bottomAnchor, constant: 10),
+            rating.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             
-            stackView.topAnchor.constraint(equalTo: starStack.bottomAnchor, constant: 20),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+            starStack.topAnchor.constraint(equalTo: rating.bottomAnchor, constant: 20),
+            starStack.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             
-            storyline.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            stackView.topAnchor.constraint(equalTo: starStack.bottomAnchor, constant: 40),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+            stackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            
             storyline.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 40),
+            storyline.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
             
-            story.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             story.topAnchor.constraint(equalTo: storyline.bottomAnchor, constant: 10),
-            story.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
+            story.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            story.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+            story.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
     }
 }
@@ -198,7 +198,7 @@ extension DetailMovieViewController {
         let lowResolutionPosterEndpoint = (presenter.detailMovie.image as NSString).lastPathComponent
         
         poster.downloadImage(from: lowResolutionPoster + lowResolutionPosterEndpoint)
-        name.text = presenter.detailMovie.title
+        movieTitle.text = presenter.detailMovie.title
         rating.text = presenter.detailMovie.imDbRating
         movieLenght.text = "⏱ \(presenter.detailMovie.runtimeStr)"
         releaseDate.text = "🗓 \(presenter.detailMovie.year)"

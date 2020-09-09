@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MovieNetworkService: MovieNetworkServiceStrategy {
+class MovieNetworkService: NSObject, MovieNetworkServiceStrategy {
     func downloadTopRated(completion: @escaping (Result<MovieList?, Error>) -> ()) {
         guard let url = URL(string: "https://imdb-api.com/en/API/Top250Movies/k_7k80gZKE") else {
             return

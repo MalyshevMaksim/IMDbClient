@@ -31,13 +31,8 @@ class RatingStackView: UIView {
         var starCount = self.rating / 2
         var counter = 0
             
-        for star in 0..<4 {
+        for star in 0..<5 {
             let image = UIImageView(image: UIImage(systemName: "star.fill"))
-            image.tintColor = .systemOrange
-            stackView.addArrangedSubview(image)
-        }
-        for star in 0..<1 {
-            let image = UIImageView(image: UIImage(systemName: "star"))
             image.tintColor = .systemOrange
             stackView.addArrangedSubview(image)
         }

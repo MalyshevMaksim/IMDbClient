@@ -24,6 +24,7 @@ class MovieViewController: UITableViewController, ViewControllerProtocol {
     private func setupNavigationController() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.searchController = UISearchController()
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
     
     private func makeRefreshControl() -> UIRefreshControl {
