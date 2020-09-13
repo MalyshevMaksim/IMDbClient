@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct DetailMovie: Decodable {
+struct MovieDetail: Decodable {
     var image: String
     var title: String
     var imDbRating: String

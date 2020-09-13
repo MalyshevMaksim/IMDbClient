@@ -10,11 +10,14 @@ import Foundation
 import UIKit
 
 class RatingStackView: UIView {
-    private var rating: Float
+    var rating: Double! = 0 {
+        didSet {
+            configureStack(rating: rating)
+        }
+    }
     
-    init(with rating: Float) {
-        self.rating = rating
-        super.init(frame: .zero)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupView()
     }
     
@@ -22,20 +25,27 @@ class RatingStackView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func configureStack(rating: Double) {
+        let starCount = lround(Double(self.rating / 2))
+            
+        for _ in 0..<starCount {
+            let image = UIImageView(image: UIImage(systemName: "star.fill"))
+            image.tintColor = .systemOrange
+            starStack.addArrangedSubview(image)
+        }
+        
+        for _ in 0..<5 - starCount {
+            let image = UIImageView(image: UIImage(systemName: "star"))
+            image.tintColor = .systemOrange
+            starStack.addArrangedSubview(image)
+        }
+    }
+
     lazy var starStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.spacing = 5
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        var starCount = self.rating / 2
-        var counter = 0
-            
-        for star in 0..<5 {
-            let image = UIImageView(image: UIImage(systemName: "star.fill"))
-            image.tintColor = .systemOrange
-            stackView.addArrangedSubview(image)
-        }
         return stackView
     }()
     

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class DetailMovieViewController: UIViewController, ViewControllerProtocol {
-    var presenter: DetailMoviePresenterProtocol!
+    var presenter: MovieDetailPresenterProtocol!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +45,7 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
      }()
     
     lazy var starStack: RatingStackView = {
-        let starStack = RatingStackView(with: 5.0)
+        let starStack = RatingStackView()
         starStack.translatesAutoresizingMaskIntoConstraints = false
         return starStack
     }()
@@ -194,19 +194,45 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
 
 extension DetailMovieViewController {
     func success() {
-        let lowResolutionPoster = "https://imdb-api.com/images/600x800/"
-        let lowResolutionPosterEndpoint = (presenter.detailMovie.image as NSString).lastPathComponent
-        
-        poster.downloadImage(from: lowResolutionPoster + lowResolutionPosterEndpoint)
-        movieTitle.text = presenter.detailMovie.title
-        rating.text = presenter.detailMovie.imDbRating
-        movieLenght.text = "⏱ \(presenter.detailMovie.runtimeStr)"
-        releaseDate.text = "🗓 \(presenter.detailMovie.year)"
-        contentRating.text = "🔞 \(presenter.detailMovie.contentRating)"
-        story.text = presenter.detailMovie.plot
+        presenter.configureView(view: self)
     }
     
     func failure(error: Error) {
         print(error)
+    }
+}
+
+extension DetailMovieViewController: MovieDetailView {
+    func display(image: UIImage?) {
+        self.poster.image = image
+    }
+    
+    func display(title: String) {
+        self.movieTitle.text = title
+    }
+    
+    func display(imDbRating: String) {
+        self.rating.text = imDbRating
+        self.starStack.rating = Double(imDbRating)
+    }
+    
+    func display(length: String) {
+        self.movieLenght.text = length
+    }
+    
+    func display(releaseDate: String) {
+        self.releaseDate.text = releaseDate
+    }
+    
+    func display(contentRating: String) {
+        self.contentRating.text = contentRating
+    }
+    
+    func display(plot: String) {
+        self.story.text = plot
+    }
+    
+    func display(rating: String) {
+        self.rating.text = rating
     }
 }

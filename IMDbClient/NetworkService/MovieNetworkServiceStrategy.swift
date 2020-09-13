@@ -9,9 +9,6 @@
 import Foundation
 
 
-/* The strategy for loading movies allows you not to duplicate the presenter code for TV shows and movies.
-   It will be enough just to replace this strategy with another */
-
 protocol MovieNetworkServiceStrategy {
     func downloadTopRated(completion: @escaping (Result<MovieList?, Error>) -> ())
     func downloadMostPopular(completion: @escaping (Result<MovieList?, Error>) -> ())
@@ -35,5 +32,3 @@ extension MovieNetworkServiceStrategy {
         task.resume()
     }
 }
-
-

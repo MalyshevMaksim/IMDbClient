@@ -19,10 +19,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let movieNavigationController = makeNavigationController(assembly: MovieModuleAssembly(), title: "Movies", icon: "film")
-        let TVserievNavigationController = makeNavigationController(assembly: TVShowModuleAssembly(), title: "TV series", icon: "tv")
-        let comingSoonNavigationController = makeNavigationController(assembly: TVShowModuleAssembly(), title: "Coming", icon: "clock")
-        let searchNavigationController = makeNavigationController(assembly: TVShowModuleAssembly(), title: "Search", icon: "magnifyingglass")
+        let movieNavigationController = makeNavigationController(assembly: MovieAssembly(), title: "Movies", icon: "film")
+        let TVserievNavigationController = makeNavigationController(assembly: TVShowAssembly(), title: "TV series", icon: "tv")
+        let comingSoonNavigationController = makeNavigationController(assembly: TVShowAssembly(), title: "Coming", icon: "clock")
+        let searchNavigationController = makeNavigationController(assembly: TVShowAssembly(), title: "Search", icon: "magnifyingglass")
         
         let tabBarController = UITabBarController()
         tabBarController.setViewControllers([movieNavigationController, TVserievNavigationController, comingSoonNavigationController, searchNavigationController], animated: true)
@@ -33,11 +33,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
     
-    func makeNavigationController(assembly: MovieAssemblyBuilderStrategy, title: String, icon: String) -> UINavigationController {
+    func makeNavigationController(assembly: AssemblyFactory, title: String, icon: String) -> UINavigationController {
         let navigationController = UINavigationController()
         navigationController.tabBarItem = UITabBarItem(title: title, image: UIImage(systemName: icon), selectedImage: nil)
         let router = Router(assembly: assembly, rootNavigationController: navigationController)
-        _ = MovieModuleAssembly().makeMainViewController(navigationController: navigationController, router: router)
+        _ = MovieAssembly().makeMainViewController(navigationController: navigationController, router: router)
         return navigationController
     }
 

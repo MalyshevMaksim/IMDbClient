@@ -9,8 +9,9 @@
 import Foundation
 import UIKit
 
-class TopMovieCell: UITableViewCell {
+class MovieTableViewCell: UITableViewCell {
     static var reuseIdentifier = "MovieTableCell"
+    private let activityIndicator = UIActivityIndicatorView(style: .medium)
     
     lazy var title: UILabel = {
         let label = UILabel()
@@ -28,8 +29,8 @@ class TopMovieCell: UITableViewCell {
         return imageView
     }()
     
-    lazy var ratingTagView: TagLabelView = {
-        let ratingTagView = TagLabelView()
+    lazy var ratingTagView: RatingTagView = {
+        let ratingTagView = RatingTagView()
         ratingTagView.translatesAutoresizingMaskIntoConstraints = false
         return ratingTagView
     }()
@@ -73,8 +74,8 @@ class TopMovieCell: UITableViewCell {
         NSLayoutConstraint.activate([
             poster.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             poster.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
-            poster.widthAnchor.constraint(equalToConstant: 90),
-            poster.heightAnchor.constraint(equalToConstant: 130),
+            poster.widthAnchor.constraint(equalToConstant: contentView.frame.width * 0.3),
+            poster.heightAnchor.constraint(equalToConstant: contentView.frame.width * 0.41),
 
             title.leadingAnchor.constraint(equalTo: poster.trailingAnchor, constant: 15),
             title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
@@ -92,5 +93,47 @@ class TopMovieCell: UITableViewCell {
             
             contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: poster.lastBaselineAnchor, multiplier: 0)
         ])
+    }
+}
+
+extension MovieTableViewCell: MovieCell {
+    func display(image: UIImage?) {
+        UIView.transition(with: self, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.poster.image = image
+        })
+    }
+    
+    func display(ratingCount: String) {
+        self.ratingCount.text = ratingCount
+    }
+    
+    func display(title: String) {
+        self.title.text = title
+    }
+    
+    func display(crew: String) {
+        self.crew.text = crew
+    }
+    
+    func display(imDbRating: String) {
+        self.ratingTagView.rating.text = imDbRating
+    }
+    
+    func display(image: UIImageView) {
+        poster = image
+    }
+    
+    func startActivity() {
+        poster.addSubview(activityIndicator)
+        activityIndicator.hidesWhenStopped = true
+        
+        DispatchQueue.main.async {
+            self.activityIndicator.center = CGPoint(x: self.poster.bounds.width / 2, y: self.poster.bounds.height / 2)
+            self.activityIndicator.startAnimating()
+        }
+    }
+    
+    func stopActivity() {
+        activityIndicator.stopAnimating()
     }
 }

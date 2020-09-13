@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class TagLabelView: UIView {
+class RatingTagView: UIView {
     lazy var rating: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .caption1)
