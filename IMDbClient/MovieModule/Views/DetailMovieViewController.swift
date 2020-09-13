@@ -18,6 +18,7 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
         setupView()
     }
     
+    
     lazy var poster: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit

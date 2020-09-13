@@ -10,14 +10,14 @@ import Foundation
 
 class MovieNetworkService: NSObject, MovieNetworkServiceStrategy {
     func downloadTopRated(completion: @escaping (Result<MovieList?, Error>) -> ()) {
-        guard let url = URL(string: "https://imdb-api.com/en/API/Top250Movies/k_TqCmDS42") else {
+        guard let url = URL(string: "https://imdb-api.com/en/API/Top250Movies/k_7k80gZKE") else {
             return
         }
         executeRequest(url: url, completion: completion)
     }
     
     func downloadMostPopular(completion: @escaping (Result<MovieList?, Error>) -> ()) {
-        guard let url = URL(string: "https://imdb-api.com/en/API/MostPopularMovies/k_TqCmDS42") else {
+        guard let url = URL(string: "https://imdb-api.com/en/API/MostPopularMovies/k_7k80gZKE") else {
             return
         }
         executeRequest(url: url, completion: completion)

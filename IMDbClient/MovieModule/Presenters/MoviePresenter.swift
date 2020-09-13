@@ -74,19 +74,16 @@ class MoviePresenter: MoviePresenterProtocol {
         cell.display(imDbRating: "⭐️  \(movie.imDbRating) IMDb")
         cell.display(ratingCount: "based on \(movie.imDbRatingCount) user ratings")
         
-        // Loading the poster in reduced quality for faster loading and minimizing RAM consumption
-        let posterUrl = "https://imdb-api.com/images/192x264/" + (movie.image as NSString).lastPathComponent
-        
         
         /* We check whether the desired poster is in the cache.
            If not, then download it from the network and add it to the cache.
            Otherwise we take the poster from the cache without access to the server */
         
-        if let poster = imageCache.object(forKey: posterUrl as NSString) {
+        if let poster = imageCache.object(forKey: movie.image as NSString) {
             cell.display(image: poster)
         }
         else {
-            downloadImage(cell: cell, from: posterUrl)
+            downloadImage(cell: cell, from: movie.image)
         }
     }
     

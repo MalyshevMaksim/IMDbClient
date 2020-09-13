@@ -41,14 +41,14 @@ class DetailMoviePresenter: MovieDetailPresenterProtocol {
     func configureView(view: MovieDetailView) {
         view.display(title: movieDetail.title)
         view.display(imDbRating: movieDetail.imDbRating)
-        view.display(length: movieDetail.imDbRating)
-        view.display(contentRating: movieDetail.contentRating)
-        view.display(releaseDate: movieDetail.releaseDate)
+        view.display(length: "⏱ \(movieDetail.imDbRating)")
+        view.display(contentRating: "🔞 \(movieDetail.contentRating)")
+        view.display(releaseDate: "🗓 \(movieDetail.releaseDate)")
         view.display(plot: movieDetail.plot)
     }
     
     func downloadMovieDetail(withId id: String) {
-        URLSession.shared.dataTask(with: URL(string: "https://imdb-api.com/en/API/Title/k_TqCmDS42/\(movieId)")!) { data, response, error in
+        URLSession.shared.dataTask(with: URL(string: "https://imdb-api.com/en/API/Title/k_7k80gZKE/\(movieId)")!) { data, response, error in
             do {
                 let jsonData = try JSONDecoder().decode(MovieDetail.self, from: data!)
                 self.movieDetail = jsonData
