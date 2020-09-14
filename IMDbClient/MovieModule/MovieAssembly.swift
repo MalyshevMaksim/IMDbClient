@@ -20,8 +20,8 @@ class MovieAssembly: AssemblyFactory {
     }
     
     func makeDetailViewController(movieId: String) -> UIViewController {
-        let view = DetailMovieViewController()
-        let presenter = DetailMoviePresenter(view: view, movieId: movieId)
+        let view = MovieDetailViewController()
+        let presenter = MovieDetailPresenter(view: view, movieId: movieId)
         view.presenter = presenter
         return view
     }

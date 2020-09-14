@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 protocol MovieNetworkServiceStrategy {
     func downloadTopRated(completion: @escaping (Result<MovieList?, Error>) -> ())
     func downloadMostPopular(completion: @escaping (Result<MovieList?, Error>) -> ())

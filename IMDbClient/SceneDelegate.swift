@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let movieNavigationController = makeNavigationController(assembly: MovieAssembly(), title: "Movies", icon: "film")
         let TVserievNavigationController = makeNavigationController(assembly: TVShowAssembly(), title: "TV series", icon: "tv")
-        let comingSoonNavigationController = makeNavigationController(assembly: TVShowAssembly(), title: "Coming", icon: "clock")
+        let comingSoonNavigationController = makeNavigationController(assembly: NewMovieAssembly(), title: "Coming", icon: "clock")
         let searchNavigationController = makeNavigationController(assembly: TVShowAssembly(), title: "Search", icon: "magnifyingglass")
         
         let tabBarController = UITabBarController()

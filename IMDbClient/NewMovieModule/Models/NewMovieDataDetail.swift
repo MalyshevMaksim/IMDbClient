@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct NewMovieDataDetail {
+struct NewMovieDataDetail: Decodable {
     var id: String
     var title: String
     var releaseState: String

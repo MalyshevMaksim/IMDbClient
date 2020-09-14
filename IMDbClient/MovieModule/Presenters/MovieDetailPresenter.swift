@@ -27,7 +27,7 @@ protocol MovieDetailPresenterProtocol {
     func configureView(view: MovieDetailView)
 }
 
-class DetailMoviePresenter: MovieDetailPresenterProtocol {
+class MovieDetailPresenter: MovieDetailPresenterProtocol {
     var view: ViewControllerProtocol
     var movieId: String
     var movieDetail: MovieDetail!

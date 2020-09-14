@@ -1,5 +1,5 @@
 //
-//  NewMovieData.swift
+//  NewMovieCollectionCell.swift
 //  IMDbClient
 //
 //  Created by Малышев Максим Алексеевич on 9/14/20.
@@ -7,8 +7,8 @@
 //
 
 import Foundation
+import UIKit
 
-struct NewMovieData: Decodable {
-    var items: [NewMovieDataDetail]
-    var errorMessage: String
+class NewMovieCollectionCell: UICollectionViewCell {
+    static var reuseIdentifier = "MovieTableCell"
 }

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class DetailMovieViewController: UIViewController, ViewControllerProtocol {
+class MovieDetailViewController: UIViewController, ViewControllerProtocol {
     var presenter: MovieDetailPresenterProtocol!
     
     override func viewDidLoad() {
@@ -193,7 +193,7 @@ class DetailMovieViewController: UIViewController, ViewControllerProtocol {
     }
 }
 
-extension DetailMovieViewController {
+extension MovieDetailViewController {
     func success() {
         presenter.configureView(view: self)
     }
@@ -203,7 +203,7 @@ extension DetailMovieViewController {
     }
 }
 
-extension DetailMovieViewController: MovieDetailView {
+extension MovieDetailViewController: MovieDetailView {
     func display(image: UIImage?) {
         self.poster.image = image
     }

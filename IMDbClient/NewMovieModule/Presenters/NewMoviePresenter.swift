@@ -9,24 +9,46 @@
 import Foundation
 
 protocol NewMoviePresenterProtocol {
-    var comingSoonMovieCache: [NewMovieData]? { get set }
-    var inTheatersMovieCache: [NewMovieData]? { get set }
+    var comingSoonMovieCache: NewMovieData? { get set }
+    var inTheatersMovieCache: NewMovieData? { get set }
     
-    func downloadComingSoonMovie()
-    func downloadInTheatersMovie()
+    func downloadMovies(collectionType: NewMovieCollectionType)
 }
 
 class NewMoviePresenter: NewMoviePresenterProtocol {
-    var comingSoonMovieCache: [NewMovieData]?
-    var inTheatersMovieCache: [NewMovieData]?
+    var view: ViewControllerProtocol
+    var router: Router
+    var networkService: NewMovieNetworkStrategy
     
+    var comingSoonMovieCache: NewMovieData?
+    var inTheatersMovieCache: NewMovieData?
     
-    
-    func downloadComingSoonMovie() {
-        
+    init(view: ViewControllerProtocol, router: Router, networkService: NewMovieNetworkStrategy) {
+        self.view = view
+        self.router = router
+        self.networkService = networkService
+        downloadMovies()
     }
     
-    func downloadInTheatersMovie() {
-        
+    func downloadMovies(collectionType: NewMovieCollectionType = .inTheaters) {
+        networkService.downloadMovies(collectionType: collectionType) { [weak self] result in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                switch result {
+                    case .success(let movies):
+                        switch collectionType {
+                            case .inTheaters:
+                                self.inTheatersMovieCache = movies
+                                self.downloadMovies(collectionType: .inTheaters)
+                            case .comingSoon:
+                                self.comingSoonMovieCache = movies
+                                self.view.success()
+                    }
+                    case .failure(let error):
+                        self.view.failure(error: error)
+                }
+            }
+        }
     }
 }
