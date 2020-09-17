@@ -11,7 +11,7 @@ import UIKit
 
 class NewMovieAssembly: AssemblyFactory {
     func makeMainViewController(navigationController: UINavigationController, router: Router) -> UIViewController {
-        let view = NewMovieCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
+        let view = NewMovieCollectionViewController()
         view.title = "New Movies"
         let networkService = NewMovieNetworkService()
         let presenter = NewMoviePresenter(view: view, router: router, networkService: networkService)

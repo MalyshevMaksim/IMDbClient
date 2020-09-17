@@ -9,17 +9,6 @@
 import Foundation
 import UIKit
 
-protocol MovieDetailView {
-    func display(image: UIImage?)
-    func display(title: String)
-    func display(imDbRating: String)
-    func display(rating: String)
-    func display(length: String)
-    func display(releaseDate: String)
-    func display(contentRating: String)
-    func display(plot: String)
-}
-
 protocol MovieDetailPresenterProtocol {
     var movieDetail: MovieDetail! { get set }
     var movieId: String { get set }
@@ -48,7 +37,7 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     }
     
     func downloadMovieDetail(withId id: String) {
-        URLSession.shared.dataTask(with: URL(string: "https://imdb-api.com/en/API/Title/k_7k80gZKE/\(movieId)")!) { data, response, error in
+        URLSession.shared.dataTask(with: URL(string: "https://imdb-api.com/en/API/Title/k_288fbjOY/\(movieId)")!) { data, response, error in
             do {
                 let jsonData = try JSONDecoder().decode(MovieDetail.self, from: data!)
                 self.movieDetail = jsonData

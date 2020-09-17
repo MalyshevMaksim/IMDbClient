@@ -9,6 +9,16 @@
 import Foundation
 import UIKit
 
+protocol MovieCell {
+    func display(image: UIImage?)
+    func display(title: String)
+    func display(imDbRating: String)
+    func display(ratingCount: String)
+    func display(crew: String)
+    func startActivity()
+    func stopActivity()
+}
+
 class MovieTableViewCell: UITableViewCell {
     static var reuseIdentifier = "MovieTableCell"
     private let activityIndicator = UIActivityIndicatorView(style: .medium)

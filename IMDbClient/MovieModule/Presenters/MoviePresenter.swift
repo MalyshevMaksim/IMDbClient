@@ -9,16 +9,6 @@
 import Foundation
 import UIKit
 
-protocol MovieCell {
-    func display(image: UIImage?)
-    func display(title: String)
-    func display(imDbRating: String)
-    func display(ratingCount: String)
-    func display(crew: String)
-    func startActivity()
-    func stopActivity()
-}
-
 protocol MoviePresenterProtocol {
     var topRatedMovieCache: MovieList? { get set }
     var mostPopularMovieCache: MovieList? { get set }
@@ -73,11 +63,6 @@ class MoviePresenter: MoviePresenterProtocol {
         cell.display(title: movie.title + " (\(movie.year))")
         cell.display(imDbRating: "⭐️  \(movie.imDbRating) IMDb")
         cell.display(ratingCount: "based on \(movie.imDbRatingCount) user ratings")
-        
-        
-        /* We check whether the desired poster is in the cache.
-           If not, then download it from the network and add it to the cache.
-           Otherwise we take the poster from the cache without access to the server */
         
         if let poster = imageCache.object(forKey: movie.image as NSString) {
             cell.display(image: poster)

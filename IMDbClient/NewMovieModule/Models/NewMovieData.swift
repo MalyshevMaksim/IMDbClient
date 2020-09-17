@@ -9,6 +9,6 @@
 import Foundation
 
 struct NewMovieData: Decodable {
-    var items: [NewMovieDataDetail]
+    var items: [NewMovie]
     var errorMessage: String
 }

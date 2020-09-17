@@ -12,7 +12,7 @@ Implementing a mobile client for [IMDb](https://www.imdb.com/).
 - [x] URLSession + IMDb API.
 - [x] Grand Central Dispatch (GCD).
 - [x] JSON parsing using `Codable`.
-- [x] Programmatically UI + Auto Layout.
+- [x] Programmatically UI (Auto Layout, Compositional Layout)
 - [x] XCTest (Unit).
 
 ## Screenshots
@@ -21,7 +21,5 @@ Implementing a mobile client for [IMDb](https://www.imdb.com/).
   <img src = "https://github.com/MalyshevMaksim/IMDbClient/raw/master/img/DetailMovie.png" width="250"/>
   <img src = "https://github.com/MalyshevMaksim/IMDbClient/raw/master/img/TVs.png" width="250"/>
 </p>
-
-## Application Details
 
 ## Building and Running

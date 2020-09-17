@@ -11,12 +11,12 @@ import Foundation
 enum NewMovieCollectionType {
     case comingSoon, inTheaters
     
-    var url: String {
+    var resourceUrl: String {
         switch self {
         case .comingSoon:
-            return "https://imdb-api.com/en/API/ComingSoon/k_7k80gZKE"
+            return "https://imdb-api.com/en/API/ComingSoon/k_288fbjOY"
         default:
-            return "https://imdb-api.com/en/API/InTheaters/k_7k80gZKE"
+            return "https://imdb-api.com/en/API/InTheaters/k_288fbjOY"
         }
     }
 }
@@ -27,7 +27,7 @@ protocol NewMovieNetworkStrategy {
 
 class NewMovieNetworkService: NewMovieNetworkStrategy {
     func downloadMovies(collectionType: NewMovieCollectionType, completion: @escaping (Result<NewMovieData?, Error>) -> ()) {
-        guard let url = URL(string: collectionType.url) else {
+        guard let url = URL(string: collectionType.resourceUrl) else {
             return
         }
         URLSession.shared.dataTask(with: url) { (data, response, error) in

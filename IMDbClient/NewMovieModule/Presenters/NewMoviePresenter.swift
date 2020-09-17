@@ -7,12 +7,15 @@
 //
 
 import Foundation
+import UIKit
 
 protocol NewMoviePresenterProtocol {
     var comingSoonMovieCache: NewMovieData? { get set }
     var inTheatersMovieCache: NewMovieData? { get set }
     
     func downloadMovies(collectionType: NewMovieCollectionType)
+    func getCountOfMovies(section: Int) -> Int
+    func displayCell(cell: NewMovieCell, section: Int, forRow row: Int)
 }
 
 class NewMoviePresenter: NewMoviePresenterProtocol {
@@ -20,6 +23,7 @@ class NewMoviePresenter: NewMoviePresenterProtocol {
     var router: Router
     var networkService: NewMovieNetworkStrategy
     
+    var imageCache = NSCache<NSString, UIImage>()
     var comingSoonMovieCache: NewMovieData?
     var inTheatersMovieCache: NewMovieData?
     
@@ -50,5 +54,56 @@ class NewMoviePresenter: NewMoviePresenterProtocol {
                 }
             }
         }
+    }
+    
+    private func getCachedMovie(section: Int, for row: Int) -> NewMovie? {
+        switch section {
+            case 0:
+                return inTheatersMovieCache?.items[row]
+            default:
+                return comingSoonMovieCache?.items[row]
+        }
+    }
+    
+    func displayCell(cell: NewMovieCell, section: Int, forRow row: Int) {
+        guard let movie = getCachedMovie(section: section, for: row) else {
+            return
+        }
+        cell.display(title: movie.title)
+        cell.display(runtimeStr: "⏱ \(movie.runtimeStr)")
+        
+        if let poster = imageCache.object(forKey: movie.image as NSString) {
+            cell.display(image: poster)
+        }
+        else {
+            downloadImage(cell: cell, from: movie.image)
+        }
+    }
+    
+    func getCountOfMovies(section: Int) -> Int {
+        switch section {
+            case 0:
+                return inTheatersMovieCache?.items.count ?? 0
+            default:
+                return comingSoonMovieCache?.items.count ?? 0
+        }
+    }
+    
+    // Uploading an image and adding it to the cache
+    private func downloadImage(cell: NewMovieCell, from url: String) {
+        cell.display(image: nil)
+        guard let url = URL(string: url) else { fatalError("Error") }
+        cell.startActivity()
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, let image = UIImage(data: data) else {
+                return
+            }
+            DispatchQueue.main.async {
+                cell.display(image: image)
+                cell.stopActivity()
+                self.imageCache.setObject(image, forKey: (url.absoluteString as NSString))
+            }
+        }.resume()
     }
 }

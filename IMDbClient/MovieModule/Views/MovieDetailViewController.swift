@@ -9,6 +9,17 @@
 import Foundation
 import UIKit
 
+protocol MovieDetailView {
+    func display(image: UIImage?)
+    func display(title: String)
+    func display(imDbRating: String)
+    func display(rating: String)
+    func display(length: String)
+    func display(releaseDate: String)
+    func display(contentRating: String)
+    func display(plot: String)
+}
+
 class MovieDetailViewController: UIViewController, ViewControllerProtocol {
     var presenter: MovieDetailPresenterProtocol!
     
@@ -17,7 +28,6 @@ class MovieDetailViewController: UIViewController, ViewControllerProtocol {
         view.backgroundColor = .systemBackground
         setupView()
     }
-    
     
     lazy var poster: UIImageView = {
         let imageView = UIImageView()
