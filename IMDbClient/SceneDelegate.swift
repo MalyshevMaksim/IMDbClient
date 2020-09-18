@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let movieNavigationController = makeNavigationController(assembly: MovieAssembly(), title: "Movies", icon: "film")
         let TVserievNavigationController = makeNavigationController(assembly: TVShowAssembly(), title: "TV series", icon: "tv")
-        let comingSoonNavigationController = makeNavigationController(assembly: NewMovieAssembly(), title: "Coming", icon: "clock")
+        let comingSoonNavigationController = makeNavigationController(assembly: TrendingMovieAssembly(), title: "Coming", icon: "clock")
         let searchNavigationController = makeNavigationController(assembly: TVShowAssembly(), title: "Search", icon: "magnifyingglass")
         
         let tabBarController = UITabBarController()
@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
     
-    func makeNavigationController(assembly: AssemblyFactory, title: String, icon: String) -> UINavigationController {
+    func makeNavigationController(assembly: AssemblyBuilder, title: String, icon: String) -> UINavigationController {
         let navigationController = UINavigationController()
         navigationController.tabBarItem = UITabBarItem(title: title, image: UIImage(systemName: icon), selectedImage: nil)
         let router = Router(assembly: assembly, rootNavigationController: navigationController)

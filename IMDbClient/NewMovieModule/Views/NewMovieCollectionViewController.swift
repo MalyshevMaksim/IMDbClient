@@ -11,7 +11,7 @@ import UIKit
 
 class NewMovieCollectionViewController: UIViewController {
     static let sectionHeaderElementKind = "section-header-element-kind"
-    var presenter: NewMoviePresenterProtocol!
+    var presenter: MoviePresenterProtocol!
     var collectionView: UICollectionView!
     
     enum Section: String, CaseIterable {
@@ -96,7 +96,7 @@ extension NewMovieCollectionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InTheatersMovieCell.reuseIdentifier, for: indexPath) as! InTheatersMovieCell
-        presenter.displayCell(cell: cell, section: indexPath.section, forRow: indexPath.row)
+        //presenter.displayCell(cell: cell, section: indexPath.section, forRow: indexPath.row)
         return cell
     }
     

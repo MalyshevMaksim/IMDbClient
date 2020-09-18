@@ -9,12 +9,17 @@
 import Foundation
 import UIKit
 
-class NewMovieAssembly: AssemblyFactory {
+class TrendingMovieAssembly: AssemblyBuilder {
     func makeMainViewController(navigationController: UINavigationController, router: Router) -> UIViewController {
         let view = NewMovieCollectionViewController()
-        view.title = "New Movies"
-        let networkService = NewMovieNetworkService()
-        let presenter = NewMoviePresenter(view: view, router: router, networkService: networkService)
+        view.title = "Trending Movies"
+       
+        let topRatedRequest = DownloadMovieRequest(movieCollectionType: .inTheater)
+        let mostPopularRequest = DownloadMovieRequest(movieCollectionType: .comingSoon)
+        let resources = [topRatedRequest, mostPopularRequest]
+        let networkService = NetworkServiceClient()
+        
+        let presenter = MoviePresenter(view: view, networkService: networkService, resources: resources, router: router)
         view.presenter = presenter
         return view
     }

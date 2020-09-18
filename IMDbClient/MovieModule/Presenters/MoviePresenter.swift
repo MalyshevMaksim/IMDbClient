@@ -10,53 +10,50 @@ import Foundation
 import UIKit
 
 protocol MoviePresenterProtocol {
-    var topRatedMovieCache: MovieList? { get set }
-    var mostPopularMovieCache: MovieList? { get set }
-    var networkService: MovieNetworkServiceStrategy { get set }
+    var resources: [APIRequest] { get set }
+    var networkService: NetworkService { get set }
+    var view: ViewControllerProtocol { get set }
     
-    func displayCell(cell: MovieCell, segmentIndex: Int, forRow row: Int)
-    func showDetail(segmentIndex: Int, from indexPath: IndexPath)
-    func refreshMovies(segmentIndex: Int)
-    func getCountOfMovies(segmentIndex: Int) -> Int
-    func downloadTopRated()
-    func downloadMostPopular()
+    func displayCell(cell: MovieCell, section: Int, forRow row: Int)
+    func showDetail(section: Int, from indexPath: IndexPath)
+    func refreshMovies(section: Int)
+    func getCountOfMovies(section: Int) -> Int
+    func downloadMovies()
 }
 
 class MoviePresenter: MoviePresenterProtocol {
+    var resources: [APIRequest]
+    var networkService: NetworkService
     var view: ViewControllerProtocol
-    var networkService: MovieNetworkServiceStrategy
     var router: Router
     
+    var movieCache: [String : MovieList] = [:]
     var imageCache = NSCache<NSString, UIImage>()
-    var topRatedMovieCache: MovieList?
-    var mostPopularMovieCache: MovieList?
     
-    init(view: ViewControllerProtocol, networkService: MovieNetworkServiceStrategy, router: Router) {
+    init(view: ViewControllerProtocol, networkService: NetworkService, resources: [APIRequest], router: Router) {
         self.view = view
         self.networkService = networkService
+        self.resources = resources
         self.router = router
-        downloadTopRated()
-        downloadMostPopular()
+        downloadMovies()
     }
     
-    private func getCachedMovie(segmentIndex: Int, for row: Int) -> Movie? {
-        switch segmentIndex {
-            case 0:
-                return topRatedMovieCache?.items[row]
-            default:
-                return mostPopularMovieCache?.items[row]
+    private func getCachedMovie(section: Int, for row: Int) -> Movie? {
+        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else {
+            fatalError("Unable")
         }
+        return movieCache[collectionKey]?.items[row]
     }
     
-    func showDetail(segmentIndex: Int, from indexPath: IndexPath) {
-        guard let movie = getCachedMovie(segmentIndex: segmentIndex, for: indexPath.row) else {
+    func showDetail(section: Int, from indexPath: IndexPath) {
+        guard let movie = getCachedMovie(section: section, for: indexPath.row) else {
             fatalError("Unable")
         }
         router.showDetail(movieId: movie.id)
     }
     
-    func displayCell(cell: MovieCell, segmentIndex: Int, forRow row: Int) {
-        guard let movie = getCachedMovie(segmentIndex: segmentIndex, for: row) else {
+    func displayCell(cell: MovieCell, section: Int, forRow row: Int) {
+        guard let movie = getCachedMovie(section: section, for: row) else {
             fatalError("Unable")
         }
         cell.display(crew: "Crew: \(movie.crew)")
@@ -72,50 +69,28 @@ class MoviePresenter: MoviePresenterProtocol {
         }
     }
     
-    func refreshMovies(segmentIndex: Int) {
-        switch segmentIndex {
-            case 0:
-                downloadTopRated()
-            default:
-                downloadMostPopular()
-        }
+    func refreshMovies(section: Int) {
+        downloadMovies()
     }
     
-    func getCountOfMovies(segmentIndex: Int) -> Int {
-        switch segmentIndex {
-            case 0:
-                return topRatedMovieCache?.items.count ?? 0
-            default:
-                return mostPopularMovieCache?.items.count ?? 0
+    func getCountOfMovies(section: Int) -> Int {
+        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else {
+            fatalError("Unable")
         }
+        return movieCache[collectionKey]?.items.count ?? 0
     }
     
-    func downloadTopRated() {
-        networkService.downloadTopRated { [weak self] results in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async {
-                switch results {
-                    case .success(let receivedMovies):
-                        self.topRatedMovieCache = receivedMovies
-                        self.view.success()
-                    case .failure(let error):
-                        self.view.failure(error: error)
-                }
-            }
-        }
-    }
-    
-    func downloadMostPopular() {
-        networkService.downloadMostPopular { [weak self] results in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async {
-                switch results {
-                    case .success(let receivedMovies):
-                        self.mostPopularMovieCache = receivedMovies
-                    case .failure(let error):
-                        self.view.failure(error: error)
+    func downloadMovies() {
+        for resource in resources {
+            networkService.execute(request: resource) { (result: Result<MovieList?, Error>) in
+                DispatchQueue.main.async {
+                    switch result {
+                        case .success(let movies):
+                            self.movieCache[resource.urlRequest.url!.absoluteString] = movies
+                            self.view.success()
+                        case .failure(let error):
+                            self.view.failure(error: error)
+                    }
                 }
             }
         }

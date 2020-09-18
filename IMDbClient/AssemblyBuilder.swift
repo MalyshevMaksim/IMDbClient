@@ -12,7 +12,7 @@ import UIKit
 
 // Protocol responsible for building modules and installing dependencies between them
 
-protocol AssemblyFactory {
+protocol AssemblyBuilder {
     func makeMainViewController(navigationController: UINavigationController, router: Router) -> UIViewController
     func makeDetailViewController(movieId: String) -> UIViewController
 }

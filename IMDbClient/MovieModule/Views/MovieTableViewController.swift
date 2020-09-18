@@ -58,7 +58,7 @@ class MovieTableViewController: UITableViewController, ViewControllerProtocol {
     }
     
     @objc private func refresh(_ sender: Any) {
-        presenter.refreshMovies(segmentIndex: segmentControl.selectedSegmentIndex)
+        presenter.refreshMovies(section: segmentControl.selectedSegmentIndex)
     }
 }
 
@@ -80,18 +80,18 @@ extension MovieTableViewController {
 
 extension MovieTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter.getCountOfMovies(segmentIndex: segmentControl.selectedSegmentIndex)
+        return presenter.getCountOfMovies(section: segmentControl.selectedSegmentIndex)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        presenter.showDetail(segmentIndex: segmentControl.selectedSegmentIndex, from: indexPath)
+        presenter.showDetail(section: segmentControl.selectedSegmentIndex, from: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.reuseIdentifier) as? MovieTableViewCell else {
             fatalError("error")
         }
-        presenter.displayCell(cell: cell, segmentIndex: segmentControl.selectedSegmentIndex, forRow: indexPath.row)
+        presenter.displayCell(cell: cell, section: segmentControl.selectedSegmentIndex, forRow: indexPath.row)
         return cell
     }
 }

@@ -8,10 +8,9 @@
 
 import Foundation
 
-struct NewMovie: Decodable, Hashable {
+struct TrendingMovie: Decodable, Hashable {
     var id: String
     var title: String
-    var releaseState: String
     var image: String
     var plot: String
     var runtimeStr: String

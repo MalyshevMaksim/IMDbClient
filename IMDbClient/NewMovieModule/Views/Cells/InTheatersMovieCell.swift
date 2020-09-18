@@ -23,7 +23,7 @@ class InTheatersMovieCell: UICollectionViewCell {
     
     lazy var image: UIImageView = {
         let imageView = UIImageView()
-        imageView.layer.cornerRadius = 10
+        imageView.layer.cornerRadius = 5
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView

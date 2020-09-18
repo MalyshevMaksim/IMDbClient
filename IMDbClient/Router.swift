@@ -15,10 +15,10 @@ import UIKit
    it has a link to the assembly builder to determine which module is being navigated through */
 
 class Router {
-    var assembly: AssemblyFactory
+    var assembly: AssemblyBuilder
     var rootNavigationController: UINavigationController
     
-    init(assembly: AssemblyFactory, rootNavigationController: UINavigationController) {
+    init(assembly: AssemblyBuilder, rootNavigationController: UINavigationController) {
         self.assembly = assembly
         self.rootNavigationController = rootNavigationController
         initialNavigationController()
