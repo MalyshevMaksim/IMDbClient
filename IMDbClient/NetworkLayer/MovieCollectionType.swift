@@ -6,19 +6,19 @@
 //  Copyright © 2020 Малышев Максим Алексеевич. All rights reserved.
 //
 
-import Foundation
+var APIKey = "k_TqCmDS42"
 
 enum MovieCollectionType {
     case topRatedMovie, mostPopularMovie, topRatedTVShow, mostPopularTVShow, inTheater, comingSoon
     
     var resourceUrl: String {
         switch self {
-            case .topRatedMovie: return "https://imdb-api.com/en/API/Top250Movies/k_TqCmDS42"
-            case .mostPopularMovie: return "https://imdb-api.com/en/API/MostPopularMovies/k_TqCmDS42"
-            case .topRatedTVShow: return "https://imdb-api.com/en/API/Top250TVs/k_TqCmDS42"
-            case .mostPopularTVShow: return "https://imdb-api.com/en/API/MostPopularTVs/k_TqCmDS42"
-            case .inTheater: return "https://imdb-api.com/en/API/InTheaters/k_TqCmDS42"
-            case .comingSoon: return "https://imdb-api.com/en/API/ComingSoon/k_TqCmDS42"
+            case .topRatedMovie: return "https://imdb-api.com/en/API/Top250Movies/\(APIKey)"
+            case .mostPopularMovie: return "https://imdb-api.com/en/API/MostPopularMovies/\(APIKey)"
+            case .topRatedTVShow: return "https://imdb-api.com/en/API/Top250TVs/\(APIKey)"
+            case .mostPopularTVShow: return "https://imdb-api.com/en/API/MostPopularTVs/\(APIKey)"
+            case .inTheater: return "https://imdb-api.com/en/API/InTheaters/\(APIKey)"
+            case .comingSoon: return "https://imdb-api.com/en/API/ComingSoon/\(APIKey)"
         }
     }
 }

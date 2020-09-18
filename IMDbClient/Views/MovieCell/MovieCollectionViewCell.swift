@@ -9,15 +9,14 @@
 import Foundation
 import UIKit
 
-protocol NewMovieCell {
+protocol TrendingMovieCell {
     func display(title: String)
-    func display(runtimeStr: String)
     func display(image: UIImage?)
     func startActivity()
     func stopActivity()
 }
 
-class InTheatersMovieCell: UICollectionViewCell {
+class MovieCollectionViewCell: UICollectionViewCell {
     static var reuseIdentifier = "MovieTableCell"
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
     
@@ -37,26 +36,6 @@ class InTheatersMovieCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var timeTag: TagView = {
-        let tagView = TagView()
-        tagView.translatesAutoresizingMaskIntoConstraints = false
-        return tagView
-    }()
-    
-    lazy var genresStack: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        let drama = TagView()
-        drama.text.text = "Drama"
-        let th = TagView()
-        th.text.text = "Thriller"
-        stackView.addArrangedSubview(drama)
-        stackView.addArrangedSubview(th)
-        stackView.axis = .horizontal
-        stackView.spacing = 5
-        return stackView
-    }()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -69,8 +48,6 @@ class InTheatersMovieCell: UICollectionViewCell {
     private func setupSubviews() {
         addSubview(image)
         addSubview(title)
-        addSubview(timeTag)
-        addSubview(genresStack)
     }
     
     private func configure() {
@@ -85,23 +62,13 @@ class InTheatersMovieCell: UICollectionViewCell {
             title.leadingAnchor.constraint(equalTo: image.leadingAnchor, constant: 10),
             title.trailingAnchor.constraint(equalTo: image.trailingAnchor, constant: -10),
             title.bottomAnchor.constraint(equalTo: image.bottomAnchor, constant: -50),
-        
-            timeTag.trailingAnchor.constraint(equalTo: image.trailingAnchor, constant: -20),
-            timeTag.topAnchor.constraint(equalTo: image.topAnchor, constant: 20),
-            
-            genresStack.leadingAnchor.constraint(equalTo: image.leadingAnchor, constant: 10),
-            genresStack.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10)
         ])
     }
 }
 
-extension InTheatersMovieCell: NewMovieCell {
+extension MovieCollectionViewCell: TrendingMovieCell {
     func display(title: String) {
         self.title.text = title
-    }
-    
-    func display(runtimeStr: String) {
-        self.timeTag.text.text = runtimeStr
     }
     
     func display(image: UIImage?) {

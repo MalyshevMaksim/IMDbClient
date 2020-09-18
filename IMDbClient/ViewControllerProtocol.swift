@@ -6,9 +6,6 @@
 //  Copyright © 2020 Малышев Максим Алексеевич. All rights reserved.
 //
 
-import Foundation
-
-
 // Protocol defining actions upon successful download of data from the network or from a failure
 
 protocol ViewControllerProtocol {

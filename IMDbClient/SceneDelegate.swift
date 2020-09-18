@@ -19,10 +19,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let movieNavigationController = makeNavigationController(assembly: MovieAssembly(), title: "Movies", icon: "film")
-        let TVserievNavigationController = makeNavigationController(assembly: TVShowAssembly(), title: "TV series", icon: "tv")
-        let comingSoonNavigationController = makeNavigationController(assembly: TrendingMovieAssembly(), title: "Coming", icon: "clock")
-        let searchNavigationController = makeNavigationController(assembly: TVShowAssembly(), title: "Search", icon: "magnifyingglass")
+        let movieNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: MovieFactory(), title: "Movies", icon: "film")
+        let TVserievNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: TVShowFactory(), title: "TV series", icon: "tv")
+        let comingSoonNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: TrendingFactory(), title: "Coming", icon: "clock")
+        let searchNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: TrendingFactory(), title: "Search", icon: "magnifyingglass")
         
         let tabBarController = UITabBarController()
         tabBarController.setViewControllers([movieNavigationController, TVserievNavigationController, comingSoonNavigationController, searchNavigationController], animated: true)
@@ -33,11 +33,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
     
-    func makeNavigationController(assembly: AssemblyBuilder, title: String, icon: String) -> UINavigationController {
+    func makeNavigationController(assembly: AssemblyBuilder, assemblyFactory: AssemblyFactory, title: String, icon: String) -> UINavigationController {
         let navigationController = UINavigationController()
         navigationController.tabBarItem = UITabBarItem(title: title, image: UIImage(systemName: icon), selectedImage: nil)
-        let router = Router(assembly: assembly, rootNavigationController: navigationController)
-        _ = MovieAssembly().makeMainViewController(navigationController: navigationController, router: router)
+        let router = Router(assembly: assembly, assemblyFactory: assemblyFactory, rootNavigationController: navigationController)
+        _ = MovieAssembly().makeMainViewController(assemblyFactory: assemblyFactory, navigationController: navigationController, router: router)
         return navigationController
     }
 

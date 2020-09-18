@@ -13,6 +13,4 @@ struct TrendingMovie: Decodable, Hashable {
     var title: String
     var image: String
     var plot: String
-    var runtimeStr: String
-    var genres: String
 }

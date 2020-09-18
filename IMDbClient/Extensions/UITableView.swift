@@ -6,7 +6,6 @@
 //  Copyright © 2020 Малышев Максим Алексеевич. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 extension UITableView {

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class NewMovieCollectionViewController: UIViewController {
+class MovieCollectionViewController: UIViewController {
     static let sectionHeaderElementKind = "section-header-element-kind"
     var presenter: MoviePresenterProtocol!
     var collectionView: UICollectionView!
@@ -27,8 +27,8 @@ class NewMovieCollectionViewController: UIViewController {
     
     private func configureCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: generateLayout())
-        collectionView.register(InTheatersMovieCell.self, forCellWithReuseIdentifier: InTheatersMovieCell.reuseIdentifier)
-        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: NewMovieCollectionViewController.sectionHeaderElementKind, withReuseIdentifier: HeaderView.reuseIdentifier)
+        collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.reuseIdentifier)
+        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: MovieCollectionViewController.sectionHeaderElementKind, withReuseIdentifier: HeaderView.reuseIdentifier)
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .systemBackground
         collectionView.decelerationRate = .fast
@@ -63,7 +63,7 @@ class NewMovieCollectionViewController: UIViewController {
         group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
         
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(44))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: NewMovieCollectionViewController.sectionHeaderElementKind, alignment: .top)
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: MovieCollectionViewController.sectionHeaderElementKind, alignment: .top)
 
         let section = NSCollectionLayoutSection(group: group)
         section.boundarySupplementaryItems = [header]
@@ -85,9 +85,9 @@ class NewMovieCollectionViewController: UIViewController {
     }
 }
 
-extension NewMovieCollectionViewController: UICollectionViewDataSource {
+extension MovieCollectionViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return presenter.resources.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -95,23 +95,23 @@ extension NewMovieCollectionViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InTheatersMovieCell.reuseIdentifier, for: indexPath) as! InTheatersMovieCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.reuseIdentifier, for: indexPath) as! MovieCollectionViewCell
         //presenter.displayCell(cell: cell, section: indexPath.section, forRow: indexPath.row)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: NewMovieCollectionViewController.sectionHeaderElementKind, withReuseIdentifier: HeaderView.reuseIdentifier, for: indexPath)
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: MovieCollectionViewController.sectionHeaderElementKind, withReuseIdentifier: HeaderView.reuseIdentifier, for: indexPath)
         return header
     }
 }
 
-extension NewMovieCollectionViewController: ViewControllerProtocol {
+extension MovieCollectionViewController: ViewControllerProtocol {
     func success() {
         collectionView.reloadData()
     }
     
     func failure(error: Error) {
-        
+        print(error)
     }
 }

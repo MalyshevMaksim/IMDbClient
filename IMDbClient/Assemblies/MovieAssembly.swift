@@ -6,19 +6,24 @@
 //  Copyright © 2020 Малышев Максим Алексеевич. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
+// Protocol responsible for building modules and installing dependencies between them.
+// Assembly builders create the necessary resources based on the factory method, which
+// allows you to avoid duplicating the code of presenters.
+
+protocol AssemblyBuilder {
+    func makeMainViewController(assemblyFactory: AssemblyFactory, navigationController: UINavigationController, router: Router) -> UIViewController
+    func makeDetailViewController(movieId: String) -> UIViewController
+}
+
 class MovieAssembly: AssemblyBuilder {
-    func makeMainViewController(navigationController: UINavigationController, router: Router) -> UIViewController {
+    func makeMainViewController(assemblyFactory: AssemblyFactory, navigationController: UINavigationController, router: Router) -> UIViewController {
         let view = MovieTableViewController()
         view.title = "Movies"
-        
-        let topRatedRequest = DownloadMovieRequest(movieCollectionType: .topRatedMovie)
-        let mostPopularRequest = DownloadMovieRequest(movieCollectionType: .mostPopularMovie)
-        let resources = [topRatedRequest, mostPopularRequest]
+       
+        let resources = assemblyFactory.makeResources()
         let networkService = NetworkServiceClient()
-        
         let presenter = MoviePresenter(view: view, networkService: networkService, resources: resources, router: router)
         view.presenter = presenter
         return view

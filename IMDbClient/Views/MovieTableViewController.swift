@@ -58,7 +58,7 @@ class MovieTableViewController: UITableViewController, ViewControllerProtocol {
     }
     
     @objc private func refresh(_ sender: Any) {
-        presenter.refreshMovies(section: segmentControl.selectedSegmentIndex)
+        presenter.downloadMovies()
     }
 }
 

@@ -16,7 +16,6 @@ protocol MoviePresenterProtocol {
     
     func displayCell(cell: MovieCell, section: Int, forRow row: Int)
     func showDetail(section: Int, from indexPath: IndexPath)
-    func refreshMovies(section: Int)
     func getCountOfMovies(section: Int) -> Int
     func downloadMovies()
 }
@@ -45,6 +44,13 @@ class MoviePresenter: MoviePresenterProtocol {
         return movieCache[collectionKey]?.items[row]
     }
     
+    func getCountOfMovies(section: Int) -> Int {
+        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else {
+            fatalError("Unable")
+        }
+        return movieCache[collectionKey]?.items.count ?? 0
+    }
+    
     func showDetail(section: Int, from indexPath: IndexPath) {
         guard let movie = getCachedMovie(section: section, for: indexPath.row) else {
             fatalError("Unable")
@@ -69,17 +75,7 @@ class MoviePresenter: MoviePresenterProtocol {
         }
     }
     
-    func refreshMovies(section: Int) {
-        downloadMovies()
-    }
-    
-    func getCountOfMovies(section: Int) -> Int {
-        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else {
-            fatalError("Unable")
-        }
-        return movieCache[collectionKey]?.items.count ?? 0
-    }
-    
+    // Loading data from all resources
     func downloadMovies() {
         for resource in resources {
             networkService.execute(request: resource) { (result: Result<MovieList?, Error>) in

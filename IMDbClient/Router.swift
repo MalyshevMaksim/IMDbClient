@@ -6,26 +6,22 @@
 //  Copyright © 2020 Малышев Максим Алексеевич. All rights reserved.
 //
 
-import Foundation
 import UIKit
-
-
-/* The class responsible for navigating the application. For example, if the user selects a cell in the table,
-   then the responsibility for creating and displaying the detailed view passes to the router. As a property,
-   it has a link to the assembly builder to determine which module is being navigated through */
 
 class Router {
     var assembly: AssemblyBuilder
+    var assemblyFactory: AssemblyFactory
     var rootNavigationController: UINavigationController
     
-    init(assembly: AssemblyBuilder, rootNavigationController: UINavigationController) {
+    init(assembly: AssemblyBuilder, assemblyFactory: AssemblyFactory, rootNavigationController: UINavigationController) {
         self.assembly = assembly
+        self.assemblyFactory = assemblyFactory
         self.rootNavigationController = rootNavigationController
         initialNavigationController()
     }
     
     func initialNavigationController() {
-        let mainViewController = assembly.makeMainViewController(navigationController: rootNavigationController, router: self)
+        let mainViewController = assembly.makeMainViewController(assemblyFactory: assemblyFactory, navigationController: rootNavigationController, router: self)
         rootNavigationController.viewControllers = [mainViewController]
     }
     
