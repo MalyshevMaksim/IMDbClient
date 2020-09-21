@@ -9,7 +9,7 @@
 var APIKey = "k_TqCmDS42"
 
 enum MovieCollectionType {
-    case topRatedMovie, mostPopularMovie, topRatedTVShow, mostPopularTVShow, inTheater, comingSoon
+    case topRatedMovie, mostPopularMovie, topRatedTVShow, mostPopularTVShow, inTheater, comingSoon, detail(id: String), poster(id: String)
     
     var resourceUrl: String {
         switch self {
@@ -19,6 +19,8 @@ enum MovieCollectionType {
             case .mostPopularTVShow: return "https://imdb-api.com/en/API/MostPopularTVs/\(APIKey)"
             case .inTheater: return "https://imdb-api.com/en/API/InTheaters/\(APIKey)"
             case .comingSoon: return "https://imdb-api.com/en/API/ComingSoon/\(APIKey)"
+            case .detail(let id): return "https://imdb-api.com/en/API/Title/\(APIKey)/\(id)"
+            case .poster(let imageUrl): return imageUrl
         }
     }
 }

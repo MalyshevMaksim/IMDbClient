@@ -7,12 +7,21 @@
 //
 
 import Foundation
+import UIKit
 
 protocol NetworkService {
+    var posterQuality: PosterQuality { get }
     func execute<T: Decodable>(request: APIRequest, comletionHandler: @escaping (Result<T?, Error>) -> ())
+    func downloadPoster(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
 }
 
 class NetworkServiceClient: NetworkService {
+    var posterQuality: PosterQuality
+    
+    init(posterQuality: PosterQuality) {
+        self.posterQuality = posterQuality
+    }
+    
     func execute<T: Decodable>(request: APIRequest, comletionHandler: @escaping (Result<T?, Error>) -> ()) {
         let dataTask = URLSession.shared.dataTask(with: request.urlRequest) { data, response, error in
             guard let data = data, error == nil else {
@@ -33,5 +42,19 @@ class NetworkServiceClient: NetworkService {
         catch {
             comletionHandler(.failure(error))
         }
+    }
+    
+    func downloadPoster(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
+        guard let url = posterQuality.makeNewImageUrl(originalUrl: url) else {
+            return
+        }
+         let dataTask = URLSession.shared.dataTask(with: url) { data, repsonse, error in
+           guard let data = data, let image = UIImage(data: data), error == nil else {
+                completionHandler(.failure(error!))
+                return
+            }
+            completionHandler(.success(image))
+        }
+        dataTask.resume()
     }
 }

@@ -10,7 +10,6 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -21,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let movieNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: MovieFactory(), title: "Movies", icon: "film")
         let TVserievNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: TVShowFactory(), title: "TV series", icon: "tv")
-        let comingSoonNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: TrendingFactory(), title: "Coming", icon: "clock")
+        let comingSoonNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: TrendingFactory(), title: "Trends", icon: "flame")
         let searchNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: TrendingFactory(), title: "Search", icon: "magnifyingglass")
         
         let tabBarController = UITabBarController()

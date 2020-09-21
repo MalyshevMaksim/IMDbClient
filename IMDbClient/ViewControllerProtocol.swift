@@ -8,7 +8,11 @@
 
 // Protocol defining actions upon successful download of data from the network or from a failure
 
-protocol ViewControllerProtocol {
+import UIKit
+
+protocol ViewControllerProtocol: UIViewController {
+    var presenter: MoviePresenterProtocol! { get set }
+    
     func success()
     func failure(error: Error)
 }

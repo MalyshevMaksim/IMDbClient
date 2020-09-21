@@ -19,7 +19,7 @@ class HeaderView: UICollectionReusableView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     override init(frame: CGRect) {
        super.init(frame: frame)
        configure()
@@ -34,7 +34,7 @@ class HeaderView: UICollectionReusableView {
         
         let inset = CGFloat(10)
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),
+            label.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: inset),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
             label.topAnchor.constraint(equalTo: topAnchor, constant: inset),
             label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -inset)

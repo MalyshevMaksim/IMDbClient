@@ -9,26 +9,9 @@
 import Foundation
 import UIKit
 
-protocol MovieCell {
-    func display(image: UIImage?)
-    func display(title: String)
-    func display(imDbRating: String)
-    func display(ratingCount: String)
-    func display(crew: String)
-    func startActivity()
-    func stopActivity()
-}
-
-class MovieTableViewCell: UITableViewCell {
+class MovieTableViewCell: UITableViewCell, MovieCell {
     static var reuseIdentifier = "MovieTableCell"
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
-    
-    lazy var title: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 17)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
     lazy var poster: UIImageView = {
         let imageView = UIImageView()
@@ -39,26 +22,40 @@ class MovieTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    lazy var ratingTagView: RatingTagView = {
-        let ratingTagView = RatingTagView()
-        ratingTagView.translatesAutoresizingMaskIntoConstraints = false
-        return ratingTagView
+    lazy var title: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 17)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
-    lazy var ratingCount: UILabel = {
+    lazy var subtitle: UILabel = {
+        let label = UILabel()
+        label.textColor = .secondaryLabel
+        label.numberOfLines = 3
+        label.font = UIFont.preferredFont(forTextStyle: .caption1)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var imDbRating: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.preferredFont(forTextStyle: .caption1)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var imDbRatingCount: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .caption2)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    lazy var crew: UILabel = {
-        let label = UILabel()
-        label.textColor = .secondaryLabel
-        label.numberOfLines = 2
-        label.font = UIFont.preferredFont(forTextStyle: .caption1)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    lazy var ratingTagView: RatingTagView = {
+        let ratingTagView = RatingTagView(ratingLabel: imDbRating)
+        ratingTagView.translatesAutoresizingMaskIntoConstraints = false
+        return ratingTagView
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -74,8 +71,8 @@ class MovieTableViewCell: UITableViewCell {
         contentView.addSubview(title)
         contentView.addSubview(poster)
         contentView.addSubview(ratingTagView)
-        contentView.addSubview(ratingCount)
-        contentView.addSubview(crew)
+        contentView.addSubview(imDbRatingCount)
+        contentView.addSubview(subtitle)
     }
     
     private func setupCell() {
@@ -94,56 +91,14 @@ class MovieTableViewCell: UITableViewCell {
             ratingTagView.leadingAnchor.constraint(equalTo: title.leadingAnchor),
             ratingTagView.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10),
             
-            ratingCount.topAnchor.constraint(equalTo: ratingTagView.bottomAnchor, constant: 5),
-            ratingCount.leadingAnchor.constraint(equalTo: ratingTagView.leadingAnchor),
+            imDbRatingCount.topAnchor.constraint(equalTo: ratingTagView.bottomAnchor, constant: 5),
+            imDbRatingCount.leadingAnchor.constraint(equalTo: ratingTagView.leadingAnchor),
             
-            crew.bottomAnchor.constraint(equalTo: poster.bottomAnchor),
-            crew.leadingAnchor.constraint(equalTo: ratingCount.leadingAnchor),
-            crew.trailingAnchor.constraint(equalTo: title.trailingAnchor),
+            subtitle.topAnchor.constraint(equalTo: imDbRatingCount.bottomAnchor, constant: 5),
+            subtitle.leadingAnchor.constraint(equalTo: imDbRatingCount.leadingAnchor),
+            subtitle.trailingAnchor.constraint(equalTo: title.trailingAnchor),
             
             contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: poster.lastBaselineAnchor, multiplier: 0)
         ])
-    }
-}
-
-extension MovieTableViewCell: MovieCell {
-    func display(image: UIImage?) {
-        UIView.transition(with: self, duration: 0.5, options: .transitionCrossDissolve, animations: {
-            self.poster.image = image
-        })
-    }
-    
-    func display(ratingCount: String) {
-        self.ratingCount.text = ratingCount
-    }
-    
-    func display(title: String) {
-        self.title.text = title
-    }
-    
-    func display(crew: String) {
-        self.crew.text = crew
-    }
-    
-    func display(imDbRating: String) {
-        self.ratingTagView.rating.text = imDbRating
-    }
-    
-    func display(image: UIImageView) {
-        poster = image
-    }
-    
-    func startActivity() {
-        poster.addSubview(activityIndicator)
-        activityIndicator.hidesWhenStopped = true
-        
-        DispatchQueue.main.async {
-            self.activityIndicator.center = CGPoint(x: self.poster.bounds.width / 2, y: self.poster.bounds.height / 2)
-            self.activityIndicator.startAnimating()
-        }
-    }
-    
-    func stopActivity() {
-        activityIndicator.stopAnimating()
     }
 }

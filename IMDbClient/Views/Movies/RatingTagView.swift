@@ -10,15 +10,11 @@ import Foundation
 import UIKit
 
 class RatingTagView: UIView {
-    lazy var rating: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.preferredFont(forTextStyle: .caption1)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private var rating: UILabel
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(ratingLabel: UILabel) {
+        self.rating = ratingLabel
+        super.init(frame: .zero)
         backgroundColor = .secondarySystemBackground
         layer.cornerRadius = 3
         setupView()

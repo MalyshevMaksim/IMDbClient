@@ -11,20 +11,20 @@ import UIKit
 
 protocol MovieDetailPresenterProtocol {
     var movieDetail: MovieDetail! { get set }
-    var movieId: String { get set }
-    func downloadMovieDetail(withId id: String)
+    var networkService: NetworkServiceClient { get set }
+    func downloadMovieDetail()
     func configureView(view: MovieDetailView)
 }
 
 class MovieDetailPresenter: MovieDetailPresenterProtocol {
+    var networkService: NetworkServiceClient
     var view: ViewControllerProtocol
-    var movieId: String
     var movieDetail: MovieDetail!
     
-    init(view: ViewControllerProtocol, movieId: String) {
-        self.movieId = movieId
+    init(view: ViewControllerProtocol, networkService: NetworkServiceClient) {
         self.view = view
-        downloadMovieDetail(withId: movieId)
+        self.networkService = networkService
+        downloadMovieDetail()
     }
     
     func configureView(view: MovieDetailView) {
@@ -32,23 +32,13 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
         view.display(imDbRating: movieDetail.imDbRating)
         view.display(length: "⏱ \(movieDetail.imDbRating)")
         view.display(contentRating: "🔞 \(movieDetail.contentRating)")
-        view.display(releaseDate: "🗓 \(movieDetail.releaseDate)")
+        view.display(releaseDate: "🗓 \(movieDetail.year)")
         view.display(plot: movieDetail.plot)
     }
     
-    func downloadMovieDetail(withId id: String) {
-        URLSession.shared.dataTask(with: URL(string: "https://imdb-api.com/en/API/Title/\(APIKey)/\(movieId)")!) { data, response, error in
-            do {
-                let jsonData = try JSONDecoder().decode(MovieDetail.self, from: data!)
-                self.movieDetail = jsonData
-                
-                DispatchQueue.main.async {
-                    self.view.success()
-                }
-            }
-            catch {
-                print(error)
-            }
-        }.resume()
+    func downloadMovieDetail() {
+        networkService.execute(request: <#T##APIRequest#>) { (Result<MovieDetail?, Error>) in
+            
+        }
     }
 }

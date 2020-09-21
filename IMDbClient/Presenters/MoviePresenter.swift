@@ -38,40 +38,48 @@ class MoviePresenter: MoviePresenterProtocol {
     }
     
     private func getCachedMovie(section: Int, for row: Int) -> Movie? {
-        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else {
-            fatalError("Unable")
-        }
+        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else { fatalError("Error") }
         return movieCache[collectionKey]?.items[row]
     }
     
     func getCountOfMovies(section: Int) -> Int {
-        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else {
-            fatalError("Unable")
-        }
+        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else { fatalError("Error") }
         return movieCache[collectionKey]?.items.count ?? 0
     }
     
     func showDetail(section: Int, from indexPath: IndexPath) {
-        guard let movie = getCachedMovie(section: section, for: indexPath.row) else {
-            fatalError("Unable")
-        }
+        guard let movie = getCachedMovie(section: section, for: indexPath.row) else { fatalError("Error") }
         router.showDetail(movieId: movie.id)
     }
     
     func displayCell(cell: MovieCell, section: Int, forRow row: Int) {
-        guard let movie = getCachedMovie(section: section, for: row) else {
-            fatalError("Unable")
-        }
-        cell.display(crew: "Crew: \(movie.crew)")
-        cell.display(title: movie.title + " (\(movie.year))")
-        cell.display(imDbRating: "⭐️  \(movie.imDbRating) IMDb")
-        cell.display(ratingCount: "based on \(movie.imDbRatingCount) user ratings")
+        guard let movie = getCachedMovie(section: section, for: row) else { fatalError("Error") }
+        cell.display(title: movie.fullTitle)
+        cell.display(imDbRating: "⭐️ \(movie.imDbRating) IMDb")
+        cell.display(imDbRatingCount: "based on \(movie.imDbRatingCount) user ratings")
+        downloadAndDisplaySubtitle(for: cell, with: movie.id)
         
+        // We get the movie poster from the cache if it is there.
+        // Otherwise, we download the image from the network and put it in the cache
         if let poster = imageCache.object(forKey: movie.image as NSString) {
             cell.display(image: poster)
         }
         else {
-            downloadImage(cell: cell, from: movie.image)
+            downloadAndCacheMoviePoster(cell: cell, imageUrl: movie.image)
+        }
+    }
+    
+    // Download movie details and update cell
+    private func downloadAndDisplaySubtitle(for cell: MovieCell, with movieId: String) {
+        networkService.execute(request: DownloadMovieRequest(movieCollectionType: .detail(id: movieId))) { (result: Result<MovieDetail?, Error>) in
+            DispatchQueue.main.async {
+                switch result {
+                    case .success(let detail):
+                        cell.display(subtitle: detail!.plot)
+                    case .failure:
+                        cell.display(subtitle: "Unable")
+                }
+            }
         }
     }
     
@@ -93,20 +101,19 @@ class MoviePresenter: MoviePresenterProtocol {
     }
     
     // Uploading an image and adding it to the cache
-    private func downloadImage(cell: MovieCell, from url: String) {
+    private func downloadAndCacheMoviePoster(cell: MovieCell, imageUrl: String) {
         cell.display(image: nil)
-        guard let url = URL(string: url) else { fatalError("Error") }
         cell.startActivity()
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data, let image = UIImage(data: data) else {
-                return
+        networkService.downloadPoster(url: imageUrl) { result in
+            switch result {
+                case .success(let image):
+                    cell.display(image: image)
+                    cell.stopActivity()
+                    self.imageCache.setObject(image!, forKey: (imageUrl as NSString))
+                case .failure:
+                    cell.display(image: nil)
             }
-            DispatchQueue.main.async {
-                cell.display(image: image)
-                cell.stopActivity()
-                self.imageCache.setObject(image, forKey: (url.absoluteString as NSString))
-            }
-        }.resume()
+        }
     }
 }

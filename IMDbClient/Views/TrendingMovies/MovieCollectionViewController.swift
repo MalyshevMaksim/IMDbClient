@@ -34,30 +34,25 @@ class MovieCollectionViewController: UIViewController {
         collectionView.decelerationRate = .fast
         collectionView.alwaysBounceHorizontal = true
         collectionView.dataSource = self
+        collectionView.delegate = self
         view.addSubview(collectionView)
     }
     
     private func generateLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
             let isWideView = layoutEnvironment.container.effectiveContentSize.width > 500
-            let sectionLayoutKind = Section.allCases[sectionIndex]
-            
-            switch sectionLayoutKind {
-                case .inTheaters: return self.makeInThetaresMoviesSection(isWide: isWideView)
-                case .comingSoon: return self.makeComingSoonMoviesSection()
-            }
+            return self.makeInThetaresMoviesSection(isWide: isWideView)
         }
-        layout.configuration.interSectionSpacing = 20
         return layout
     }
     
     private func makeInThetaresMoviesSection(isWide: Bool) -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(2/3))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.75))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         // Show one item plus peek on narrow screens, two items plus peek on wider screens
-        let groupFractionalWidth = isWide ? 0.475 : 0.95
-        let groupFractionalHeight: Float = isWide ? 1/3 : 2/3
+        let groupFractionalWidth = isWide ? 0.475 : 0.9
+        let groupFractionalHeight: Float = isWide ? 0.37 : 0.68
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(CGFloat(groupFractionalWidth)), heightDimension: .fractionalWidth(CGFloat(groupFractionalHeight)))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
         group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
@@ -70,24 +65,15 @@ class MovieCollectionViewController: UIViewController {
         section.orthogonalScrollingBehavior = .groupPaging
         return section
     }
-    
-    private func makeComingSoonMoviesSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(140), heightDimension: .absolute(186))
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitem: item, count: 1)
-        group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .groupPaging
-        return section
-    }
 }
 
-extension MovieCollectionViewController: UICollectionViewDataSource {
+extension MovieCollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presenter.showDetail(section: indexPath.section, from: indexPath)
+    }
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return presenter.resources.count
+       return presenter.resources.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -96,19 +82,20 @@ extension MovieCollectionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.reuseIdentifier, for: indexPath) as! MovieCollectionViewCell
-        //presenter.displayCell(cell: cell, section: indexPath.section, forRow: indexPath.row)
+        presenter.displayCell(cell: cell, section: indexPath.section, forRow: indexPath.row)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: MovieCollectionViewController.sectionHeaderElementKind, withReuseIdentifier: HeaderView.reuseIdentifier, for: indexPath)
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: MovieCollectionViewController.sectionHeaderElementKind, withReuseIdentifier: HeaderView.reuseIdentifier, for: indexPath) as! HeaderView
+        header.label.text = Section.allCases[indexPath.section].rawValue
         return header
     }
 }
 
 extension MovieCollectionViewController: ViewControllerProtocol {
     func success() {
-        collectionView.reloadData()
+        //collectionView.reloadData()
     }
     
     func failure(error: Error) {

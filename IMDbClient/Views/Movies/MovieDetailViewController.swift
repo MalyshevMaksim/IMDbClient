@@ -21,7 +21,9 @@ protocol MovieDetailView {
 }
 
 class MovieDetailViewController: UIViewController, ViewControllerProtocol {
-    var presenter: MovieDetailPresenterProtocol!
+    var presenter: MoviePresenterProtocol!
+    
+    var presenter2: MovieDetailPresenterProtocol!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -205,7 +207,7 @@ class MovieDetailViewController: UIViewController, ViewControllerProtocol {
 
 extension MovieDetailViewController {
     func success() {
-        presenter.configureView(view: self)
+        presenter2.configureView(view: self)
     }
     
     func failure(error: Error) {

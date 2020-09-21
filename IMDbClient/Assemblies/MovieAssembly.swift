@@ -19,11 +19,10 @@ protocol AssemblyBuilder {
 
 class MovieAssembly: AssemblyBuilder {
     func makeMainViewController(assemblyFactory: AssemblyFactory, navigationController: UINavigationController, router: Router) -> UIViewController {
-        let view = MovieTableViewController()
-        view.title = "Movies"
-       
+        let view = assemblyFactory.makeViewController()
         let resources = assemblyFactory.makeResources()
-        let networkService = NetworkServiceClient()
+        let networkService = assemblyFactory.makeNetworkService()
+        
         let presenter = MoviePresenter(view: view, networkService: networkService, resources: resources, router: router)
         view.presenter = presenter
         return view
@@ -32,7 +31,7 @@ class MovieAssembly: AssemblyBuilder {
     func makeDetailViewController(movieId: String) -> UIViewController {
         let view = MovieDetailViewController()
         let presenter = MovieDetailPresenter(view: view, movieId: movieId)
-        view.presenter = presenter
+        view.presenter2 = presenter
         return view
     }
 }
