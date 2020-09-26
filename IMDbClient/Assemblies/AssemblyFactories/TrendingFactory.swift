@@ -23,7 +23,7 @@ class TrendingFactory: AssemblyFactory {
         return view
     }
     
-    func makeNetworkService() -> NetworkService {
-        return NetworkServiceClient(posterQuality: .normal)
+    func makeNetworkService() -> NetworkClient {
+        return APIClient(posterQuality: .normal)
     }
 }

@@ -30,7 +30,7 @@ class MovieAssembly: AssemblyBuilder {
     
     func makeDetailViewController(movieId: String) -> UIViewController {
         let view = MovieDetailViewController()
-        let networkService = NetworkServiceClient(posterQuality: .normal)
+        let networkService = APIClient(posterQuality: .normal)
         let resource = DownloadMovieRequest(movieCollectionType: .detail(id: movieId))
         
         let presenter = MovieDetailPresenter(view: view, networkService: networkService, resource: resource)

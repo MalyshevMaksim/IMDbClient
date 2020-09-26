@@ -11,7 +11,7 @@ import UIKit
 
 protocol MoviePresenterProtocol {
     var resources: [APIRequest] { get set }
-    var networkService: NetworkService { get set }
+    var networkService: NetworkClient { get set }
     var view: ViewControllerProtocol { get set }
     
     func displayCell(cell: MovieCell, section: Int, forRow row: Int)
@@ -22,14 +22,14 @@ protocol MoviePresenterProtocol {
 
 class MoviePresenter: MoviePresenterProtocol {
     var resources: [APIRequest]
-    var networkService: NetworkService
+    var networkService: NetworkClient
     var view: ViewControllerProtocol
     var router: Router
     
     var movieCache: [String : MovieList] = [:]
     var imageCache = NSCache<NSString, UIImage>()
     
-    init(view: ViewControllerProtocol, networkService: NetworkService, resources: [APIRequest], router: Router) {
+    init(view: ViewControllerProtocol, networkService: NetworkClient, resources: [APIRequest], router: Router) {
         self.view = view
         self.networkService = networkService
         self.resources = resources

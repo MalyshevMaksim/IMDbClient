@@ -11,7 +11,7 @@ import UIKit
 
 protocol MovieDetailPresenterProtocol {
     var resource: APIRequest { get set }
-    var networkService: NetworkServiceClient { get set }
+    var networkService: NetworkClient { get set }
     var view: DetailViewControllerProtocol { get set }
     
     func downloadMovieDetail()
@@ -20,11 +20,11 @@ protocol MovieDetailPresenterProtocol {
 
 class MovieDetailPresenter: MovieDetailPresenterProtocol {
     var resource: APIRequest
-    var networkService: NetworkServiceClient
+    var networkService: NetworkClient
     var view: DetailViewControllerProtocol
-    var movieDetail: MovieDetail!
+    var movieDetail: MovieDetail?
     
-    init(view: DetailViewControllerProtocol, networkService: NetworkServiceClient, resource: APIRequest) {
+    init(view: DetailViewControllerProtocol, networkService: APIClient, resource: APIRequest) {
         self.view = view
         self.networkService = networkService
         self.resource = resource
@@ -32,12 +32,14 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     }
     
     func configureView(view: MovieDetailView) {
-        view.display(title: movieDetail.title)
-        view.display(imDbRating: movieDetail.imDbRating)
-        view.display(length: "⏱ \(movieDetail.runtimeStr)")
-        view.display(contentRating: "🔞 \(movieDetail.contentRating)")
-        view.display(releaseDate: "🗓 \(movieDetail.year)")
-        view.display(plot: movieDetail.plot)
+        guard let detail = movieDetail else { return }
+        
+        view.display(title: detail.title)
+        view.display(imDbRating: detail.imDbRating)
+        view.display(length: "⏱ \(detail.runtimeStr)")
+        view.display(contentRating: "🔞 \(detail.contentRating)")
+        view.display(releaseDate: "🗓 \(detail.year)")
+        view.display(plot: detail.plot)
         downloadPoster(view: view)
     }
     
@@ -56,7 +58,9 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     }
     
     private func downloadPoster(view: MovieDetailView) {
-        networkService.downloadPoster(url: movieDetail.image) { (result: Result<UIImage?, Error>) in
+        guard let detail = movieDetail else { return }
+        
+        networkService.downloadPoster(url: detail.image) { (result: Result<UIImage?, Error>) in
             DispatchQueue.main.async {
                 switch result {
                     case .success(let image):

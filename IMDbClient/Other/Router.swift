@@ -8,6 +8,9 @@
 
 import UIKit
 
+// The class responsible for navigating the application.
+// For example, to show detailed information about a movie
+
 class Router {
     var assembly: AssemblyBuilder
     var assemblyFactory: AssemblyFactory
