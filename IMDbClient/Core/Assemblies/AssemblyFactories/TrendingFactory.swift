@@ -1,5 +1,5 @@
 //
-//  MovieFactory.swift
+//  TrendingFactory.swift
 //  IMDbClient
 //
 //  Created by Малышев Максим Алексеевич on 9/21/20.
@@ -7,22 +7,23 @@
 //
 
 import Foundation
+import UIKit
 
-class MovieFactory: AssemblyFactory {
-    func makeResources() -> [DownloadMovieRequest] {
-        let topRatedRequest = DownloadMovieRequest(movieCollectionType: .topRatedMovie)
-        let mostPopularRequest = DownloadMovieRequest(movieCollectionType: .mostPopularMovie)
+class TrendingFactory: AssemblyFactory {
+    func makeResources() -> [GETMovieRequest] {
+        let topRatedRequest = GETMovieRequest(type: .inTheater)
+        let mostPopularRequest = GETMovieRequest(type: .comingSoon)
         let resources = [topRatedRequest, mostPopularRequest]
         return resources
     }
     
     func makeViewController() -> ViewControllerProtocol {
-        let view = MovieTableViewController()
-        view.title = "Movies"
+        let view = MovieCollectionViewController(collectionViewLayout: generateLayout())
+        view.title = "Trends"
         return view
     }
     
     func makeNetworkService() -> NetworkClient {
-        return APIClient(posterQuality: .low)
+        return APIClient(posterQuality: .normal)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  TVShowFactory.swift
+//  MovieFactory.swift
 //  IMDbClient
 //
 //  Created by Малышев Максим Алексеевич on 9/21/20.
@@ -8,17 +8,17 @@
 
 import Foundation
 
-class TVShowFactory: AssemblyFactory {
-    func makeResources() -> [DownloadMovieRequest] {
-        let topRatedRequest = DownloadMovieRequest(movieCollectionType: .topRatedTVShow)
-        let mostPopularRequest = DownloadMovieRequest(movieCollectionType: .mostPopularTVShow)
+class MovieFactory: AssemblyFactory {
+    func makeResources() -> [GETMovieRequest] {
+        let topRatedRequest = GETMovieRequest(type: .topRatedMovie)
+        let mostPopularRequest = GETMovieRequest(type: .mostPopularMovie)
         let resources = [topRatedRequest, mostPopularRequest]
         return resources
     }
     
     func makeViewController() -> ViewControllerProtocol {
         let view = MovieTableViewController()
-        view.title = "TV series"
+        view.title = "Movies"
         return view
     }
     

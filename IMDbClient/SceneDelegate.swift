@@ -26,6 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tabBarController = UITabBarController()
         tabBarController.setViewControllers([movieNavigationController, TVserievNavigationController, comingSoonNavigationController, searchNavigationController], animated: true)
 
+        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.rootViewController = tabBarController
         window?.windowScene = windowScene
         window?.backgroundColor = .systemBackground

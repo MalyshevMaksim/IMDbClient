@@ -12,15 +12,15 @@ protocol APIRequest {
     var urlRequest: URLRequest { get }
 }
 
-class DownloadMovieRequest: APIRequest {
+class GETMovieRequest: APIRequest {
     private var movieCollectionType: MovieCollectionType
     
-    init(movieCollectionType: MovieCollectionType) {
-        self.movieCollectionType = movieCollectionType
+    init(type: MovieCollectionType) {
+        self.movieCollectionType = type
     }
     
     var urlRequest: URLRequest {
-        guard let url = URL(string:movieCollectionType.resourceUrl) else {
+        guard let url = URL(string: movieCollectionType.resourceUrl) else {
             fatalError("Error")
         }
         var request = URLRequest(url: url)

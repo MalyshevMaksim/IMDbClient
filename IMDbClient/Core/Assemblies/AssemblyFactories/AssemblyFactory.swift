@@ -14,7 +14,7 @@ import UIKit
 // In addition, this will allow us to avoid duplicating the code of the Assembly builders
 
 protocol AssemblyFactory {
-    func makeResources() -> [DownloadMovieRequest]
+    func makeResources() -> [GETMovieRequest]
     func makeViewController() -> ViewControllerProtocol
     func makeNetworkService() -> NetworkClient
 }
