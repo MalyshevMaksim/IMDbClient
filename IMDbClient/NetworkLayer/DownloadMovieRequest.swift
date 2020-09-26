@@ -21,7 +21,7 @@ class DownloadMovieRequest: APIRequest {
     
     var urlRequest: URLRequest {
         guard let url = URL(string:movieCollectionType.resourceUrl) else {
-            fatalError("")
+            fatalError("Error")
         }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"

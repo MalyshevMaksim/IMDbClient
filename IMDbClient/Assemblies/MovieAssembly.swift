@@ -30,8 +30,11 @@ class MovieAssembly: AssemblyBuilder {
     
     func makeDetailViewController(movieId: String) -> UIViewController {
         let view = MovieDetailViewController()
-        let presenter = MovieDetailPresenter(view: view, movieId: movieId)
-        view.presenter2 = presenter
+        let networkService = NetworkServiceClient(posterQuality: .normal)
+        let resource = DownloadMovieRequest(movieCollectionType: .detail(id: movieId))
+        
+        let presenter = MovieDetailPresenter(view: view, networkService: networkService, resource: resource)
+        view.presenter = presenter
         return view
     }
 }

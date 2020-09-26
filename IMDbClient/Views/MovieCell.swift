@@ -8,18 +8,12 @@
 
 import UIKit
 
-protocol MovieCell {
-    var poster: UIImageView { get set }
-    var title: UILabel { get set }
-    var imDbRating: UILabel { get set }
-    var imDbRatingCount: UILabel { get set }
-    var subtitle: UILabel { get set }
-}
-
 extension MovieCell {
     func display(image: UIImage?) {
         DispatchQueue.main.async {
-            self.poster.image = image
+            UIView.transition(with: self.poster, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                self.poster.image = image
+            })
         }
     }
     
@@ -40,7 +34,12 @@ extension MovieCell {
     }
     
     func startActivity() {
-        
+        DispatchQueue.main.async {
+            let activityView = UIActivityIndicatorView(style: .medium)
+            self.poster.addSubview(activityView)
+            activityView.center = self.poster.center
+            activityView.startAnimating()
+        }
     }
     
     func stopActivity() {

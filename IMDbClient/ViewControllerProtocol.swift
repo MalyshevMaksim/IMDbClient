@@ -16,3 +16,10 @@ protocol ViewControllerProtocol: UIViewController {
     func success()
     func failure(error: Error)
 }
+
+protocol DetailViewControllerProtocol: UIViewController {
+    var presenter: MovieDetailPresenterProtocol! { get set }
+    
+    func success()
+    func failure(error: Error)
+}

@@ -48,9 +48,9 @@ class NetworkServiceClient: NetworkService {
         guard let url = posterQuality.makeNewImageUrl(originalUrl: url) else {
             return
         }
-         let dataTask = URLSession.shared.dataTask(with: url) { data, repsonse, error in
-           guard let data = data, let image = UIImage(data: data), error == nil else {
-                completionHandler(.failure(error!))
+        let dataTask = URLSession.shared.dataTask(with: url) { data, repsonse, error in
+            guard let data = data, let image = UIImage(data: data), error == nil else {
+                // completionHandler(.failure(error))
                 return
             }
             completionHandler(.success(image))

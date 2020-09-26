@@ -16,4 +16,5 @@ struct Movie: Decodable, Hashable {
     var image: String
     var imDbRating: String
     var imDbRatingCount: String
+    var crew: String
 }

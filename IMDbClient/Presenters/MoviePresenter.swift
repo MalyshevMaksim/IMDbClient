@@ -55,9 +55,16 @@ class MoviePresenter: MoviePresenterProtocol {
     func displayCell(cell: MovieCell, section: Int, forRow row: Int) {
         guard let movie = getCachedMovie(section: section, for: row) else { fatalError("Error") }
         cell.display(title: movie.fullTitle)
-        cell.display(imDbRating: "⭐️ \(movie.imDbRating) IMDb")
-        cell.display(imDbRatingCount: "based on \(movie.imDbRatingCount) user ratings")
-        downloadAndDisplaySubtitle(for: cell, with: movie.id)
+        cell.display(subtitle: "Crew: \(movie.crew)")
+        
+        if movie.imDbRating == "" {
+            cell.display(imDbRating: "⭐️ No ratings")
+            cell.display(imDbRatingCount: "Ratings for this movie are not yet available.")
+        }
+        else {
+            cell.display(imDbRating: "⭐️ \(movie.imDbRating) IMDb")
+            cell.display(imDbRatingCount: "based on \(movie.imDbRatingCount) user ratings")
+        }
         
         // We get the movie poster from the cache if it is there.
         // Otherwise, we download the image from the network and put it in the cache
@@ -66,20 +73,6 @@ class MoviePresenter: MoviePresenterProtocol {
         }
         else {
             downloadAndCacheMoviePoster(cell: cell, imageUrl: movie.image)
-        }
-    }
-    
-    // Download movie details and update cell
-    private func downloadAndDisplaySubtitle(for cell: MovieCell, with movieId: String) {
-        networkService.execute(request: DownloadMovieRequest(movieCollectionType: .detail(id: movieId))) { (result: Result<MovieDetail?, Error>) in
-            DispatchQueue.main.async {
-                switch result {
-                    case .success(let detail):
-                        cell.display(subtitle: detail!.plot)
-                    case .failure:
-                        cell.display(subtitle: "Unable")
-                }
-            }
         }
     }
     

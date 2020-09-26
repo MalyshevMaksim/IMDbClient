@@ -9,6 +9,14 @@
 import Foundation
 import UIKit
 
+protocol MovieCell {
+    var poster: UIImageView { get set }
+    var title: UILabel { get set }
+    var imDbRating: UILabel { get set }
+    var imDbRatingCount: UILabel { get set }
+    var subtitle: UILabel { get set }
+}
+
 class MovieTableViewCell: UITableViewCell, MovieCell {
     static var reuseIdentifier = "MovieTableCell"
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
@@ -94,7 +102,7 @@ class MovieTableViewCell: UITableViewCell, MovieCell {
             imDbRatingCount.topAnchor.constraint(equalTo: ratingTagView.bottomAnchor, constant: 5),
             imDbRatingCount.leadingAnchor.constraint(equalTo: ratingTagView.leadingAnchor),
             
-            subtitle.topAnchor.constraint(equalTo: imDbRatingCount.bottomAnchor, constant: 5),
+            subtitle.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             subtitle.leadingAnchor.constraint(equalTo: imDbRatingCount.leadingAnchor),
             subtitle.trailingAnchor.constraint(equalTo: title.trailingAnchor),
             

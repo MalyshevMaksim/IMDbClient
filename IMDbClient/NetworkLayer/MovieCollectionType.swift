@@ -6,7 +6,7 @@
 //  Copyright © 2020 Малышев Максим Алексеевич. All rights reserved.
 //
 
-var APIKey = "k_TqCmDS42"
+var APIKey = "k_09P3SOzm"
 
 enum MovieCollectionType {
     case topRatedMovie, mostPopularMovie, topRatedTVShow, mostPopularTVShow, inTheater, comingSoon, detail(id: String), poster(id: String)

@@ -9,7 +9,13 @@
 import Foundation
 import UIKit
 
-class MovieCollectionViewCell: UICollectionViewCell, MovieCell {
+protocol TrendingCell {
+    var poster: UIImageView { get set }
+    var title: UILabel { get set }
+    var subtitle: UILabel { get set }
+}
+
+class MovieCollectionViewCell: UICollectionViewCell, TrendingCell {
     static var reuseIdentifier = "MovieTableCell"
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
     
@@ -35,16 +41,6 @@ class MovieCollectionViewCell: UICollectionViewCell, MovieCell {
        label.numberOfLines = 2
        label.translatesAutoresizingMaskIntoConstraints = false
        return label
-    }()
-    
-    lazy var imDbRating: UILabel = {
-        let label = UILabel()
-        return label
-    }()
-    
-    lazy var imDbRatingCount: UILabel = {
-        let label = UILabel()
-        return label
     }()
     
     override init(frame: CGRect) {
@@ -73,11 +69,9 @@ class MovieCollectionViewCell: UICollectionViewCell, MovieCell {
             
             title.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor, constant: 5),
             title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            title.bottomAnchor.constraint(equalTo: subtitle.topAnchor, constant: -5),
-            
-            subtitle.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor, constant: 5),
-            subtitle.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5),
-            subtitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            title.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: 10),
+            subtitle.leadingAnchor.constraint(equalTo: title.leadingAnchor),
+            subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10)
         ])
     }
 }
