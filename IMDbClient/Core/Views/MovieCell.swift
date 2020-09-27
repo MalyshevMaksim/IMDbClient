@@ -8,6 +8,15 @@
 
 import UIKit
 
+protocol MovieCell {
+    var activityView: UIActivityIndicatorView { get set }
+    var poster: UIImageView { get set }
+    var title: UILabel { get set }
+    var imDbRating: UILabel { get set }
+    var imDbRatingCount: UILabel { get set }
+    var subtitle: UILabel { get set }
+}
+
 extension MovieCell {
     func display(image: UIImage?) {
         DispatchQueue.main.async {
@@ -35,14 +44,14 @@ extension MovieCell {
     
     func startActivity() {
         DispatchQueue.main.async {
-            let activityView = UIActivityIndicatorView(style: .medium)
             self.poster.addSubview(activityView)
+            activityView.hidesWhenStopped = true
             activityView.center = self.poster.center
             activityView.startAnimating()
         }
     }
     
     func stopActivity() {
-        
+        activityView.stopAnimating()
     }
 }

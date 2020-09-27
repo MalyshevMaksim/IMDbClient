@@ -12,11 +12,26 @@ class MovieTableViewController: UITableViewController, ViewControllerProtocol {
     var presenter: MoviePresenterProtocol!
     var segmentControl = UISegmentedControl()
     
+    var isSearchBarEmpty: Bool {
+        return navigationItem.searchController!.searchBar.text?.isEmpty ?? true
+    }
+    
+    var isFiltering: Bool {
+        print("CHANGE")
+        return navigationItem.searchController!.isActive && !isSearchBarEmpty
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         setupNavigationController()
         setupSegmentControl()
+    }
+    
+    private func filterContentForSearch(searchText: String) {
+        presenter.delegate.filter(navigationItem.searchController!, in: segmentControl.selectedSegmentIndex, didChangeSearchText: searchText)
+        presenter.delegate.filterShouldChangeFiltered(navigationItem.searchController!, value: isFiltering)
+        tableView.reloadData()
     }
     
     private func makeRefreshControl() -> UIRefreshControl {
@@ -38,6 +53,9 @@ class MovieTableViewController: UITableViewController, ViewControllerProtocol {
     private func setupNavigationController() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.searchController = UISearchController()
+        navigationItem.searchController?.searchResultsUpdater = self
+        navigationItem.searchController?.searchBar.placeholder = "Search Movies"
+        navigationItem.searchController?.obscuresBackgroundDuringPresentation = false
         navigationItem.hidesSearchBarWhenScrolling = true
     }
     
@@ -93,5 +111,11 @@ extension MovieTableViewController {
         }
         presenter.displayCell(cell: cell, section: segmentControl.selectedSegmentIndex, forRow: indexPath.row)
         return cell
+    }
+}
+
+extension MovieTableViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        filterContentForSearch(searchText: searchController.searchBar.text!)
     }
 }

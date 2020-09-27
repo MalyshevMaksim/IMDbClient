@@ -16,5 +16,15 @@ struct Movie: Decodable, Hashable {
     var image: String
     var imDbRating: String
     var imDbRatingCount: String
-    var crew: String
+    var crew: String?
+    var plot: String?
+    
+    var subtitle: String {
+        if let crew = crew {
+            return crew
+        }
+        else {
+            return plot!
+        }
+    }
 }

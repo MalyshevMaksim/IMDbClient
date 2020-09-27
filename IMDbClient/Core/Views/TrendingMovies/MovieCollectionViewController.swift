@@ -53,7 +53,7 @@ extension MovieCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.reuseIdentifier, for: indexPath) as! MovieCollectionViewCell
-        //presenter.displayCell(cell: cell, section: indexPath.section, forRow: indexPath.row)
+        presenter.displayCell(cell: cell, section: indexPath.section, forRow: indexPath.row)
         return cell
     }
     

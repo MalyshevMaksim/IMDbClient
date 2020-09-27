@@ -9,16 +9,9 @@
 import Foundation
 import UIKit
 
-protocol MovieCell {
-    var poster: UIImageView { get set }
-    var title: UILabel { get set }
-    var imDbRating: UILabel { get set }
-    var imDbRatingCount: UILabel { get set }
-    var subtitle: UILabel { get set }
-}
-
 class MovieTableViewCell: UITableViewCell, MovieCell {
     static var reuseIdentifier = "MovieTableCell"
+    var activityView = UIActivityIndicatorView(style: .medium)
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
     
     lazy var poster: UIImageView = {

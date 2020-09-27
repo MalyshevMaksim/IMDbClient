@@ -9,13 +9,18 @@
 import Foundation
 import UIKit
 
-protocol TrendingCell {
-    var poster: UIImageView { get set }
-    var title: UILabel { get set }
-    var subtitle: UILabel { get set }
-}
 
-class MovieCollectionViewCell: UICollectionViewCell, TrendingCell {
+class MovieCollectionViewCell: UICollectionViewCell, MovieCell {
+    var activityView = UIActivityIndicatorView(style: .medium)
+    
+    lazy var imDbRating: UILabel =  {
+        return UILabel()
+    }()
+    
+    lazy var imDbRatingCount: UILabel = {
+        return UILabel()
+    }()
+    
     static var reuseIdentifier = "MovieTableCell"
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
     
@@ -70,8 +75,10 @@ class MovieCollectionViewCell: UICollectionViewCell, TrendingCell {
             title.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor, constant: 5),
             title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             title.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: 10),
+            
             subtitle.leadingAnchor.constraint(equalTo: title.leadingAnchor),
-            subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10)
+            subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10),
+            subtitle.trailingAnchor.constraint(equalTo: title.trailingAnchor)
         ])
     }
 }

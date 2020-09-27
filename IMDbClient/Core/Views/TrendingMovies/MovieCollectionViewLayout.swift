@@ -22,7 +22,7 @@ func makeInThetaresMoviesSection(isWide: Bool) -> NSCollectionLayoutSection {
 
     // Show one item plus peek on narrow screens, two items plus peek on wider screens
     let groupFractionalWidth = isWide ? 0.475 : 0.9
-    let groupFractionalHeight: Float = isWide ? 0.37 : 0.68
+    let groupFractionalHeight: Float = isWide ? 0.4 : 0.8
     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(CGFloat(groupFractionalWidth)), heightDimension: .fractionalWidth(CGFloat(groupFractionalHeight)))
     let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
     group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
