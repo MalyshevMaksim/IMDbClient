@@ -17,7 +17,6 @@ class MovieTableViewController: UITableViewController, ViewControllerProtocol {
     }
     
     var isFiltering: Bool {
-        print("CHANGE")
         return navigationItem.searchController!.isActive && !isSearchBarEmpty
     }
     
@@ -29,8 +28,8 @@ class MovieTableViewController: UITableViewController, ViewControllerProtocol {
     }
     
     private func filterContentForSearch(searchText: String) {
-        presenter.delegate.filter(navigationItem.searchController!, in: segmentControl.selectedSegmentIndex, didChangeSearchText: searchText)
-        presenter.delegate.filterShouldChangeFiltered(navigationItem.searchController!, value: isFiltering)
+        presenter.delegate.filter(didChangeSearchText: searchText, in: segmentControl.selectedSegmentIndex)
+        presenter.delegate.filterShouldChange(filtering: isFiltering)
         tableView.reloadData()
     }
     
@@ -107,7 +106,7 @@ extension MovieTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.reuseIdentifier) as? MovieTableViewCell else {
-            fatalError("error")
+            fatalError("Unable cell")
         }
         presenter.displayCell(cell: cell, section: segmentControl.selectedSegmentIndex, forRow: indexPath.row)
         return cell

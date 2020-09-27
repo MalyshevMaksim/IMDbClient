@@ -10,13 +10,13 @@ import Foundation
 import UIKit
 
 protocol FilterMovieDelegate {
-    func filter(_ searchController: UISearchController, in section: Int, didChangeSearchText text: String)
-    func filterShouldChangeFiltered(_ searchController: UISearchController, value: Bool)
+    func filter(didChangeSearchText text: String, in section: Int)
+    func filterShouldChange(filtering: Bool)
 }
 
 protocol MoviePresenterProtocol {
     var resources: [APIRequest] { get set }
-    var networkService: NetworkClient { get set }
+    var networkService: NetworkService { get set }
     var view: ViewControllerProtocol { get set }
     var delegate: FilterMovieDelegate { get set }
     
@@ -28,18 +28,18 @@ protocol MoviePresenterProtocol {
 
 class MoviePresenter: MoviePresenterProtocol {
     var resources: [APIRequest]
-    var networkService: NetworkClient
+    var networkService: NetworkService
     var view: ViewControllerProtocol
-    var router: Router
     lazy var delegate: FilterMovieDelegate = self
     
     var movieCache: [String : MovieList] = [:]
     var imageCache = NSCache<NSString, UIImage>()
     
-    var isFiltered: Bool = false
-    var filteredMovie: [Movie] = []
+    var router: Router
+    var isFiltering = false
+    var filteredMovies: [Movie] = []
     
-    init(view: ViewControllerProtocol, networkService: NetworkClient, resources: [APIRequest], router: Router) {
+    init(view: ViewControllerProtocol, networkService: NetworkService, resources: [APIRequest], router: Router) {
         self.view = view
         self.networkService = networkService
         self.resources = resources
@@ -48,43 +48,29 @@ class MoviePresenter: MoviePresenterProtocol {
     }
     
     private func getCachedMovie(section: Int, for row: Int) -> Movie? {
-        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else { fatalError("Error") }
+        if isFiltering {
+            return filteredMovies[row]
+        }
+        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else { return nil }
         return movieCache[collectionKey]?.items[row]
     }
     
     func getCountOfMovies(section: Int) -> Int {
-        if isFiltered { return filteredMovie.count }
-        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else { fatalError("Error") }
+        if isFiltering {
+            return filteredMovies.count
+        }
+        guard let collectionKey = resources[section].urlRequest.url?.absoluteString else { return 0 }
         return movieCache[collectionKey]?.items.count ?? 0
     }
     
     func showDetail(section: Int, from indexPath: IndexPath) {
-        var movie: Movie!
-        
-        if isFiltered {
-            movie = filteredMovie[indexPath.row]
-        }
-        else {
-            movie = getCachedMovie(section: section, for: indexPath.row)
-        }
+        guard let movie = getCachedMovie(section: section, for: indexPath.row) else { return }
         router.showDetail(movieId: movie.id)
     }
     
     func displayCell(cell: MovieCell, section: Int, forRow row: Int) {
-        var movie: Movie!
-        
-        if isFiltered {
-            movie = filteredMovie[row]
-        }
-        else {
-            if let movieN = getCachedMovie(section: section, for: row) {
-                movie = movieN
-            }
-            else {
-                fatalError("Error")
-            }
-        }
-        
+        guard let movie = getCachedMovie(section: section, for: row) else { return }
+          
         cell.display(title: movie.fullTitle)
         cell.display(subtitle: movie.subtitle)
         
@@ -144,16 +130,16 @@ class MoviePresenter: MoviePresenterProtocol {
 }
 
 extension MoviePresenter: FilterMovieDelegate {
-    func filter(_ searchController: UISearchController, in section: Int, didChangeSearchText text: String) {
+    func filter(didChangeSearchText text: String, in section: Int) {
         guard let collectionKey = resources[section].urlRequest.url?.absoluteString, let movies = movieCache[collectionKey] else {
-            fatalError("Error")
+            return
         }
-        filteredMovie = movies.items.filter { movie -> Bool in
+        filteredMovies = movies.items.filter { movie -> Bool in
             return movie.title.lowercased().contains(text.lowercased())
         }
     }
     
-    func filterShouldChangeFiltered(_ searchController: UISearchController, value: Bool) {
-        self.isFiltered = value
+    func filterShouldChange(filtering: Bool) {
+        self.isFiltering = filtering
     }
 }

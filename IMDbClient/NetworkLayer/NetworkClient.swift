@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-protocol NetworkClient {
+protocol NetworkService {
     var posterQuality: PosterQuality { get }
     func execute<T: Decodable>(request: APIRequest, comletionHandler: @escaping (Result<T?, Error>) -> ())
     func downloadPoster(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
 }
 
-class APIClient: NetworkClient {
+class APIClient: NetworkService {
     var posterQuality: PosterQuality
     
     init(posterQuality: PosterQuality) {

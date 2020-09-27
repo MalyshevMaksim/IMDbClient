@@ -16,5 +16,5 @@ import UIKit
 protocol AssemblyFactory {
     func makeResources() -> [GETMovieRequest]
     func makeViewController() -> ViewControllerProtocol
-    func makeNetworkService() -> NetworkClient
+    func makeNetworkService() -> NetworkService
 }

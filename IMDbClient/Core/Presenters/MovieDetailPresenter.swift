@@ -11,7 +11,7 @@ import UIKit
 
 protocol MovieDetailPresenterProtocol {
     var resource: APIRequest { get set }
-    var networkService: NetworkClient { get set }
+    var networkService: NetworkService { get set }
     var view: DetailViewControllerProtocol { get set }
     
     func downloadMovieDetail()
@@ -20,11 +20,12 @@ protocol MovieDetailPresenterProtocol {
 
 class MovieDetailPresenter: MovieDetailPresenterProtocol {
     var resource: APIRequest
-    var networkService: NetworkClient
+    var networkService: NetworkService
     var view: DetailViewControllerProtocol
+    
     var movieDetail: MovieDetail?
     
-    init(view: DetailViewControllerProtocol, networkService: APIClient, resource: APIRequest) {
+    init(view: DetailViewControllerProtocol, networkService: NetworkService, resource: APIRequest) {
         self.view = view
         self.networkService = networkService
         self.resource = resource
