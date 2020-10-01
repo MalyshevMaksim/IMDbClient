@@ -10,8 +10,8 @@ import Foundation
 
 class MovieFactory: AssemblyFactory {
     func makeRequests() -> [APIRequest] {
-        let topRatedRequest = GETMovieRequest(type: .topRatedMovie)
-        let mostPopularRequest = GETMovieRequest(type: .mostPopularMovie)
+        let topRatedRequest = GETMovieRequest(endpoint: .topRatedMovie)
+        let mostPopularRequest = GETMovieRequest(endpoint: .mostPopularMovie)
         let resources = [topRatedRequest, mostPopularRequest]
         return resources
     }
@@ -23,6 +23,6 @@ class MovieFactory: AssemblyFactory {
     }
     
     func makeNetworkService() -> NetworkService {
-        return APIService(posterQuality: .low)
+        return APIService(posterEndpoint: .lowQuality)
     }
 }

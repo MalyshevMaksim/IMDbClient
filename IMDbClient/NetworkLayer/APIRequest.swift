@@ -13,14 +13,14 @@ protocol APIRequest {
 }
 
 class GETMovieRequest: APIRequest {
-    private var movieCollectionType: MovieCollectionType
+    private var endpoint: MovieEndpoint
     
-    init(type: MovieCollectionType) {
-        self.movieCollectionType = type
+    init(endpoint: MovieEndpoint) {
+        self.endpoint = endpoint
     }
     
     var urlRequest: URLRequest {
-        guard let url = URL(string: movieCollectionType.resourceUrl) else {
+        guard let url = URL(string: endpoint.resourceUrl) else {
             fatalError("Error")
         }
         var request = URLRequest(url: url)

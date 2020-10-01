@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 
 protocol NetworkService {
-    var posterQuality: PosterQuality { get }
+    var posterEndpoint: PosterEndpoint { get }
     func execute<T: Decodable>(request: APIRequest, comletionHandler: @escaping (Result<T?, Error>) -> ())
     func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
 }
@@ -18,10 +18,10 @@ protocol NetworkService {
 class APIService: NetworkService {
     var urlSession: URLSession
     var parser: ParserProtocol
-    var posterQuality: PosterQuality
+    var posterEndpoint: PosterEndpoint
     
-    init(posterQuality: PosterQuality, parser: Parser = Parser(), urlSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)) {
-        self.posterQuality = posterQuality
+    init(posterEndpoint: PosterEndpoint, parser: Parser = Parser(), urlSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)) {
+        self.posterEndpoint = posterEndpoint
         self.parser = parser
         self.urlSession = urlSession
     }
@@ -38,7 +38,7 @@ class APIService: NetworkService {
     }
     
     func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
-        guard let url = posterQuality.makeNewImageUrl(originalUrl: url) else {
+        guard let url = posterEndpoint.makeNewQualityImageUrl(originalUrl: url) else {
             return
         }
         let dataTask = URLSession.shared.dataTask(with: url) { data, repsonse, error in

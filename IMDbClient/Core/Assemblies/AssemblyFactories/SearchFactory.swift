@@ -10,7 +10,7 @@ import Foundation
 
 class SearchFactory: AssemblyFactory {
     func makeRequests() -> [APIRequest] {
-        let searchRequest = GETMovieRequest(type: .search)
+        let searchRequest = GETMovieRequest(endpoint: .search(searchText: "Inception"))
         return [searchRequest]
     }
     
@@ -21,6 +21,6 @@ class SearchFactory: AssemblyFactory {
     }
     
     func makeNetworkService() -> NetworkService {
-        return APIService(posterQuality: .low)
+        return APIService(posterEndpoint: .lowQuality)
     }
 }

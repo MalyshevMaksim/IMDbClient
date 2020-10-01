@@ -11,8 +11,8 @@ import UIKit
 
 class TrendingFactory: AssemblyFactory {
     func makeRequests() -> [APIRequest] {
-        let topRatedRequest = GETMovieRequest(type: .inTheater)
-        let mostPopularRequest = GETMovieRequest(type: .comingSoon)
+        let topRatedRequest = GETMovieRequest(endpoint: .inTheater)
+        let mostPopularRequest = GETMovieRequest(endpoint: .comingSoon)
         let resources = [topRatedRequest, mostPopularRequest]
         return resources
     }
@@ -24,6 +24,6 @@ class TrendingFactory: AssemblyFactory {
     }
     
     func makeNetworkService() -> NetworkService {
-        return APIService(posterQuality: .normal)
+        return APIService(posterEndpoint: .normalQuality)
     }
 }
