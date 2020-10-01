@@ -6,8 +6,8 @@
 //  Copyright © 2020 Малышев Максим Алексеевич. All rights reserved.
 //
 
-
 import UIKit
+import Foundation
 
 protocol NetworkService {
     var posterQuality: PosterQuality { get }
@@ -15,33 +15,26 @@ protocol NetworkService {
     func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
 }
 
-class APIClient: NetworkService {
+class APIService: NetworkService {
+    var urlSession: URLSession
+    var parser: ParserProtocol
     var posterQuality: PosterQuality
     
-    init(posterQuality: PosterQuality) {
+    init(posterQuality: PosterQuality, parser: Parser = Parser(), urlSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)) {
         self.posterQuality = posterQuality
+        self.parser = parser
+        self.urlSession = urlSession
     }
     
     func execute<T: Decodable>(request: APIRequest, comletionHandler: @escaping (Result<T?, Error>) -> ()) {
-        let dataTask = URLSession.shared.dataTask(with: request.urlRequest) { data, response, error in
+        let dataTask = urlSession.dataTask(with: request.urlRequest) { data, response, error in
             guard let data = data, error == nil else {
                 comletionHandler(.failure(error!))
                 return
             }
-            self.jsonEncoding(data: data, comletionHandler: comletionHandler)
+            self.parser.json(data: data, comletionHandler: comletionHandler)
         }
         dataTask.resume()
-    }
-    
-    private func jsonEncoding<T: Decodable>(data: Data, comletionHandler: @escaping (Result<T?, Error>) -> ()) {
-        do {
-            let jsonDecoder = JSONDecoder()
-            let movieJson = try jsonDecoder.decode(T.self, from: data)
-            comletionHandler(.success(movieJson))
-        }
-        catch {
-            comletionHandler(.failure(error))
-        }
     }
     
     func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
@@ -50,7 +43,7 @@ class APIClient: NetworkService {
         }
         let dataTask = URLSession.shared.dataTask(with: url) { data, repsonse, error in
             guard let data = data, let image = UIImage(data: data), error == nil else {
-                // completionHandler(.failure(error))
+                completionHandler(.failure(error!))
                 return
             }
             completionHandler(.success(image))

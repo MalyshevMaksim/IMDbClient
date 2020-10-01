@@ -24,6 +24,6 @@ class TrendingFactory: AssemblyFactory {
     }
     
     func makeNetworkService() -> NetworkService {
-        return APIClient(posterQuality: .normal)
+        return APIService(posterQuality: .normal)
     }
 }

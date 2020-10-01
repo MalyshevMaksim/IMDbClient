@@ -23,6 +23,6 @@ class MovieFactory: AssemblyFactory {
     }
     
     func makeNetworkService() -> NetworkService {
-        return APIClient(posterQuality: .low)
+        return APIService(posterQuality: .low)
     }
 }
