@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let movieNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: MovieFactory(), title: "Movies", icon: "film")
         let TVserievNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: TVShowFactory(), title: "TV series", icon: "tv")
         let comingSoonNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: TrendingFactory(), title: "Trends", icon: "flame")
-        let searchNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: TrendingFactory(), title: "Search", icon: "magnifyingglass")
+        let searchNavigationController = makeNavigationController(assembly: MovieAssembly(), assemblyFactory: SearchFactory(), title: "Search", icon: "magnifyingglass")
         
         let tabBarController = UITabBarController()
         tabBarController.setViewControllers([movieNavigationController, TVserievNavigationController, comingSoonNavigationController, searchNavigationController], animated: true)

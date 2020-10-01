@@ -6,13 +6,13 @@
 //  Copyright © 2020 Малышев Максим Алексеевич. All rights reserved.
 //
 
-import Foundation
+
 import UIKit
 
 protocol NetworkService {
     var posterQuality: PosterQuality { get }
     func execute<T: Decodable>(request: APIRequest, comletionHandler: @escaping (Result<T?, Error>) -> ())
-    func downloadPoster(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
+    func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
 }
 
 class APIClient: NetworkService {
@@ -44,7 +44,7 @@ class APIClient: NetworkService {
         }
     }
     
-    func downloadPoster(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
+    func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
         guard let url = posterQuality.makeNewImageUrl(originalUrl: url) else {
             return
         }

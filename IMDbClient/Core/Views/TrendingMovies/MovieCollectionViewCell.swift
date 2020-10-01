@@ -9,9 +9,9 @@
 import Foundation
 import UIKit
 
-
 class MovieCollectionViewCell: UICollectionViewCell, MovieCell {
     var activityView = UIActivityIndicatorView(style: .medium)
+    static var reuseIdentifier = "MovieTableCell"
     
     lazy var imDbRating: UILabel =  {
         return UILabel()
@@ -20,9 +20,6 @@ class MovieCollectionViewCell: UICollectionViewCell, MovieCell {
     lazy var imDbRatingCount: UILabel = {
         return UILabel()
     }()
-    
-    static var reuseIdentifier = "MovieTableCell"
-    private let activityIndicator = UIActivityIndicatorView(style: .medium)
     
     lazy var poster: UIImageView = {
         let imageView = UIImageView()
@@ -50,7 +47,7 @@ class MovieCollectionViewCell: UICollectionViewCell, MovieCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        setupView()
     }
     
     required init?(coder: NSCoder) {
@@ -63,7 +60,7 @@ class MovieCollectionViewCell: UICollectionViewCell, MovieCell {
         addSubview(subtitle)
     }
     
-    private func configure() {
+    private func setupView() {
         setupSubviews()
     
         NSLayoutConstraint.activate([

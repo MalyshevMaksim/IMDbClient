@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class TrendingFactory: AssemblyFactory {
-    func makeResources() -> [GETMovieRequest] {
+    func makeRequests() -> [APIRequest] {
         let topRatedRequest = GETMovieRequest(type: .inTheater)
         let mostPopularRequest = GETMovieRequest(type: .comingSoon)
         let resources = [topRatedRequest, mostPopularRequest]

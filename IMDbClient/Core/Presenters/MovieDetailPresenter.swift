@@ -22,7 +22,6 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     var resource: APIRequest
     var networkService: NetworkService
     var view: DetailViewControllerProtocol
-    
     var movieDetail: MovieDetail?
     
     init(view: DetailViewControllerProtocol, networkService: NetworkService, resource: APIRequest) {
@@ -61,7 +60,7 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     private func downloadPoster(view: MovieDetailView) {
         guard let detail = movieDetail else { return }
         
-        networkService.downloadPoster(url: detail.image) { (result: Result<UIImage?, Error>) in
+        networkService.downloadImage(url: detail.image) { (result: Result<UIImage?, Error>) in
             DispatchQueue.main.async {
                 switch result {
                     case .success(let image):

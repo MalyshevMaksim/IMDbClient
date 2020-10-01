@@ -9,7 +9,7 @@
 import Foundation
 
 class TVShowFactory: AssemblyFactory {
-    func makeResources() -> [GETMovieRequest] {
+    func makeRequests() -> [APIRequest] {
         let topRatedRequest = GETMovieRequest(type: .topRatedTVShow)
         let mostPopularRequest = GETMovieRequest(type: .mostPopularTVShow)
         let resources = [topRatedRequest, mostPopularRequest]

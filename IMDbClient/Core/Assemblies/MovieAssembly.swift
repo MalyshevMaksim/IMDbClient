@@ -20,10 +20,12 @@ protocol AssemblyBuilder {
 class MovieAssembly: AssemblyBuilder {
     func makeMainViewController(assemblyFactory: AssemblyFactory, navigationController: UINavigationController, router: Router) -> UIViewController {
         let view = assemblyFactory.makeViewController()
-        let resources = assemblyFactory.makeResources()
+        let resources = assemblyFactory.makeRequests()
         let networkService = assemblyFactory.makeNetworkService()
         
-        let presenter = MoviePresenter(view: view, networkService: networkService, resources: resources, router: router)
+        let resourceDownloader = MovieResourceDownloader(resources: resources, networkService: networkService)
+        let presenter = MoviePresenter(view: view, resourceDownloader: resourceDownloader, router: router)
+        
         view.presenter = presenter
         return view
     }
