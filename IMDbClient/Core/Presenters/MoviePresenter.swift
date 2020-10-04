@@ -9,14 +9,28 @@
 import Foundation
 import UIKit
 
+protocol MoviePresenterProtocol {
+    var resourceDownloader: MovieResourceDownloader { get }
+    var view: ViewControllerProtocol { get }
+    var delegate: FilterMovieDelegate { get set }
+    var router: Router { get }
+    
+    func displayCell(cell: MovieCell, in section: Int, for row: Int)
+    func showDetail(fromSection: Int, forRow: Int)
+    func getCountOfMovies(section: Int) -> Int
+    func downloadMovies()
+}
+
 protocol FilterMovieDelegate {
-    func filter(didChangeSearchText text: String, in section: Int) -> [Movie]?
+    func filter(_ searchController: UISearchController, didChangeSearchText text: String, in section: Int)
 }
 
 class MoviePresenter: MoviePresenterProtocol {
     var resourceDownloader: MovieResourceDownloader
     var view: ViewControllerProtocol
     var router: Router
+    
+    private var filteredMovie: [Movie] = []
     lazy var delegate: FilterMovieDelegate = self
     
     init(view: ViewControllerProtocol, resourceDownloader: MovieResourceDownloader, router: Router) {
@@ -51,27 +65,61 @@ class MoviePresenter: MoviePresenterProtocol {
         }
     }
     
-    func displayCell(cell: MovieCell, movie: Movie) {
-        cell.display(title: movie.fullTitle)
-        cell.display(subtitle: movie.subtitle)
-        cell.display(imDbRating: movie.imDbRating.isEmpty ? "⭐️ No ratings" : "⭐️ \(movie.imDbRating) IMDb")
-        cell.display(imDbRatingCount: movie.imDbRating.isEmpty ? "Ratings for this movie are not yet available" : "based on \(movie.imDbRatingCount) user ratings")
+    func displayCell(cell: MovieCell, in section: Int, for row: Int) {
+        var movie: Movie
         
-        if let poster = resourceDownloader.cache.pullImage(key: movie.image) {
+        if filteredMovie.isEmpty {
+            guard let cachedMovie = resourceDownloader.getCachedMovie(fromSection: section, forRow: row) else { return }
+            movie = cachedMovie
+        }
+        else {
+            movie = filteredMovie[row]
+        }
+        
+        cell.display(title: movie.title)
+        cell.display(subtitle: movie.subtitle)
+        
+        if let poster = resourceDownloader.getCachedImage(for: movie.image) {
             cell.display(image: poster)
         }
         else {
             downloadPoster(for: cell, from: movie.image)
         }
+        
+        guard let imDbRating = movie.imDbRating, let imDbRatingCount = movie.imDbRatingCount else {
+            cell.display(imDbRating: "⭐️ No ratings")
+            cell.display(imDbRatingCount: "Ratings for this movie are not yet available")
+            return
+        }
+        cell.display(imDbRating: "⭐️ \(imDbRating) IMDb")
+        cell.display(imDbRatingCount: "based on \(imDbRatingCount) user ratings")
+    }
+    
+    func getCountOfMovies(section: Int) -> Int {
+        if filteredMovie.isEmpty {
+            return resourceDownloader.getCountOfMovies(fromSection: section)
+        }
+        return filteredMovie.count
+    }
+    
+    func showDetail(fromSection: Int, forRow: Int) {
+        if filteredMovie.isEmpty {
+            guard let movie = resourceDownloader.getCachedMovie(fromSection: fromSection, forRow: forRow) else { return }
+            router.showDetail(movieId: movie.id)
+        }
+        else {
+            let movie = filteredMovie[forRow]
+            router.showDetail(movieId: movie.id)
+        }
     }
 }
 
 extension MoviePresenter: FilterMovieDelegate {
-    func filter(didChangeSearchText text: String, in section: Int) -> [Movie]? {
+    func filter(_ searchController: UISearchController, didChangeSearchText text: String, in section: Int) {
         guard let movies = resourceDownloader.getCachedMovies(fromSection: section) else {
-            return nil
+            return
         }
-        return movies.filter { movie -> Bool in
+        filteredMovie = movies.filter { movie -> Bool in
             return movie.title.lowercased().contains(text.lowercased())
         }
     }

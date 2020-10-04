@@ -67,7 +67,7 @@ class MovieCollectionViewCell: UICollectionViewCell, MovieCell {
             poster.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor, constant: 5),
             poster.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             poster.topAnchor.constraint(equalTo: contentView.topAnchor),
-            poster.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.7),
+            poster.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.75),
             
             title.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor, constant: 5),
             title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),

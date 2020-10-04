@@ -16,9 +16,9 @@ protocol NetworkService {
 }
 
 class APIService: NetworkService {
-    var urlSession: URLSession
-    var parser: ParserProtocol
-    var posterEndpoint: PosterEndpoint
+    private var urlSession: URLSession
+    private var parser: ParserProtocol
+    internal var posterEndpoint: PosterEndpoint
     
     init(posterEndpoint: PosterEndpoint, parser: Parser = Parser(), urlSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)) {
         self.posterEndpoint = posterEndpoint
@@ -43,7 +43,7 @@ class APIService: NetworkService {
         }
         let dataTask = URLSession.shared.dataTask(with: url) { data, repsonse, error in
             guard let data = data, let image = UIImage(data: data), error == nil else {
-                completionHandler(.failure(error!))
+                //completionHandler(.failure(error!))
                 return
             }
             completionHandler(.success(image))

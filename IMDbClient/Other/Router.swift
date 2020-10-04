@@ -12,9 +12,9 @@ import UIKit
 // For example, to show detailed information about a movie
 
 class Router {
-    var assembly: AssemblyBuilder
-    var assemblyFactory: AssemblyFactory
-    var rootNavigationController: UINavigationController
+    private var assembly: AssemblyBuilder
+    private var assemblyFactory: AssemblyFactory
+    private var rootNavigationController: UINavigationController
     
     init(assembly: AssemblyBuilder, assemblyFactory: AssemblyFactory, rootNavigationController: UINavigationController) {
         self.assembly = assembly

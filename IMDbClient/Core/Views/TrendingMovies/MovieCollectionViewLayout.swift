@@ -17,12 +17,13 @@ func generateLayout() -> UICollectionViewLayout {
 }
 
 func makeInThetaresMoviesSection(isWide: Bool) -> NSCollectionLayoutSection {
-    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.9))
+    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1))
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
     // Show one item plus peek on narrow screens, two items plus peek on wider screens
-    let groupFractionalWidth = isWide ? 0.475 : 0.9
-    let groupFractionalHeight: Float = isWide ? 0.4 : 0.8
+    let groupFractionalWidth = isWide ? 0.475 : 0.6
+    let groupFractionalHeight: Float = isWide ? 0.4 : 0.9
+    
     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(CGFloat(groupFractionalWidth)), heightDimension: .fractionalWidth(CGFloat(groupFractionalHeight)))
     let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
     group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)

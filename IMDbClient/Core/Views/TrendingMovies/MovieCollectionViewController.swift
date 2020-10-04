@@ -40,12 +40,11 @@ class MovieCollectionViewController: UICollectionViewController {
 
 extension MovieCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movie = presenter.resourceDownloader.getCachedMovie(fromSection: indexPath.section, forRow: indexPath.row)
-        presenter.showDetail(id: movie!.id)
+        presenter.showDetail(fromSection: indexPath.section, forRow: indexPath.row)
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return presenter.resourceDownloader.cache.movieCache.count
+        return presenter.resourceDownloader.getNumberOfSection()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -54,8 +53,7 @@ extension MovieCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.reuseIdentifier, for: indexPath) as! MovieCollectionViewCell
-        let movie = presenter.resourceDownloader.getCachedMovie(fromSection: indexPath.section, forRow: indexPath.row)
-        presenter.displayCell(cell: cell, movie: movie!)
+        presenter.displayCell(cell: cell, in: indexPath.section, for: indexPath.row)
         return cell
     }
     

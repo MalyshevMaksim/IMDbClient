@@ -23,7 +23,7 @@ class MovieAssembly: AssemblyBuilder {
         let resources = assemblyFactory.makeRequests()
         let networkService = assemblyFactory.makeNetworkService()
         
-        let resourceDownloader = MovieResourceDownloader(resources: resources, networkService: networkService)
+        let resourceDownloader = MovieResourceDownloader(requests: resources, networkService: networkService, cacheGateway: InMemoryCache())
         let presenter = MoviePresenter(view: view, resourceDownloader: resourceDownloader, router: router)
         
         view.presenter = presenter

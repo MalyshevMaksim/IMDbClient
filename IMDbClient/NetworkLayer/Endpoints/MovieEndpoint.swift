@@ -12,10 +12,9 @@ var APIKey = "k_09P3SOzm"
 
 enum MovieEndpoint {
     case topRatedMovie, mostPopularMovie, topRatedTVShow, mostPopularTVShow, inTheater, comingSoon
-    case detail(id: String), poster(id: String)
-    case search(searchText: String)
+    case detail(id: String), poster(id: String), search(searchText: String)
     
-    var baseUrl: URL { return URL(string: "https://imdb-api.com/en/API/")! }
+    private var baseUrl: URL { return URL(string: "https://imdb-api.com/en/API/")! }
     
     var resourceUrl: String {
         let beginningPath = baseUrl.absoluteURL.absoluteString
@@ -38,7 +37,7 @@ enum MovieEndpoint {
             case .poster(let imageUrl):
                 return imageUrl
             case .search(let searchText):
-                return beginningPath + "SearchAll/\(APIKey)/\(searchText)"
+                return beginningPath + "SearchMovie/\(APIKey)/\(searchText)"
         }
     }
 }

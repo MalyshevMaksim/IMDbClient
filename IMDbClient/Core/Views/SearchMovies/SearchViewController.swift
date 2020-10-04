@@ -15,7 +15,7 @@ class SearchViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationController()
-        filterContentForSearch(searchText: (navigationItem.searchController?.searchBar.text)!)
+        configureTableView()
     }
     
     private func configureNavigationController() {
@@ -25,6 +25,12 @@ class SearchViewController: UITableViewController {
         navigationItem.searchController?.searchResultsUpdater = self
         navigationItem.hidesSearchBarWhenScrolling = true
         navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    private func configureTableView() {
+        tableView.backgroundView = SearchEmptyView()
+        tableView.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.reuseIdentifier)
+        tableView.separatorStyle = .none
     }
     
     private func filterContentForSearch(searchText: String) {
@@ -37,17 +43,17 @@ class SearchViewController: UITableViewController {
             tableView.backgroundView = nil
             tableView.separatorStyle = .singleLine
         }
-        tableView.reloadData()
     }
 }
 
 extension SearchViewController: ViewControllerProtocol {
     func success() {
         tableView.reloadData()
+        print("SUCCESS")
     }
     
     func failure(error: Error) {
-        
+        print(error)
     }
 }
 
@@ -61,6 +67,10 @@ extension SearchViewController {
         let cell = UITableViewCell()
         cell.textLabel?.text = presenter.resourceDownloader.getCachedMovie(fromSection: indexPath.section, forRow: indexPath.row)?.title
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        presenter.showDetail(fromSection: 0, forRow: indexPath.row)
     }
 }
 

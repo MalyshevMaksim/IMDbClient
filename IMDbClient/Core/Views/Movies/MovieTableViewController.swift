@@ -11,7 +11,6 @@ import UIKit
 class MovieTableViewController: UITableViewController, ViewControllerProtocol {
     var presenter: MoviePresenterProtocol!
     var segmentControl = UISegmentedControl()
-    var filteredMovies: [Movie] = []
     
     var isSearchBarEmpty: Bool {
         return navigationItem.searchController!.searchBar.text?.isEmpty ?? true
@@ -29,10 +28,10 @@ class MovieTableViewController: UITableViewController, ViewControllerProtocol {
     }
     
     private func filterContentForSearch(searchText: String) {
-        guard let movies = presenter.delegate.filter(didChangeSearchText: searchText, in: segmentControl.selectedSegmentIndex) else {
+        guard let searchController = navigationItem.searchController else {
             return
         }
-        filteredMovies = movies
+        presenter.delegate.filter(searchController, didChangeSearchText: searchText, in: segmentControl.selectedSegmentIndex)
         tableView.reloadData()
     }
     
@@ -83,7 +82,6 @@ class MovieTableViewController: UITableViewController, ViewControllerProtocol {
 }
 
 extension MovieTableViewController {
-    // After successfully executing the network request and receiving data, we display the table and hide the activity
     func success() {
         UIView.transition(with: tableView, duration: 0.5, options: .transitionCrossDissolve, animations: {
             self.tableView.refreshControl?.endRefreshing()
@@ -100,34 +98,18 @@ extension MovieTableViewController {
 
 extension MovieTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isFiltering {
-            return filteredMovies.count
-        }
         return presenter.getCountOfMovies(section: segmentControl.selectedSegmentIndex)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if isFiltering {
-            presenter.showDetail(id: filteredMovies[indexPath.row].id)
-        }
-        else {
-            let movie = presenter.resourceDownloader.getCachedMovie(fromSection: segmentControl.selectedSegmentIndex, forRow: indexPath.row)
-            presenter.showDetail(id: movie!.id)
-        }
+        presenter.showDetail(fromSection: segmentControl.selectedSegmentIndex, forRow: indexPath.row)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.reuseIdentifier) as? MovieTableViewCell else {
             fatalError("Unable cell")
         }
-        
-        if isFiltering {
-            presenter.displayCell(cell: cell, movie: filteredMovies[indexPath.row])
-        }
-        else {
-            let movie = presenter.resourceDownloader.getCachedMovie(fromSection: segmentControl.selectedSegmentIndex, forRow: indexPath.row)
-            presenter.displayCell(cell: cell, movie: movie!)
-        }
+        presenter.displayCell(cell: cell, in: segmentControl.selectedSegmentIndex, for: indexPath.row)
         return cell
     }
 }

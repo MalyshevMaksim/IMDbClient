@@ -11,11 +11,12 @@ import UIKit
 class MovieResourceDownloader {
     private var requests: [APIRequest]
     private var networkService: NetworkService
-    var cache = MovieCache()
+    private var cache: CacheGateway
     
-    init(resources: [APIRequest], networkService: NetworkService) {
-        self.requests = resources
+    init(requests: [APIRequest], networkService: NetworkService, cacheGateway: CacheGateway) {
+        self.requests = requests
         self.networkService = networkService
+        self.cache = cacheGateway
     }
     
     func downloadMovies(completion: @escaping (_ error: Error?) -> ()) {
@@ -23,7 +24,7 @@ class MovieResourceDownloader {
             networkService.execute(request: request) { (result: Result<MovieList?, Error>) in
                 switch result {
                     case .success(let movies):
-                        self.cache.pushMovies(movies: movies!, key: request.urlRequest.url!.absoluteString)
+                        self.cache.addMovies(movies: movies!, forKey: request.urlRequest.url!.absoluteString)
                         completion(nil)
                     case .failure(let error):
                         completion(error)
@@ -36,7 +37,7 @@ class MovieResourceDownloader {
         networkService.downloadImage(url: imageUrl) { result in
             switch result {
                 case .success(let image):
-                    self.cache.pushImage(image: image!, forKey: imageUrl)
+                    self.cache.addImage(image: image!, fromUrl: imageUrl)
                     completion(image, nil)
                 case .failure(let error):
                     completion(nil, error)
@@ -48,18 +49,26 @@ class MovieResourceDownloader {
         guard let key = requests[fromSection].urlRequest.url?.absoluteString else {
             return nil
         }
-        return cache.pullMovie(key: key, from: forRow)
+        return cache.fetchMovie(forKey: key, fromRow: forRow)
+    }
+    
+    func getCachedImage(for key: String) -> UIImage? {
+        return cache.fetchImage(fromUrl: key)
     }
     
     func getCachedMovies(fromSection: Int) -> [Movie]? {
         guard let key = requests[fromSection].urlRequest.url?.absoluteString else {
             return nil
         }
-        return cache.pullMovies(key: key)
+        return cache.fetchMovies(forKey: key)
+    }
+    
+    func getNumberOfSection() -> Int {
+        return cache.getCountOfMovies()
     }
     
     func getCountOfMovies(fromSection: Int) -> Int {
-        guard let key = requests[fromSection].urlRequest.url?.absoluteString, let movies = cache.movieCache[key]?.items else {
+        guard let key = requests[fromSection].urlRequest.url?.absoluteString, let movies = cache.fetchMovies(forKey: key) else {
             return 0
         }
         return movies.count

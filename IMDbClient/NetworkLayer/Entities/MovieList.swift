@@ -9,6 +9,16 @@
 import Foundation
 
 struct MovieList: Decodable {
-    var items: [Movie]
+    var items: [Movie]?
+    var results: [Movie]?
     var errorMessage: String
+    
+    var result: [Movie] {
+        if let items = items {
+            return items
+        }
+        else {
+            return results!
+        }
+    }
 }

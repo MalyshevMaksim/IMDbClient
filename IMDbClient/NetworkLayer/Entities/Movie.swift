@@ -12,19 +12,22 @@ import UIKit
 struct Movie: Decodable, Hashable {
     var id: String
     var title: String
-    var fullTitle: String
     var image: String
-    var imDbRating: String
-    var imDbRatingCount: String
+    var imDbRating: String?
+    var imDbRatingCount: String?
     var crew: String?
     var plot: String?
+    var description: String?
     
     var subtitle: String {
         if let crew = crew {
             return crew
         }
+        else if let plot = plot {
+            return plot
+        }
         else {
-            return plot!
+            return description!
         }
     }
 }
