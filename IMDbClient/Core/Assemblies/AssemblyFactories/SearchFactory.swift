@@ -10,7 +10,7 @@ import Foundation
 
 class SearchFactory: AssemblyFactory {
     func makeRequests() -> [APIRequest] {
-        let searchRequest = GETMovieRequest(endpoint: .search(searchText: "Inception"))
+        let searchRequest = GETMovieRequest(endpoint: .search)
         return [searchRequest]
     }
     

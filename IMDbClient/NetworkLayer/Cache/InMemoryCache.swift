@@ -24,7 +24,7 @@ class InMemoryCache: CacheGateway {
         guard let movieCollection = movieCache[forKey] else {
             return nil
         }
-        return movieCollection.result[fromRow]
+        return movieCollection.result![fromRow]
     }
     
     func fetchMovies(forKey: String) -> [Movie]? {

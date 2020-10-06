@@ -13,12 +13,12 @@ struct MovieList: Decodable {
     var results: [Movie]?
     var errorMessage: String
     
-    var result: [Movie] {
+    var result: [Movie]? {
         if let items = items {
             return items
         }
         else {
-            return results!
+            return results
         }
     }
 }

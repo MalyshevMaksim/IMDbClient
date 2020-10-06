@@ -10,6 +10,10 @@ import Foundation
 import UIKit
 
 class TrendingFactory: AssemblyFactory {
+    func makePresenter(router: Router, downloader: MovieResourceDownloader) -> MoviePresenterProtocol {
+        return MoviePresenter(view: makeViewController(), resourceDownloader: downloader, router: router)
+    }
+    
     func makeRequests() -> [APIRequest] {
         let topRatedRequest = GETMovieRequest(endpoint: .inTheater)
         let mostPopularRequest = GETMovieRequest(endpoint: .comingSoon)

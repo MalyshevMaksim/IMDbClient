@@ -9,22 +9,6 @@
 import Foundation
 import UIKit
 
-protocol MoviePresenterProtocol {
-    var resourceDownloader: MovieResourceDownloader { get }
-    var view: ViewControllerProtocol { get }
-    var delegate: FilterMovieDelegate { get set }
-    var router: Router { get }
-    
-    func displayCell(cell: MovieCell, in section: Int, for row: Int)
-    func showDetail(fromSection: Int, forRow: Int)
-    func getCountOfMovies(section: Int) -> Int
-    func downloadMovies()
-}
-
-protocol FilterMovieDelegate {
-    func filter(_ searchController: UISearchController, didChangeSearchText text: String, in section: Int)
-}
-
 class MoviePresenter: MoviePresenterProtocol {
     var resourceDownloader: MovieResourceDownloader
     var view: ViewControllerProtocol

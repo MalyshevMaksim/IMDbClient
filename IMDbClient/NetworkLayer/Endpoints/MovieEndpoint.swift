@@ -11,8 +11,8 @@ import Foundation
 var APIKey = "k_09P3SOzm"
 
 enum MovieEndpoint {
-    case topRatedMovie, mostPopularMovie, topRatedTVShow, mostPopularTVShow, inTheater, comingSoon
-    case detail(id: String), poster(id: String), search(searchText: String)
+    case topRatedMovie, mostPopularMovie, topRatedTVShow, mostPopularTVShow, inTheater, comingSoon, search
+    case detail(id: String), poster(id: String)
     
     private var baseUrl: URL { return URL(string: "https://imdb-api.com/en/API/")! }
     
@@ -36,8 +36,8 @@ enum MovieEndpoint {
                 return beginningPath + "Title/\(APIKey)/\(id)"
             case .poster(let imageUrl):
                 return imageUrl
-            case .search(let searchText):
-                return beginningPath + "SearchMovie/\(APIKey)/\(searchText)"
+            case .search:
+                return beginningPath + "SearchMovie/\(APIKey)/"
         }
     }
 }

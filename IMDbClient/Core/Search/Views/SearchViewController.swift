@@ -39,9 +39,9 @@ class SearchViewController: UITableViewController {
             tableView.separatorStyle = .none
         }
         else {
-            presenter.downloadMovies()
             tableView.backgroundView = nil
             tableView.separatorStyle = .singleLine
+            presenter.delegate.filter(navigationItem.searchController!, didChangeSearchText: searchText, in: 0)
         }
     }
 }
@@ -49,7 +49,6 @@ class SearchViewController: UITableViewController {
 extension SearchViewController: ViewControllerProtocol {
     func success() {
         tableView.reloadData()
-        print("SUCCESS")
     }
     
     func failure(error: Error) {
@@ -59,13 +58,14 @@ extension SearchViewController: ViewControllerProtocol {
 
 extension SearchViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(presenter.getCountOfMovies(section: section))
         return presenter.getCountOfMovies(section: section)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        cell.textLabel?.text = presenter.resourceDownloader.getCachedMovie(fromSection: indexPath.section, forRow: indexPath.row)?.title
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.reuseIdentifier) as? MovieTableViewCell else {
+            return UITableViewCell()
+        }
+        presenter.displayCell(cell: cell, in: indexPath.section, for: indexPath.row)
         return cell
     }
     

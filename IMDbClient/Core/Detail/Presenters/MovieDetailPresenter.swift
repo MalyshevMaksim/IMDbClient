@@ -44,7 +44,8 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     }
     
     func downloadMovieDetail() {
-        networkService.execute(request: resource) { (result: Result<MovieDetail?, Error>) in
+        let url = resource.urlRequest.url
+        networkService.execute(url: url!) { (result: Result<MovieDetail?, Error>) in
             DispatchQueue.main.async {
                 switch result {
                     case .success(let movieDetail):

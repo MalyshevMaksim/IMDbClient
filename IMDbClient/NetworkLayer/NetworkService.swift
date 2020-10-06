@@ -11,7 +11,7 @@ import Foundation
 
 protocol NetworkService {
     var posterEndpoint: PosterEndpoint { get }
-    func execute<T: Decodable>(request: APIRequest, comletionHandler: @escaping (Result<T?, Error>) -> ())
+    func execute<T: Decodable>(url: URL, comletionHandler: @escaping (Result<T?, Error>) -> ())
     func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
 }
 
@@ -26,8 +26,8 @@ class APIService: NetworkService {
         self.urlSession = urlSession
     }
     
-    func execute<T: Decodable>(request: APIRequest, comletionHandler: @escaping (Result<T?, Error>) -> ()) {
-        let dataTask = urlSession.dataTask(with: request.urlRequest) { data, response, error in
+    func execute<T: Decodable>(url: URL, comletionHandler: @escaping (Result<T?, Error>) -> ()) {
+        let dataTask = urlSession.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 comletionHandler(.failure(error!))
                 return

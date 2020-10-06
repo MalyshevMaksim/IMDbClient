@@ -24,8 +24,16 @@ class MovieAssembly: AssemblyBuilder {
         let networkService = assemblyFactory.makeNetworkService()
         
         let resourceDownloader = MovieResourceDownloader(requests: resources, networkService: networkService, cacheGateway: InMemoryCache())
-        let presenter = MoviePresenter(view: view, resourceDownloader: resourceDownloader, router: router)
         
+        var presenter: MoviePresenterProtocol!
+        
+        if view is SearchViewController {
+            presenter = MovieSearchPresenter(view: view, resourceDownloader: resourceDownloader, router: router)
+        }
+        else {
+            presenter = MoviePresenter(view: view, resourceDownloader: resourceDownloader, router: router)
+        }
+
         view.presenter = presenter
         return view
     }

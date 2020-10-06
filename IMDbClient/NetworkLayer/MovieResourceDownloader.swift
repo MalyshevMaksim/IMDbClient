@@ -21,7 +21,8 @@ class MovieResourceDownloader {
     
     func downloadMovies(completion: @escaping (_ error: Error?) -> ()) {
         for request in requests {
-            networkService.execute(request: request) { (result: Result<MovieList?, Error>) in
+            let url = request.urlRequest.url
+            networkService.execute(url: url!) { (result: Result<MovieList?, Error>) in
                 switch result {
                     case .success(let movies):
                         self.cache.addMovies(movies: movies!, forKey: request.urlRequest.url!.absoluteString)
@@ -39,6 +40,21 @@ class MovieResourceDownloader {
                 case .success(let image):
                     self.cache.addImage(image: image!, fromUrl: imageUrl)
                     completion(image, nil)
+                case .failure(let error):
+                    completion(nil, error)
+            }
+        }
+    }
+    
+    func searchMovies(serachText: String, completion: @escaping (_ movies: [Movie]? ,_ error: Error?) -> ()) {
+        let str = (requests.first?.urlRequest.url!.absoluteString)! + serachText
+        let url = URL(string: str)!
+        print(str)
+        
+        networkService.execute(url: url) { (result: Result<MovieList?, Error>) in
+            switch result {
+                case .success(let movies):
+                    completion(movies?.result, nil)
                 case .failure(let error):
                     completion(nil, error)
             }
