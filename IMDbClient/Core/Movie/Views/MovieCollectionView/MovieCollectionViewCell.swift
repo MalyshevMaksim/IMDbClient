@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class MovieCollectionViewCell: UICollectionViewCell, MovieCell {
+class MovieCollectionViewCell: UICollectionViewCell, MovieCellProtocol {
     var activityView = UIActivityIndicatorView(style: .medium)
     static var reuseIdentifier = "MovieTableCell"
     

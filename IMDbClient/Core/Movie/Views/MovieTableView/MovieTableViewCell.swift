@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class MovieTableViewCell: UITableViewCell, MovieCell {
+class MovieTableViewCell: UITableViewCell, MovieCellProtocol {
     static var reuseIdentifier = "MovieTableCell"
     var activityView = UIActivityIndicatorView(style: .medium)
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
@@ -26,6 +26,7 @@ class MovieTableViewCell: UITableViewCell, MovieCell {
     lazy var title: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 17)
+        label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -85,8 +86,8 @@ class MovieTableViewCell: UITableViewCell, MovieCell {
             poster.widthAnchor.constraint(equalToConstant: contentView.frame.width * 0.3),
             poster.heightAnchor.constraint(equalToConstant: contentView.frame.width * 0.41),
 
-            title.leadingAnchor.constraint(equalTo: poster.trailingAnchor, constant: 15),
             title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            title.leadingAnchor.constraint(equalTo: poster.trailingAnchor, constant: 15),
             title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
         
             ratingTagView.leadingAnchor.constraint(equalTo: title.leadingAnchor),

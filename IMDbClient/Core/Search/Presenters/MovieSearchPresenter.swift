@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class MovieSearchPresenter: MoviePresenterProtocol {
-    var resourceDownloader: MovieResourceDownloader
+    var resourceDownloader: MovieDownloaderFacade
     var view: ViewControllerProtocol
     var router: Router
     lazy var delegate: FilterMovieDelegate = self
@@ -18,16 +18,19 @@ class MovieSearchPresenter: MoviePresenterProtocol {
     private var foundMovies: [Movie] = []
     private var searchText: String = ""
     
-    init(view: ViewControllerProtocol, resourceDownloader: MovieResourceDownloader, router: Router) {
+    init(view: ViewControllerProtocol, resourceDownloader: MovieDownloaderFacade, router: Router) {
         self.view = view
         self.resourceDownloader = resourceDownloader
         self.router = router
     }
     
-    func displayCell(cell: MovieCell, in section: Int, for row: Int) {
+    func displayCell(cell: MovieCellProtocol, in section: Int, for row: Int) {
         let movie = foundMovies[row]
-        cell.display(title: movie.title)
-        cell.display(subtitle: movie.subtitle)
+        
+        DispatchQueue.main.async {
+            cell.display(title: movie.title)
+            cell.display(subtitle: movie.subtitle)
+        }
     }
     
     func showDetail(fromSection: Int, forRow: Int) {
@@ -40,15 +43,7 @@ class MovieSearchPresenter: MoviePresenterProtocol {
     }
     
     func downloadMovies() {
-        resourceDownloader.searchMovies(serachText: searchText) { (movies: [Movie]?, error: Error?) in
-            DispatchQueue.main.async {
-                guard let movies = movies else {
-                    return
-                }
-                self.foundMovies = movies
-                self.view.success()
-            }
-        }
+        
     }
 }
 

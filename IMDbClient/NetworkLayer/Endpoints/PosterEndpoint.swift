@@ -9,7 +9,7 @@
 import Foundation
 
 enum PosterEndpoint {
-    case lowQuality, normalQuality, originalQuality
+    case low, normal, original
     
     private var baseUrl: URL { return URL(string: "https://imdb-api.com/Images")! }
     
@@ -18,11 +18,11 @@ enum PosterEndpoint {
         let lastPath = (originalUrl as NSString).lastPathComponent
         
         switch self {
-            case .lowQuality:
-                return URL(string: beginningPath + "/192x264/" + lastPath)
-            case .normalQuality:
+            case .low:
+                return URL(string: beginningPath + "/144x198/" + lastPath)
+            case .normal:
                 return URL(string: beginningPath + "/384x528/" + lastPath)
-            case .originalQuality:
+            case .original:
                 return URL(string: beginningPath + "/original/" + lastPath)
         }
     }

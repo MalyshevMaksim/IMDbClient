@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 
 protocol MoviePresenterProtocol {
-    var resourceDownloader: MovieResourceDownloader { get }
+    var resourceDownloader: MovieDownloaderFacade { get }
     var view: ViewControllerProtocol { get }
     var delegate: FilterMovieDelegate { get set }
     var router: Router { get }
     
-    func displayCell(cell: MovieCell, in section: Int, for row: Int)
+    func displayCell(cell: MovieCellProtocol, in section: Int, for row: Int)
     func showDetail(fromSection: Int, forRow: Int)
     func getCountOfMovies(section: Int) -> Int
     func downloadMovies()

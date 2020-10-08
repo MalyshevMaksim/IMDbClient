@@ -9,24 +9,25 @@
 import Foundation
 import UIKit
 
-protocol MovieDetailView {
-    func display(image: UIImage?)
-    func display(title: String)
-    func display(imDbRating: String)
-    func display(rating: String)
-    func display(length: String)
-    func display(releaseDate: String)
-    func display(contentRating: String)
-    func display(plot: String)
-}
-
-class MovieDetailViewController: UIViewController, DetailViewControllerProtocol {
+class MovieDetailViewController: UIViewController, DetailViewControllerProtocol, MovieDetailViewProtocol {
     var presenter: MovieDetailPresenterProtocol!
+    var activityIndicator = UIActivityIndicatorView(style: .large)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupView()
+        setupActivityIndicator()
+    }
+    
+    private func setupActivityIndicator() {
+        for view in view.subviews {
+            view.isHidden = true
+        }
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        activityIndicator.center = view.center
+        activityIndicator.hidesWhenStopped = true
     }
     
     lazy var poster: UIImageView = {
@@ -42,12 +43,13 @@ class MovieDetailViewController: UIViewController, DetailViewControllerProtocol 
     lazy var movieTitle: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 21, weight: .heavy)
+        label.numberOfLines = 2
         label.textColor = UIColor(red: 24/255, green: 52/255, blue: 77/255, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
      }()
 
-     lazy var rating: UILabel = {
+     lazy var imDbRating: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 26, weight: .heavy)
         label.textColor = UIColor(red: 110/255, green: 130/255, blue: 144/255, alpha: 1)
@@ -84,7 +86,7 @@ class MovieDetailViewController: UIViewController, DetailViewControllerProtocol 
         return label
     }()
     
-    lazy var movieLenght: UILabel = {
+    lazy var length: UILabel = {
         let label = makeLabel(text: nil)
         label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
         label.textColor = UIColor(red: 24/255, green: 52/255, blue: 77/255, alpha: 1)
@@ -96,7 +98,7 @@ class MovieDetailViewController: UIViewController, DetailViewControllerProtocol 
         stackView.axis = .vertical
         stackView.spacing = 10
         stackView.addArrangedSubview(makeLabel(text: "Lenght"))
-        stackView.addArrangedSubview(movieLenght)
+        stackView.addArrangedSubview(length)
         return stackView
     }()
     
@@ -137,7 +139,7 @@ class MovieDetailViewController: UIViewController, DetailViewControllerProtocol 
         return label
     }()
     
-    lazy var story: UILabel = {
+    lazy var plot: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
         label.textColor = UIColor(red: 110/255, green: 130/255, blue: 144/255, alpha: 1)
@@ -157,11 +159,11 @@ class MovieDetailViewController: UIViewController, DetailViewControllerProtocol 
         view.addSubview(scrollView)
         scrollView.addSubview(poster)
         scrollView.addSubview(movieTitle)
-        scrollView.addSubview(rating)
+        scrollView.addSubview(imDbRating)
         scrollView.addSubview(starStack)
         scrollView.addSubview(stackView)
         scrollView.addSubview(storyline)
-        scrollView.addSubview(story)
+        scrollView.addSubview(plot)
     }
     
     private func setupView() {
@@ -181,10 +183,10 @@ class MovieDetailViewController: UIViewController, DetailViewControllerProtocol 
             movieTitle.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             movieTitle.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: 20),
             
-            rating.topAnchor.constraint(equalTo: movieTitle.bottomAnchor, constant: 10),
-            rating.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            imDbRating.topAnchor.constraint(equalTo: movieTitle.bottomAnchor, constant: 10),
+            imDbRating.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             
-            starStack.topAnchor.constraint(equalTo: rating.bottomAnchor, constant: 20),
+            starStack.topAnchor.constraint(equalTo: imDbRating.bottomAnchor, constant: 20),
             starStack.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             
             stackView.topAnchor.constraint(equalTo: starStack.bottomAnchor, constant: 40),
@@ -195,10 +197,10 @@ class MovieDetailViewController: UIViewController, DetailViewControllerProtocol 
             storyline.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 40),
             storyline.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
             
-            story.topAnchor.constraint(equalTo: storyline.bottomAnchor, constant: 10),
-            story.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
-            story.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
-            story.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+            plot.topAnchor.constraint(equalTo: storyline.bottomAnchor, constant: 10),
+            plot.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            plot.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+            plot.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
     }
 }
@@ -206,44 +208,15 @@ class MovieDetailViewController: UIViewController, DetailViewControllerProtocol 
 extension MovieDetailViewController {
     func success() {
         presenter.configureView(view: self)
+        for view in view.subviews {
+            UIView.transition(with: view, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                view.isHidden = false
+            })
+        }
+        activityIndicator.stopAnimating()
     }
     
     func failure(error: Error) {
         print(error)
-    }
-}
-
-extension MovieDetailViewController: MovieDetailView {
-    func display(image: UIImage?) {
-        self.poster.image = image
-    }
-    
-    func display(title: String) {
-        self.movieTitle.text = title
-    }
-    
-    func display(imDbRating: String) {
-        self.rating.text = imDbRating
-        self.starStack.rating = Double(imDbRating)
-    }
-    
-    func display(length: String) {
-        self.movieLenght.text = length
-    }
-    
-    func display(releaseDate: String) {
-        self.releaseDate.text = releaseDate
-    }
-    
-    func display(contentRating: String) {
-        self.contentRating.text = contentRating
-    }
-    
-    func display(plot: String) {
-        self.story.text = plot
-    }
-    
-    func display(rating: String) {
-        self.rating.text = rating
     }
 }

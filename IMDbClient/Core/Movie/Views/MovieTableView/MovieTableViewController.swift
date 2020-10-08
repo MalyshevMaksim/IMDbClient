@@ -107,7 +107,7 @@ extension MovieTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.reuseIdentifier) as? MovieTableViewCell else {
-            fatalError("Unable cell")
+            return UITableViewCell()
         }
         presenter.displayCell(cell: cell, in: segmentControl.selectedSegmentIndex, for: indexPath.row)
         return cell

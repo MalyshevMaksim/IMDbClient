@@ -10,16 +10,12 @@ import UIKit
 
 extension UICollectionView {
     func showActivityIndicator() {
-        DispatchQueue.main.async {
-            let activityView = UIActivityIndicatorView(style: .large)
-            self.backgroundView = activityView
-            activityView.startAnimating()
-        }
+        let activityView = UIActivityIndicatorView(style: .large)
+        self.backgroundView = activityView
+        activityView.startAnimating()
     }
 
     func hideActivityIndicator() {
-        DispatchQueue.main.async {
-            self.backgroundView = nil
-        }
+        self.backgroundView = nil
     }
 }

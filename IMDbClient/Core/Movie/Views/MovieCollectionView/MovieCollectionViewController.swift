@@ -66,7 +66,9 @@ extension MovieCollectionViewController {
 
 extension MovieCollectionViewController: ViewControllerProtocol {
     func success() {
-        collectionView.hideActivityIndicator()
+        DispatchQueue.main.async {
+            self.collectionView.hideActivityIndicator()
+        }
     }
     
     func failure(error: Error) {

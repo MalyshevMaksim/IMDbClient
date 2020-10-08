@@ -18,6 +18,10 @@ struct Movie: Decodable, Hashable {
     var crew: String?
     var plot: String?
     var description: String?
+    var runtimeStr: String?
+    var year: String?
+    var releaseDate: String?
+    var contentRating: String?
     
     var subtitle: String {
         if let crew = crew {

@@ -10,25 +10,27 @@ import UIKit
 
 class InMemoryCache: CacheGateway {
     private var imageCache = NSCache<NSString, UIImage>()
-    private var movieCache: [String : MovieList] = [:]
+    private var movieCache: [String : Movie] = [:]
+    private var movieCollection: [String : [Movie]] = [:]
     
     func addImage(image: UIImage, fromUrl: String) {
         imageCache.setObject(image, forKey: (fromUrl as NSString))
     }
     
-    func addMovies(movies: MovieList, forKey: String) {
-        movieCache[forKey] = movies
+    func addMovie(movie: Movie, forKey: String) {
+        movieCache[forKey] = movie
     }
     
-    func fetchMovie(forKey: String, fromRow: Int) -> Movie? {
-        guard let movieCollection = movieCache[forKey] else {
-            return nil
-        }
-        return movieCollection.result![fromRow]
+    func addMovieCollection(forKey: String, collection: [Movie]) {
+        movieCollection[forKey] = collection
     }
     
-    func fetchMovies(forKey: String) -> [Movie]? {
-        return movieCache[forKey]?.result
+    func fetchMovie(forKey: String) -> Movie? {
+        return movieCache[forKey]
+    }
+    
+    func fetchMovieCollection(forKey: String) -> [Movie]? {
+        return movieCollection[forKey]
     }
     
     func fetchImage(fromUrl: String) -> UIImage? {
@@ -37,5 +39,9 @@ class InMemoryCache: CacheGateway {
     
     func getCountOfMovies() -> Int {
         return movieCache.count
+    }
+    
+    func getCountOfCollections() -> Int {
+        return movieCollection.count
     }
 }

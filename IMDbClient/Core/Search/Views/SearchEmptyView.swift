@@ -10,15 +10,6 @@ import Foundation
 import UIKit
 
 class SearchEmptyView: UIView {
-    override init(frame: CGRect) {
-        super.init(frame: .zero)
-        setupView()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     private lazy var icon: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -32,6 +23,15 @@ class SearchEmptyView: UIView {
         label.text = "Enter search text"
         return label
     }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private func setupSubviews() {
         addSubview(icon)

@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol MovieCell {
+protocol MovieCellProtocol {
     var activityView: UIActivityIndicatorView { get set }
     var poster: UIImageView { get set }
     var title: UILabel { get set }
@@ -17,7 +17,7 @@ protocol MovieCell {
     var subtitle: UILabel { get set }
 }
 
-extension MovieCell {
+extension MovieCellProtocol {
     func display(image: UIImage?) {
         DispatchQueue.main.async {
             UIView.transition(with: self.poster, duration: 0.5, options: .transitionCrossDissolve, animations: {

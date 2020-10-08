@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class TrendingFactory: AssemblyFactory {
-    func makePresenter(router: Router, downloader: MovieResourceDownloader) -> MoviePresenterProtocol {
+    func makePresenter(router: Router, downloader: MovieDownloaderFacade) -> MoviePresenterProtocol {
         return MoviePresenter(view: makeViewController(), resourceDownloader: downloader, router: router)
     }
     
@@ -28,6 +28,6 @@ class TrendingFactory: AssemblyFactory {
     }
     
     func makeNetworkService() -> NetworkService {
-        return APIService(posterEndpoint: .normalQuality)
+        return APIService(quality: .normal)
     }
 }

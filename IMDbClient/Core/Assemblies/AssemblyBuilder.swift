@@ -23,8 +23,7 @@ class MovieAssembly: AssemblyBuilder {
         let resources = assemblyFactory.makeRequests()
         let networkService = assemblyFactory.makeNetworkService()
         
-        let resourceDownloader = MovieResourceDownloader(requests: resources, networkService: networkService, cacheGateway: InMemoryCache())
-        
+        let resourceDownloader = MovieDownloaderFacade(requests: resources, networkService: networkService, cacheGateway: InMemoryCache())
         var presenter: MoviePresenterProtocol!
         
         if view is SearchViewController {
@@ -40,11 +39,13 @@ class MovieAssembly: AssemblyBuilder {
     
     func makeDetailViewController(movieId: String) -> UIViewController {
         let view = MovieDetailViewController()
-        let networkService = APIService(posterEndpoint: .normalQuality)
+        let networkService = APIService(quality: .normal)
         let resource = GETMovieRequest(endpoint: .detail(id: movieId))
         
-        let presenter = MovieDetailPresenter(view: view, networkService: networkService, resource: resource)
+        let presenter = MovieDetailPresenter(view: view, networkService: networkService, resource: resource, cache: globalCache)
         view.presenter = presenter
         return view
     }
 }
+
+var globalCache = InMemoryCache()

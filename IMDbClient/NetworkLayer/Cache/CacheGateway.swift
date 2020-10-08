@@ -14,12 +14,14 @@ import UIKit
 // You can extend this protocol for caching in Core Data or Realm if needed
 
 protocol CacheGateway {
-    func fetchMovie(forKey: String, fromRow: Int) -> Movie?
-    func fetchMovies(forKey: String) -> [Movie]?
+    func fetchMovie(forKey: String) -> Movie?
     func fetchImage(fromUrl: String) -> UIImage?
+    func fetchMovieCollection(forKey: String) -> [Movie]?
     
     func addImage(image: UIImage, fromUrl: String)
-    func addMovies(movies: MovieList, forKey: String)
+    func addMovie(movie: Movie, forKey: String)
+    func addMovieCollection(forKey: String, collection: [Movie])
     
     func getCountOfMovies() -> Int
+    func getCountOfCollections() -> Int
 }

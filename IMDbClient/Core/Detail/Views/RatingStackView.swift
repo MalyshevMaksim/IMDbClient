@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class RatingStackView: UIView {
-    var rating: Double! = 0 {
+    var rating: Double? = 0 {
         didSet {
             configureStack(rating: rating)
         }
@@ -25,8 +25,12 @@ class RatingStackView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func configureStack(rating: Double) {
-        let starCount = lround(Double(self.rating / 2))
+    private func configureStack(rating: Double?) {
+        guard let rating = rating else {
+            return
+        }
+        
+        let starCount = lround(Double(rating / 2))
             
         for _ in 0..<starCount {
             let image = UIImageView(image: UIImage(systemName: "star.fill"))

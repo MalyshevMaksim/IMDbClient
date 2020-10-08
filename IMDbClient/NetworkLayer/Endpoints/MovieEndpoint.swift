@@ -8,7 +8,7 @@
 
 import Foundation
 
-var APIKey = "k_09P3SOzm"
+var APIKey = "k_3l9oqbn7"
 
 enum MovieEndpoint {
     case topRatedMovie, mostPopularMovie, topRatedTVShow, mostPopularTVShow, inTheater, comingSoon, search

@@ -23,6 +23,6 @@ class TVShowFactory: AssemblyFactory {
     }
     
     func makeNetworkService() -> NetworkService {
-        return APIService(posterEndpoint: .lowQuality)
+        return APIService(quality: .low)
     }
 }

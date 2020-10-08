@@ -10,20 +10,20 @@ import UIKit
 import Foundation
 
 protocol NetworkService {
-    var posterEndpoint: PosterEndpoint { get }
+    var quality: PosterEndpoint { get set }
     func execute<T: Decodable>(url: URL, comletionHandler: @escaping (Result<T?, Error>) -> ())
-    func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
+    func downloadImage(url: String, quality: PosterEndpoint, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
 }
 
 class APIService: NetworkService {
     private var urlSession: URLSession
     private var parser: ParserProtocol
-    internal var posterEndpoint: PosterEndpoint
+    var quality: PosterEndpoint
     
-    init(posterEndpoint: PosterEndpoint, parser: Parser = Parser(), urlSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)) {
-        self.posterEndpoint = posterEndpoint
+    init(quality: PosterEndpoint, urlSession: URLSession = URLSession(configuration: URLSessionConfiguration.default), parser: Parser = Parser()) {
         self.parser = parser
         self.urlSession = urlSession
+        self.quality = quality
     }
     
     func execute<T: Decodable>(url: URL, comletionHandler: @escaping (Result<T?, Error>) -> ()) {
@@ -37,16 +37,18 @@ class APIService: NetworkService {
         dataTask.resume()
     }
     
-    func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
-        guard let url = posterEndpoint.makeNewQualityImageUrl(originalUrl: url) else {
+    func downloadImage(url: String, quality: PosterEndpoint, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
+        guard let url = quality.makeNewQualityImageUrl(originalUrl: url) else {
             return
         }
         let dataTask = URLSession.shared.dataTask(with: url) { data, repsonse, error in
-            guard let data = data, let image = UIImage(data: data), error == nil else {
-                //completionHandler(.failure(error!))
+            guard error == nil else {
+                completionHandler(.failure(error!))
                 return
             }
-            completionHandler(.success(image))
+            if let data = data, let image = UIImage(data: data) {
+                completionHandler(.success(image))
+            }
         }
         dataTask.resume()
     }
