@@ -82,7 +82,7 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     private func downloadPoster(view: MovieDetailViewProtocol) {
         guard let detail = movieDetail else { return }
         
-        networkService.downloadImage(url: detail.image, quality: .normal) { (result: Result<UIImage?, Error>) in
+        networkService.downloadImage(url: detail.image) { (result: Result<UIImage?, Error>) in
             DispatchQueue.main.async {
                 switch result {
                     case .success(let image):

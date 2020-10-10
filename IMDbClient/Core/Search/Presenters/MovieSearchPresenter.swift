@@ -26,11 +26,8 @@ class MovieSearchPresenter: MoviePresenterProtocol {
     
     func displayCell(cell: MovieCellProtocol, in section: Int, for row: Int) {
         let movie = foundMovies[row]
-        
-        DispatchQueue.main.async {
-            cell.display(title: movie.title)
-            cell.display(subtitle: movie.subtitle)
-        }
+        cell.display(title: movie.title)
+        cell.display(subtitle: movie.subtitle)
     }
     
     func showDetail(fromSection: Int, forRow: Int) {
@@ -43,7 +40,10 @@ class MovieSearchPresenter: MoviePresenterProtocol {
     }
     
     func downloadMovies() {
-        
+        resourceDownloader.search(searchText: searchText) { movies in
+            movies != nil ? self.foundMovies = movies! : self.foundMovies.removeAll()
+            self.view.success()
+        }
     }
 }
 

@@ -21,11 +21,14 @@ final class MovieDownloaderFacade {
     
     func download(completion: @escaping (_ error: Error?) -> ()) {
         for request in requests {
-            guard let url = request.urlRequest.url else { break }
-            networkService.execute(url: url) { (result: Result<MovieList?, Error>) in
+            guard let url = request.urlRequest.url else {
+                break
+            }
+           
+            networkService.execute(url: url) { [unowned self] (result: Result<MovieList?, Error>) in
                 switch result {
                     case .success(let movies):
-                        self.addToCache(movies!, key: url.absoluteString, quality: self.networkService.quality)
+                        cache.addMovieCollection(forKey: url.absoluteString, collection: (movies?.result)!)
                         completion(nil)
                     case .failure(let error):
                         completion(error)
@@ -34,21 +37,28 @@ final class MovieDownloaderFacade {
         }
     }
     
-    private func addToCache(_ movies: MovieList, key: String, quality: PosterEndpoint) {
-        guard let movies = movies.result else { return }
-        cache.addMovieCollection(forKey: key, collection: movies)
-        for movie in movies {
-            downloadPoster(posterUrl: movie.image, quality: quality)
+    func downloadPoster(posterUrl: String, completion: @escaping (_ image: UIImage?) -> ()) {
+        networkService.downloadImage(url: posterUrl) { [unowned self] result in
+            switch result {
+                case .success(let image):
+                    cache.addImage(image: image!, fromUrl: posterUrl)
+                    completion(image)
+                case .failure:
+                    fatalError("ERROR")
+            }
         }
     }
     
-    private func downloadPoster(posterUrl: String, quality: PosterEndpoint) {
-        networkService.downloadImage(url: posterUrl, quality: quality) { result in
+    func search(searchText: String, completion: @escaping (_ movies: [Movie]?) -> ()) {
+        networkService.cancelAllTasks()
+        let url = URL(string: requests.first!.urlRequest.url!.absoluteString + searchText)
+        
+        networkService.execute(url: url!) { (result: Result<MovieList?, Error>) in
             switch result {
-                case .success(let image):
-                    self.cache.addImage(image: image!, fromUrl: posterUrl)
-                case .failure:
-                    fatalError("ERROR")
+                case .success(let movies):
+                    completion(movies?.result)
+                case .failure(let error):
+                    print(error)
             }
         }
     }

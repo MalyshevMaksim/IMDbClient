@@ -43,12 +43,10 @@ extension MovieCellProtocol {
     }
     
     func startActivity() {
-        DispatchQueue.main.async {
-            self.poster.addSubview(activityView)
-            activityView.hidesWhenStopped = true
-            activityView.center = self.poster.center
-            activityView.startAnimating()
-        }
+        self.poster.addSubview(activityView)
+        activityView.hidesWhenStopped = true
+        activityView.center = self.poster.center
+        activityView.startAnimating()
     }
     
     func stopActivity() {

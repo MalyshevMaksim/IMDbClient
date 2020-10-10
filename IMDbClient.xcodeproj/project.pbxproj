@@ -23,7 +23,6 @@
 		B53F3E762525628900ED29C8 /* MovieDownloaderFacade.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53F3E752525628900ED29C8 /* MovieDownloaderFacade.swift */; };
 		B53F3E7C252563A000ED29C8 /* InMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53F3E7B252563A000ED29C8 /* InMemoryCache.swift */; };
 		B53F3E8E252592AB00ED29C8 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53F3E8D252592AB00ED29C8 /* SearchResult.swift */; };
-		B53F3E9E25259EE400ED29C8 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53F3E9D25259EE400ED29C8 /* Parser.swift */; };
 		B5685D5F252A9C51007650B6 /* MovieSearchPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5685D5E252A9C51007650B6 /* MovieSearchPresenter.swift */; };
 		B5685D65252A9E64007650B6 /* MoviePresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5685D64252A9E64007650B6 /* MoviePresenterProtocol.swift */; };
 		B58E1A232503239300D70337 /* IMDbClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58E1A222503239300D70337 /* IMDbClientTests.swift */; };
@@ -81,7 +80,6 @@
 		B53F3E752525628900ED29C8 /* MovieDownloaderFacade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDownloaderFacade.swift; sourceTree = "<group>"; };
 		B53F3E7B252563A000ED29C8 /* InMemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryCache.swift; sourceTree = "<group>"; };
 		B53F3E8D252592AB00ED29C8 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
-		B53F3E9D25259EE400ED29C8 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		B5685D5E252A9C51007650B6 /* MovieSearchPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieSearchPresenter.swift; sourceTree = "<group>"; };
 		B5685D64252A9E64007650B6 /* MoviePresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviePresenterProtocol.swift; sourceTree = "<group>"; };
 		B58E1A202503239300D70337 /* IMDbClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IMDbClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -338,7 +336,6 @@
 				B5AD47DB25299782002CFAEF /* Cache */,
 				B5F19A7E2513B5560045BE3F /* APIRequest.swift */,
 				B5EB12BD2505A8CC00478673 /* NetworkService.swift */,
-				B53F3E9D25259EE400ED29C8 /* Parser.swift */,
 			);
 			path = NetworkLayer;
 			sourceTree = "<group>";
@@ -496,7 +493,6 @@
 				B518C1E1250F591900CC21A9 /* MovieCollectionViewCell.swift in Sources */,
 				B5DE8C4C252C58E300AB74CC /* SearchMovieCell.swift in Sources */,
 				B5F91FEE2501D2A200CE2F35 /* ViewControllerProtocol.swift in Sources */,
-				B53F3E9E25259EE400ED29C8 /* Parser.swift in Sources */,
 				B5DEA84C24FFDDBB00A5580A /* MovieDetailPresenter.swift in Sources */,
 				B5DEA81C24FF571200A5580A /* MovieTableViewController.swift in Sources */,
 				B5DEA83A24FF573400A5580A /* Movie.swift in Sources */,

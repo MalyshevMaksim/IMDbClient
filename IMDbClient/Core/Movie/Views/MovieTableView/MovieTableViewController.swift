@@ -83,12 +83,14 @@ class MovieTableViewController: UITableViewController, ViewControllerProtocol {
 
 extension MovieTableViewController {
     func success() {
-        UIView.transition(with: tableView, duration: 0.5, options: .transitionCrossDissolve, animations: {
-            self.tableView.refreshControl?.endRefreshing()
-            self.tableView.separatorColor = .none
-        })
-        self.tableView.reloadData()
-        tableView.hideActivityIndicator()
+        DispatchQueue.main.async {
+            UIView.transition(with: self.tableView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                self.tableView.refreshControl?.endRefreshing()
+                self.tableView.separatorColor = .none
+            })
+            self.tableView.reloadData()
+            self.tableView.hideActivityIndicator()
+        }
     }
     
     func failure(error: Error) {

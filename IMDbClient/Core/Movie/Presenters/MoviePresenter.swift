@@ -25,42 +25,49 @@ class MoviePresenter: MoviePresenterProtocol {
     }
     
     func downloadMovies() {
-        resourceDownloader.download() { error in
-            DispatchQueue.main.async {
-                (error == nil) ? self.view.success() : self.view.failure(error: error!)
-            }
+        resourceDownloader.download { error in
+            (error == nil) ? self.view.success() : self.view.failure(error: error!)
         }
     }
     
     func displayCell(cell: MovieCellProtocol, in section: Int, for row: Int) {
-        var movie: Movie
+        guard let movie = getMovie(in: section, for: row) else {
+            return
+        }
         
+        cell.startActivity()
+        cell.display(title: movie.title)
+        cell.display(subtitle: movie.subtitle)
+        displayPoster(for: cell, url: movie.image)
+        
+        guard let imDbRating = movie.imDbRating, !imDbRating.isEmpty, let imDbRatingCount = movie.imDbRatingCount, !imDbRatingCount.isEmpty else {
+            cell.display(imDbRating: "⭐️ No ratings")
+            cell.display(imDbRatingCount: "Ratings for this movie are not yet available")
+            return
+        }
+        cell.display(imDbRating: "⭐️ \(imDbRating) IMDb")
+        cell.display(imDbRatingCount: "based on \(imDbRatingCount) user ratings")
+    }
+    
+    private func getMovie(in section: Int, for row: Int) -> Movie? {
         if filteredMovie.isEmpty {
-            guard let movieCollection = resourceDownloader.getCachedMovies(fromSection: section) else { return }
-            movie = movieCollection[row]
+            guard let movieCollection = resourceDownloader.getCachedMovies(fromSection: section) else { return nil }
+            return movieCollection[row]
         }
         else {
-            movie = filteredMovie[row]
+            return filteredMovie[row]
         }
-        
-        DispatchQueue.main.async {
-            cell.display(title: movie.title)
-            cell.display(subtitle: movie.subtitle)
-        
-            if let image = self.resourceDownloader.getCachedImage(for: movie.image) {
+    }
+    
+    private func displayPoster(for cell: MovieCellProtocol, url: String) {
+        if let image = resourceDownloader.getCachedImage(for: url) {
+            cell.display(image: image)
+        }
+        else {
+            resourceDownloader.downloadPoster(posterUrl: url) { image in
                 cell.display(image: image)
+                cell.stopActivity()
             }
-            else {
-                cell.display(image: nil)
-            }
-            
-            guard let imDbRating = movie.imDbRating, imDbRating != "", let imDbRatingCount = movie.imDbRatingCount, imDbRatingCount != "" else {
-                cell.display(imDbRating: "⭐️ No ratings")
-                cell.display(imDbRatingCount: "Ratings for this movie are not yet available")
-                return
-            }
-            cell.display(imDbRating: "⭐️ \(imDbRating) IMDb")
-            cell.display(imDbRatingCount: "based on \(imDbRatingCount) user ratings")
         }
     }
     

@@ -12,44 +12,64 @@ import Foundation
 protocol NetworkService {
     var quality: PosterEndpoint { get set }
     func execute<T: Decodable>(url: URL, comletionHandler: @escaping (Result<T?, Error>) -> ())
-    func downloadImage(url: String, quality: PosterEndpoint, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
+    func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
+    func cancelAllTasks()
 }
 
 class APIService: NetworkService {
     private var urlSession: URLSession
-    private var parser: ParserProtocol
+    private var imageDownloadTask: URLSessionTask?
+    private var movieDownloadTask: URLSessionTask?
     var quality: PosterEndpoint
     
-    init(quality: PosterEndpoint, urlSession: URLSession = URLSession(configuration: URLSessionConfiguration.default), parser: Parser = Parser()) {
-        self.parser = parser
+    init(quality: PosterEndpoint, urlSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)) {
         self.urlSession = urlSession
         self.quality = quality
     }
     
     func execute<T: Decodable>(url: URL, comletionHandler: @escaping (Result<T?, Error>) -> ()) {
-        let dataTask = urlSession.dataTask(with: url) { data, response, error in
+        movieDownloadTask = urlSession.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 comletionHandler(.failure(error!))
                 return
             }
-            self.parser.json(data: data, comletionHandler: comletionHandler)
+            do {
+                let movieJson = try JSONDecoder().decode(T.self, from: data)
+                DispatchQueue.main.async {
+                    comletionHandler(.success(movieJson))
+                }
+            }
+            catch {
+                DispatchQueue.main.async {
+                    comletionHandler(.failure(error))
+                }
+            }
         }
-        dataTask.resume()
+        movieDownloadTask?.resume()
     }
     
-    func downloadImage(url: String, quality: PosterEndpoint, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
+    func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
         guard let url = quality.makeNewQualityImageUrl(originalUrl: url) else {
             return
         }
-        let dataTask = URLSession.shared.dataTask(with: url) { data, repsonse, error in
+        imageDownloadTask = URLSession.shared.dataTask(with: url) { data, repsonse, error in
             guard error == nil else {
-                completionHandler(.failure(error!))
+                DispatchQueue.main.async {
+                    completionHandler(.failure(error!))
+                }
                 return
             }
             if let data = data, let image = UIImage(data: data) {
-                completionHandler(.success(image))
+                DispatchQueue.main.async {
+                    completionHandler(.success(image))
+                }
             }
         }
-        dataTask.resume()
+        imageDownloadTask?.resume()
+    }
+    
+    func cancelAllTasks() {
+        movieDownloadTask?.cancel()
+        imageDownloadTask?.cancel()
     }
 }

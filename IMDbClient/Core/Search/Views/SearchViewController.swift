@@ -11,11 +11,14 @@ import UIKit
 
 class SearchViewController: UITableViewController {
     var presenter: MoviePresenterProtocol!
+    var activityIndicator: UIActivityIndicatorView!
+    var emptyView = SearchEmptyView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationController()
         configureTableView()
+        configureActivityIndicator()
     }
     
     private func configureNavigationController() {
@@ -33,40 +36,44 @@ class SearchViewController: UITableViewController {
         tableView.register(SearchMovieCell.self, forCellReuseIdentifier: SearchMovieCell.reuseIdentifier)
     }
     
+    private func configureActivityIndicator() {
+        activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.center = view.center
+        view.addSubview(activityIndicator)
+    }
+    
     private func filterContentForSearch(searchText: String) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned self] in
             if searchText.isEmpty {
-                self.tableView.backgroundView = SearchEmptyView()
-                self.tableView.separatorStyle = .none
-                self.tableView.hideActivityIndicator()
+                activityIndicator.stopAnimating()
+                tableView.separatorStyle = .none
+                tableView.backgroundView = emptyView
             }
             else {
-                self.tableView.backgroundView = nil
-                self.tableView.separatorStyle = .singleLine
-                self.tableView.showActivityIndicator()
-                self.presenter.delegate.filter(self.navigationItem.searchController!, didChangeSearchText: searchText, in: 0)
+                tableView.backgroundView = nil
+                tableView.separatorStyle = .singleLine
+                activityIndicator.startAnimating()
             }
+            self.presenter.delegate.filter(navigationItem.searchController!, didChangeSearchText: searchText, in: 0)
         }
     }
 }
 
 extension SearchViewController: ViewControllerProtocol {
     func success() {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.tableView.hideActivityIndicator()
-        }
+        self.activityIndicator.stopAnimating()
+        self.tableView.reloadData()
     }
     
     func failure(error: Error) {
-        print("ERROR: \(error)")
+        fatalError("ERR")
     }
 }
 
 extension SearchViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       // return presenter.getCountOfMovies(section: section)
-        return 0
+       return presenter.getCountOfMovies(section: section)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

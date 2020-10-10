@@ -11,7 +11,7 @@ import Foundation
 enum PosterEndpoint {
     case low, normal, original
     
-    private var baseUrl: URL { return URL(string: "https://imdb-api.com/Images")! }
+    private var baseUrl: URL { return URL(string: "https://imdb-api.com/images")! }
     
     func makeNewQualityImageUrl(originalUrl: String) -> URL? {
         let beginningPath = baseUrl.absoluteURL.absoluteString
