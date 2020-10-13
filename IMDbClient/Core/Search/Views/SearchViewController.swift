@@ -40,23 +40,22 @@ class SearchViewController: UITableViewController {
         activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.hidesWhenStopped = true
         activityIndicator.center = view.center
-        view.addSubview(activityIndicator)
     }
     
     private func filterContentForSearch(searchText: String) {
         DispatchQueue.main.async { [unowned self] in
             if searchText.isEmpty {
-                activityIndicator.stopAnimating()
-                tableView.separatorStyle = .none
                 tableView.backgroundView = emptyView
+                tableView.separatorStyle = .none
+                activityIndicator.stopAnimating()
             }
             else {
-                tableView.backgroundView = nil
+                tableView.backgroundView = activityIndicator
                 tableView.separatorStyle = .singleLine
                 activityIndicator.startAnimating()
             }
-            self.presenter.delegate.filter(navigationItem.searchController!, didChangeSearchText: searchText, in: 0)
         }
+        self.presenter.delegate.filter(navigationItem.searchController!, didChangeSearchText: searchText, in: 0)
     }
 }
 
@@ -67,7 +66,7 @@ extension SearchViewController: ViewControllerProtocol {
     }
     
     func failure(error: Error) {
-        fatalError("ERR")
+        fatalError("ERROR")
     }
 }
 

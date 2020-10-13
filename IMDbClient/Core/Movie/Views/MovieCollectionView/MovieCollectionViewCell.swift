@@ -75,7 +75,7 @@ class MovieCollectionViewCell: UICollectionViewCell, MovieCellProtocol {
             
             subtitle.leadingAnchor.constraint(equalTo: title.leadingAnchor),
             subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10),
-            subtitle.trailingAnchor.constraint(equalTo: title.trailingAnchor)
+            subtitle.trailingAnchor.constraint(equalTo: title.trailingAnchor),
         ])
     }
 }

@@ -67,6 +67,7 @@ class MovieTableViewController: UITableViewController, ViewControllerProtocol {
         segmentControl.addTarget(self, action: #selector(selected), for: .valueChanged)
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
         tableView.tableHeaderView = segmentControl
+        
         segmentControl.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
         segmentControl.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
         segmentControl.heightAnchor.constraint(equalToConstant: 35).isActive = true
@@ -83,14 +84,12 @@ class MovieTableViewController: UITableViewController, ViewControllerProtocol {
 
 extension MovieTableViewController {
     func success() {
-        DispatchQueue.main.async {
-            UIView.transition(with: self.tableView, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                self.tableView.refreshControl?.endRefreshing()
-                self.tableView.separatorColor = .none
-            })
-            self.tableView.reloadData()
-            self.tableView.hideActivityIndicator()
-        }
+        UIView.transition(with: self.tableView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.tableView.refreshControl?.endRefreshing()
+            self.tableView.separatorColor = .none
+        })
+        self.tableView.reloadData()
+        self.tableView.hideActivityIndicator()
     }
     
     func failure(error: Error) {

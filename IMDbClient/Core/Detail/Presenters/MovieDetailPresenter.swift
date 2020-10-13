@@ -36,20 +36,20 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     func configureView(view: MovieDetailViewProtocol) {
         guard let detail = movieDetail else { return }
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned self] in
             view.display(title: detail.title)
             view.display(imDbRating: detail.imDbRating!)
             view.display(length: "⏱ \(detail.runtimeStr!)")
             view.display(contentRating: "🔞 \(detail.contentRating!)")
             view.display(releaseDate: "🗓 \(detail.year!)")
             view.display(plot: detail.plot!)
-        }
-        
-        if let image = cache.fetchImage(fromUrl: detail.image) {
-            view.display(image: image)
-        }
-        else {
-            downloadPoster(view: view)
+            
+            if let image = cache.fetchImage(fromUrl: detail.image) {
+                view.display(image: image)
+            }
+            else {
+                downloadPoster(view: view)
+            }
         }
     }
     

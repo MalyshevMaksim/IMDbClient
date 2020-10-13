@@ -26,8 +26,11 @@ class MovieSearchPresenter: MoviePresenterProtocol {
     
     func displayCell(cell: MovieCellProtocol, in section: Int, for row: Int) {
         let movie = foundMovies[row]
-        cell.display(title: movie.title)
-        cell.display(subtitle: movie.subtitle)
+        
+        DispatchQueue.main.async {
+            cell.display(title: movie.title)
+            cell.display(subtitle: movie.subtitle)
+        }
     }
     
     func showDetail(fromSection: Int, forRow: Int) {

@@ -19,11 +19,9 @@ protocol MovieCellProtocol {
 
 extension MovieCellProtocol {
     func display(image: UIImage?) {
-        DispatchQueue.main.async {
-            UIView.transition(with: self.poster, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                self.poster.image = image
-            })
-        }
+        UIView.transition(with: self.poster, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.poster.image = image
+        })
     }
     
     func display(title: String) {
@@ -45,7 +43,7 @@ extension MovieCellProtocol {
     func startActivity() {
         self.poster.addSubview(activityView)
         activityView.hidesWhenStopped = true
-        activityView.center = self.poster.center
+        activityView.center = poster.center
         activityView.startAnimating()
     }
     

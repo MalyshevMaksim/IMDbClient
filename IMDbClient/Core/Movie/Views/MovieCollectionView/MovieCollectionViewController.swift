@@ -31,10 +31,8 @@ class MovieCollectionViewController: UICollectionViewController {
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .systemBackground
         collectionView.decelerationRate = .fast
-        collectionView.alwaysBounceHorizontal = true
         collectionView.dataSource = self
         collectionView.delegate = self
-        view.addSubview(collectionView)
     }
 }
 
@@ -66,9 +64,7 @@ extension MovieCollectionViewController {
 
 extension MovieCollectionViewController: ViewControllerProtocol {
     func success() {
-        DispatchQueue.main.async {
-            self.collectionView.hideActivityIndicator()
-        }
+        self.collectionView.hideActivityIndicator()
     }
     
     func failure(error: Error) {

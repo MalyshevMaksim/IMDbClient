@@ -154,7 +154,6 @@
 		B55D68FA251F929C008C7F31 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				B53F3E752525628900ED29C8 /* MovieDownloaderFacade.swift */,
 				B5DEA84F24FFE36D00A5580A /* Router.swift */,
 				B5F91FED2501D2A200CE2F35 /* ViewControllerProtocol.swift */,
 				B538201125151E5E00CA779B /* MovieCellProtocol.swift */,
@@ -336,6 +335,7 @@
 				B5AD47DB25299782002CFAEF /* Cache */,
 				B5F19A7E2513B5560045BE3F /* APIRequest.swift */,
 				B5EB12BD2505A8CC00478673 /* NetworkService.swift */,
+				B53F3E752525628900ED29C8 /* MovieDownloaderFacade.swift */,
 			);
 			path = NetworkLayer;
 			sourceTree = "<group>";

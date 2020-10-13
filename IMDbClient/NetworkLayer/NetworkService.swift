@@ -18,8 +18,6 @@ protocol NetworkService {
 
 class APIService: NetworkService {
     private var urlSession: URLSession
-    private var imageDownloadTask: URLSessionTask?
-    private var movieDownloadTask: URLSessionTask?
     var quality: PosterEndpoint
     
     init(quality: PosterEndpoint, urlSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)) {
@@ -28,7 +26,7 @@ class APIService: NetworkService {
     }
     
     func execute<T: Decodable>(url: URL, comletionHandler: @escaping (Result<T?, Error>) -> ()) {
-        movieDownloadTask = urlSession.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 comletionHandler(.failure(error!))
                 return
@@ -45,14 +43,14 @@ class APIService: NetworkService {
                 }
             }
         }
-        movieDownloadTask?.resume()
+        .resume()
     }
     
     func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
         guard let url = quality.makeNewQualityImageUrl(originalUrl: url) else {
             return
         }
-        imageDownloadTask = URLSession.shared.dataTask(with: url) { data, repsonse, error in
+        URLSession.shared.dataTask(with: url) { data, repsonse, error in
             guard error == nil else {
                 DispatchQueue.main.async {
                     completionHandler(.failure(error!))
@@ -65,11 +63,16 @@ class APIService: NetworkService {
                 }
             }
         }
-        imageDownloadTask?.resume()
+        .resume()
     }
     
     func cancelAllTasks() {
-        movieDownloadTask?.cancel()
-        imageDownloadTask?.cancel()
+        URLSession.shared.getAllTasks { tasks in
+            for task in tasks {
+                if task.state == .running {
+                    task.cancel()
+                }
+            }
+        }
     }
 }

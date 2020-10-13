@@ -35,18 +35,19 @@ class MoviePresenter: MoviePresenterProtocol {
             return
         }
         
-        cell.startActivity()
-        cell.display(title: movie.title)
-        cell.display(subtitle: movie.subtitle)
-        displayPoster(for: cell, url: movie.image)
-        
-        guard let imDbRating = movie.imDbRating, !imDbRating.isEmpty, let imDbRatingCount = movie.imDbRatingCount, !imDbRatingCount.isEmpty else {
-            cell.display(imDbRating: "⭐️ No ratings")
-            cell.display(imDbRatingCount: "Ratings for this movie are not yet available")
-            return
+        DispatchQueue.main.async {
+            cell.startActivity()
+            cell.display(title: movie.title)
+            cell.display(subtitle: movie.subtitle)
+            
+            guard let imDbRating = movie.imDbRating, !imDbRating.isEmpty, let imDbRatingCount = movie.imDbRatingCount, !imDbRatingCount.isEmpty else {
+                cell.display(imDbRating: "⭐️ No ratings")
+                cell.display(imDbRatingCount: "Ratings for this movie are not yet available")
+                return
+            }
+            cell.display(imDbRating: "⭐️ \(imDbRating) IMDb")
+            cell.display(imDbRatingCount: "based on \(imDbRatingCount) user ratings")
         }
-        cell.display(imDbRating: "⭐️ \(imDbRating) IMDb")
-        cell.display(imDbRatingCount: "based on \(imDbRatingCount) user ratings")
     }
     
     private func getMovie(in section: Int, for row: Int) -> Movie? {

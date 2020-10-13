@@ -44,6 +44,8 @@ class MovieDetailViewController: UIViewController, DetailViewControllerProtocol,
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 21, weight: .heavy)
         label.numberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
+        label.textAlignment = .center
         label.textColor = UIColor(red: 24/255, green: 52/255, blue: 77/255, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -180,7 +182,8 @@ class MovieDetailViewController: UIViewController, DetailViewControllerProtocol,
             poster.widthAnchor.constraint(equalToConstant: view.bounds.size.width * 0.5),
             poster.heightAnchor.constraint(equalToConstant: view.bounds.size.width * 0.66),
             
-            movieTitle.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            movieTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            movieTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             movieTitle.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: 20),
             
             imDbRating.topAnchor.constraint(equalTo: movieTitle.bottomAnchor, constant: 10),

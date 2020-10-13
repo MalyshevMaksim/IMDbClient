@@ -12,7 +12,6 @@ import UIKit
 class MovieTableViewCell: UITableViewCell, MovieCellProtocol {
     static var reuseIdentifier = "MovieTableCell"
     var activityView = UIActivityIndicatorView(style: .medium)
-    private let activityIndicator = UIActivityIndicatorView(style: .medium)
     
     lazy var poster: UIImageView = {
         let imageView = UIImageView()
