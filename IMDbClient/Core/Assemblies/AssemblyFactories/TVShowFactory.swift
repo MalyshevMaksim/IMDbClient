@@ -9,11 +9,14 @@
 import Foundation
 
 class TVShowFactory: AssemblyFactory {
+    func makePresenter(view: ViewControllerProtocol, downloader: MovieDownloaderFacade, router: Router) -> MoviePresenterProtocol {
+        return MoviePresenter(view: view, movieDownloader: downloader, router: router)
+    }
+    
     func makeRequests() -> [APIRequest] {
         let topRatedRequest = GETMovieRequest(endpoint: .topRatedTVShow)
         let mostPopularRequest = GETMovieRequest(endpoint: .mostPopularTVShow)
-        let resources = [topRatedRequest, mostPopularRequest]
-        return resources
+        return [topRatedRequest, mostPopularRequest]
     }
     
     func makeViewController() -> ViewControllerProtocol {

@@ -9,6 +9,10 @@
 import Foundation
 
 class SearchFactory: AssemblyFactory {
+    func makePresenter(view: ViewControllerProtocol, downloader: MovieDownloaderFacade, router: Router) -> MoviePresenterProtocol {
+        return MovieSearchPresenter(view: view, movieDownloader: downloader, router: router)
+    }
+    
     func makeRequests() -> [APIRequest] {
         let searchRequest = GETMovieRequest(endpoint: .search)
         return [searchRequest]

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class MovieSearchPresenter: MoviePresenterProtocol {
-    var resourceDownloader: MovieDownloaderFacade
+    var movieDownloader: MovieDownloaderFacade
     var view: ViewControllerProtocol
     var router: Router
     lazy var delegate: FilterMovieDelegate = self
@@ -18,9 +18,9 @@ class MovieSearchPresenter: MoviePresenterProtocol {
     private var foundMovies: [Movie] = []
     private var searchText: String = ""
     
-    init(view: ViewControllerProtocol, resourceDownloader: MovieDownloaderFacade, router: Router) {
+    init(view: ViewControllerProtocol, movieDownloader: MovieDownloaderFacade, router: Router) {
         self.view = view
-        self.resourceDownloader = resourceDownloader
+        self.movieDownloader = movieDownloader
         self.router = router
     }
     
@@ -43,9 +43,9 @@ class MovieSearchPresenter: MoviePresenterProtocol {
     }
     
     func downloadMovies() {
-        resourceDownloader.search(searchText: searchText) { movies in
-            movies != nil ? self.foundMovies = movies! : self.foundMovies.removeAll()
-            self.view.success()
+        movieDownloader.search(searchText: searchText) { [unowned self] movies in
+            movies != nil ? foundMovies = movies! : foundMovies.removeAll()
+            view.success()
         }
     }
 }

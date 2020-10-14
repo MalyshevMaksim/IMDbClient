@@ -8,9 +8,9 @@
 
 import UIKit
 
-// Protocol responsible for building modules and installing dependencies between them.
+// Protocol responsible for building modules and installing dependencies between them
 // Assembly builders create the necessary resources based on the factory method, which
-// allows you to avoid duplicating the code of presenters.
+// allows you to avoid duplicating the code of presenters
 
 protocol AssemblyBuilder {
     func makeMainViewController(assemblyFactory: AssemblyFactory, navigationController: UINavigationController, router: Router) -> UIViewController
@@ -18,20 +18,17 @@ protocol AssemblyBuilder {
 }
 
 class MovieAssembly: AssemblyBuilder {
+    // Each presenter has its own copy of the cache,
+    // but there must be a single cache for all detailed information about the movies
+    private static var detailMovieCache = InMemoryCache()
+    
     func makeMainViewController(assemblyFactory: AssemblyFactory, navigationController: UINavigationController, router: Router) -> UIViewController {
         let view = assemblyFactory.makeViewController()
         let resources = assemblyFactory.makeRequests()
         let networkService = assemblyFactory.makeNetworkService()
         
-        let resourceDownloader = MovieDownloaderFacade(requests: resources, networkService: networkService, cacheGateway: InMemoryCache())
-        var presenter: MoviePresenterProtocol!
-        
-        if view is SearchViewController {
-            presenter = MovieSearchPresenter(view: view, resourceDownloader: resourceDownloader, router: router)
-        }
-        else {
-            presenter = MoviePresenter(view: view, resourceDownloader: resourceDownloader, router: router)
-        }
+        let movieDownloader = MovieDownloaderFacade(requests: resources, networkService: networkService, cacheGateway: InMemoryCache())
+        let presenter: MoviePresenterProtocol = assemblyFactory.makePresenter(view: view, downloader: movieDownloader, router: router)
 
         view.presenter = presenter
         return view
@@ -42,10 +39,8 @@ class MovieAssembly: AssemblyBuilder {
         let networkService = APIService(quality: .normal)
         let resource = GETMovieRequest(endpoint: .detail(id: movieId))
         
-        let presenter = MovieDetailPresenter(view: view, networkService: networkService, resource: resource, cache: globalCache)
+        let presenter = MovieDetailPresenter(view: view, networkService: networkService, resource: resource, cache: MovieAssembly.detailMovieCache)
         view.presenter = presenter
         return view
     }
 }
-
-var globalCache = InMemoryCache()

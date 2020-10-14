@@ -10,22 +10,22 @@ import Foundation
 import UIKit
 
 class MoviePresenter: MoviePresenterProtocol {
-    var resourceDownloader: MovieDownloaderFacade
+    var movieDownloader: MovieDownloaderFacade
     var view: ViewControllerProtocol
     var router: Router
     
     private var filteredMovie: [Movie] = []
     lazy var delegate: FilterMovieDelegate = self
     
-    init(view: ViewControllerProtocol, resourceDownloader: MovieDownloaderFacade, router: Router) {
+    init(view: ViewControllerProtocol, movieDownloader: MovieDownloaderFacade, router: Router) {
         self.view = view
-        self.resourceDownloader = resourceDownloader
+        self.movieDownloader = movieDownloader
         self.router = router
         downloadMovies()
     }
     
     func downloadMovies() {
-        resourceDownloader.download { error in
+        movieDownloader.download { error in
             (error == nil) ? self.view.success() : self.view.failure(error: error!)
         }
     }
@@ -52,7 +52,7 @@ class MoviePresenter: MoviePresenterProtocol {
     
     private func getMovie(in section: Int, for row: Int) -> Movie? {
         if filteredMovie.isEmpty {
-            guard let movieCollection = resourceDownloader.getCachedMovies(fromSection: section) else { return nil }
+            guard let movieCollection = movieDownloader.getCachedMovies(fromSection: section) else { return nil }
             return movieCollection[row]
         }
         else {
@@ -61,11 +61,11 @@ class MoviePresenter: MoviePresenterProtocol {
     }
     
     private func displayPoster(for cell: MovieCellProtocol, url: String) {
-        if let image = resourceDownloader.getCachedImage(for: url) {
+        if let image = movieDownloader.getCachedImage(for: url) {
             cell.display(image: image)
         }
         else {
-            resourceDownloader.downloadPoster(posterUrl: url) { image in
+            movieDownloader.downloadPoster(posterUrl: url) { image in
                 cell.display(image: image)
                 cell.stopActivity()
             }
@@ -74,14 +74,14 @@ class MoviePresenter: MoviePresenterProtocol {
     
     func getCountOfMovies(section: Int) -> Int {
         if filteredMovie.isEmpty {
-            return resourceDownloader.getCountOfMovies(fromSection: section)
+            return movieDownloader.getCountOfMovies(fromSection: section)
         }
         return filteredMovie.count
     }
     
     func showDetail(fromSection: Int, forRow: Int) {
         if filteredMovie.isEmpty {
-            guard let movie = resourceDownloader.getCachedMovie(fromSection: fromSection, forRow: forRow) else { return }
+            guard let movie = movieDownloader.getCachedMovie(fromSection: fromSection, forRow: forRow) else { return }
             router.showDetail(movieId: movie.id)
         }
         else {
@@ -93,7 +93,7 @@ class MoviePresenter: MoviePresenterProtocol {
 
 extension MoviePresenter: FilterMovieDelegate {
     func filter(_ searchController: UISearchController, didChangeSearchText text: String, in section: Int) {
-        guard let movies = resourceDownloader.getCachedMovies(fromSection: section) else {
+        guard let movies = movieDownloader.getCachedMovies(fromSection: section) else {
             return
         }
         filteredMovie = movies.filter { movie -> Bool in

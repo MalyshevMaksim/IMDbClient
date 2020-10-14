@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol MoviePresenterProtocol {
-    var resourceDownloader: MovieDownloaderFacade { get }
+    var movieDownloader: MovieDownloaderFacade { get }
     var view: ViewControllerProtocol { get }
     var delegate: FilterMovieDelegate { get set }
     var router: Router { get }

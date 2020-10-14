@@ -7,13 +7,17 @@
 //
 
 import Foundation
+import UIKit
 
 class MovieFactory: AssemblyFactory {
+    func makePresenter(view: ViewControllerProtocol, downloader: MovieDownloaderFacade, router: Router) -> MoviePresenterProtocol {
+        return MoviePresenter(view: view, movieDownloader: downloader, router: router)
+    }
+    
     func makeRequests() -> [APIRequest] {
         let topRatedRequest = GETMovieRequest(endpoint: .topRatedMovie)
         let mostPopularRequest = GETMovieRequest(endpoint: .mostPopularMovie)
-        let resources = [topRatedRequest, mostPopularRequest]
-        return resources
+        return [topRatedRequest, mostPopularRequest]
     }
     
     func makeViewController() -> ViewControllerProtocol {

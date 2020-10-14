@@ -54,27 +54,31 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     }
     
     func downloadMovieDetail() {
-        let url = resource.urlRequest.url
+        // We are trying to get information about the movie from the cache
+        // If the movie is not cached, then download it from the network
         
-        if let movieDetail = cache.fetchMovie(forKey: url!.absoluteString) {
+        guard let url = resource.urlRequest.url else { return }
+        
+        if let movieDetail = cache.fetchMovie(forKey: url.absoluteString) {
             self.movieDetail = movieDetail
-            
             DispatchQueue.main.async {
                 self.view.success()
             }
-            return
         }
-        
-        networkService.execute(url: url!) { (result: Result<Movie?, Error>) in
-            DispatchQueue.main.async {
-                switch result {
-                    case .success(let movieDetail):
-                        self.movieDetail = movieDetail
-                        self.cache.addMovie(movie: self.movieDetail!, forKey: url!.absoluteString)
-                        self.view.success()
-                    case .failure(let error):
-                        print(error)
-                }
+        else {
+            executeDetailMovie(from: url)
+        }
+    }
+    
+    private func executeDetailMovie(from url: URL) {
+        networkService.execute(url: url) { (result: Result<Movie?, Error>) in
+            switch result {
+                case .success(let movieDetail):
+                    self.movieDetail = movieDetail
+                    self.cache.addMovie(movie: self.movieDetail!, forKey: url.absoluteString)
+                    self.view.success()
+                case .failure(let error):
+                    print(error)
             }
         }
     }
@@ -83,14 +87,12 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
         guard let detail = movieDetail else { return }
         
         networkService.downloadImage(url: detail.image) { (result: Result<UIImage?, Error>) in
-            DispatchQueue.main.async {
-                switch result {
-                    case .success(let image):
-                        self.cache.addImage(image: image!, fromUrl: detail.image)
-                        view.display(image: image)
-                    case.failure:
-                        view.display(image: nil)
-                }
+            switch result {
+                case .success(let image):
+                    self.cache.addImage(image: image!, fromUrl: detail.image)
+                    view.display(image: image)
+                case.failure:
+                    view.display(image: nil)
             }
         }
     }

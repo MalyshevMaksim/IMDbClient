@@ -42,7 +42,7 @@ extension MovieCollectionViewController {
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return presenter.resourceDownloader.getNumberOfSection()
+        return presenter.movieDownloader.getNumberOfSection()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
