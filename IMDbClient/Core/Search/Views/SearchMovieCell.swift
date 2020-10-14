@@ -52,7 +52,6 @@ class SearchMovieCell: UITableViewCell, MovieCellProtocol {
     
     private func setupSubviews() {
         contentView.addSubview(title)
-        contentView.addSubview(poster)
         contentView.addSubview(subtitle)
     }
     

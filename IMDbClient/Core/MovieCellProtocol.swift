@@ -12,9 +12,9 @@ protocol MovieCellProtocol {
     var activityView: UIActivityIndicatorView { get set }
     var poster: UIImageView { get set }
     var title: UILabel { get set }
+    var subtitle: UILabel { get set }
     var imDbRating: UILabel { get set }
     var imDbRatingCount: UILabel { get set }
-    var subtitle: UILabel { get set }
 }
 
 extension MovieCellProtocol {

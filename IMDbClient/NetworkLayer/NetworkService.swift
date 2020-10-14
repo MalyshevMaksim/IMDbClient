@@ -42,8 +42,7 @@ class APIService: NetworkService {
                     comletionHandler(.failure(error))
                 }
             }
-        }
-        .resume()
+        }.resume()
     }
     
     func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {

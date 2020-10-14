@@ -66,7 +66,7 @@ extension SearchViewController: ViewControllerProtocol {
     }
     
     func failure(error: Error) {
-        fatalError("ERROR")
+        print(error)
     }
 }
 

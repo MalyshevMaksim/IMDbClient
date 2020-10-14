@@ -10,9 +10,18 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    static var APIKey: String = ""
+    
+    private func readAPIKey() {
+        guard let filePath = Bundle.main.path(forResource: "Info", ofType: "plist"),
+            let loadedData = NSDictionary(contentsOfFile: filePath) else {
+            fatalError("Failed to load data: file not found!")
+        }
+        AppDelegate.APIKey = loadedData["APIKey"] as! String
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        readAPIKey()
         return true
     }
 
