@@ -9,7 +9,7 @@
 import XCTest
 @testable import IMDbClient
 
-class CacheTest: XCTestCase {
+class InMemoryCacheTest: XCTestCase {
     var sut: CacheGateway!
     var stubMovies = [Movie(id: "1", title: "foo", image: "bar", imDbRating: "baz"),
                       Movie(id: "2", title: "foo", image: "bar", imDbRating: "baz")]
@@ -42,6 +42,17 @@ class CacheTest: XCTestCase {
             readMovies.append(sut.fetchMovie(forKey: movie.id)!)
         }
         XCTAssertEqual(readMovies, stubMovies)
+    }
+    
+    func testImageReadAndWrite() {
+        let stubImage = UIImage()
+        sut.addImage(image: stubImage, fromUrl: "foo")
+        XCTAssertEqual(stubImage, sut.fetchImage(fromUrl: "foo"))
+    }
+    
+    func testCountOfMovieCollection() {
+        sut.addMovieCollection(forKey: "foo", collection: stubMovies)
+        XCTAssertEqual(sut.getCountOfCollections(), 1)
     }
     
     func testCountOfMovie() {

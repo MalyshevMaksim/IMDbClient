@@ -11,10 +11,14 @@ import XCTest
 
 class NetworkServiceMock: NetworkService {
     var quality: PosterEndpoint = .low
-    var isCancelAllTasksCalled = false
+    
+    var isCancelCalled = false
+    var isCancelCalledBeforeExecute = false
+    var url: URL!
     
     func execute<T>(url: URL, comletionHandler: @escaping (Result<T?, Error>) -> ()) where T : Decodable {
-        
+        self.url = url
+        isCancelCalledBeforeExecute = isCancelCalled ? true : false
     }
     
     func downloadImage(url: URL, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
@@ -22,7 +26,16 @@ class NetworkServiceMock: NetworkService {
     }
     
     func cancelAllTasks() {
-        isCancelAllTasksCalled = true
+        isCancelCalled = true
+    }
+}
+
+class APIRequestMock: APIRequest {
+    static var numberOfRequests = 0
+    
+    var urlRequest: URLRequest {
+        APIRequestMock.numberOfRequests += 1
+        return URLRequest(url: URL(string: "foo")!)
     }
 }
 
@@ -61,21 +74,40 @@ class CacheGatewayMock: CacheGateway {
 }
 
 class MovieDownloaderFacadeTest: XCTestCase {
-    var networkServiceMock = NetworkServiceMock()
-    var cacheMock = CacheGatewayMock()
-    var resourceStub = GETMovieRequest(endpoint: .topRatedMovie)
-    var stub: Movie
+    var sut: MovieDownloaderFacade!
+    var networkServiceMock: NetworkServiceMock!
+    var cacheMock: CacheGatewayMock!
+    var resourceStub = [APIRequestMock(), APIRequestMock(), APIRequestMock()]
     
     override func setUp() {
-       
+        networkServiceMock = NetworkServiceMock()
+        cacheMock = CacheGatewayMock()
+        sut = MovieDownloaderFacade(requests: resourceStub, networkService: networkServiceMock, cacheGateway: cacheMock)
         super.setUp()
     }
     
     override func tearDown() {
-        stub = nil
+        APIRequestMock.numberOfRequests = 0
+        networkServiceMock = nil
+        cacheMock = nil
+        sut = nil
         super.tearDown()
     }
     
-    func testSearchCalledAllTasksCancel() {
+    func testAllResourceDownload() {
+        sut.download { error in }
+        XCTAssertEqual(resourceStub.count, APIRequestMock.numberOfRequests, "Not all requests completed")
+    }
+    
+    func testSearchRequest() {
+        let searchText = "foo"
+        sut.search(searchText: searchText) { movie in }
+        
+        let sourceSearchRequest = resourceStub.first!.urlRequest.url!.absoluteString
+        let resultSearchRequest = networkServiceMock.url.absoluteString
+        
+        XCTAssertEqual(resultSearchRequest, sourceSearchRequest + searchText, "Incorrectly formed search request")
+        XCTAssertEqual(networkServiceMock.isCancelCalled, true, "The cancellation method is not called")
+        XCTAssertEqual(networkServiceMock.isCancelCalledBeforeExecute, true, "The cancellation method is called after execute")
     }
 }
