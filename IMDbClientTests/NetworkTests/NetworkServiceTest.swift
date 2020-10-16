@@ -34,25 +34,25 @@ class DataTaskMock: URLSessionDataTaskProtocol {
 
 class NetworkServiceTest: XCTestCase {
     var urlSessionMock = URLSessionMock()
-    var networkService: NetworkService!
+    var sut: NetworkService!
     
     override func setUp() {
         super.setUp()
-        networkService = APIService(quality: .low, urlSession: urlSessionMock)
+        sut = APIService(quality: .low, urlSession: urlSessionMock)
     }
     
     override func tearDown() {
-        networkService = nil
+        sut = nil
         super.tearDown()
     }
     
     func testResumeIsCalled() {
-        networkService.execute(url: URL(string: "foo")!) { (result: Result<Movie?, Error>) in }
+        sut.execute(url: URL(string: "foo")!) { (result: Result<Movie?, Error>) in }
         XCTAssertEqual(urlSessionMock.dataTask.isResumeCalled, true, "resume() is not called")
         
         urlSessionMock.dataTask.isResumeCalled = false
         
-        networkService.downloadImage(url: URL(string: "foo")!) { result in }
+        sut.downloadImage(url: URL(string: "foo")!) { result in }
         XCTAssertEqual(urlSessionMock.dataTask.isResumeCalled, true, "resume() is not called")
     }
     

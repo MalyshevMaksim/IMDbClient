@@ -10,8 +10,6 @@ import XCTest
 @testable import IMDbClient
 
 class NetworkServiceMock: NetworkService {
-    var quality: PosterEndpoint = .low
-    
     var isCancelCalled = false
     var isCancelCalledBeforeExecute = false
     var url: URL!
