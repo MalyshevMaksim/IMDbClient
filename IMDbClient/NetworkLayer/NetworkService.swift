@@ -10,68 +10,69 @@ import UIKit
 import Foundation
 
 protocol NetworkService {
-    var quality: PosterEndpoint { get set }
     func execute<T: Decodable>(url: URL, comletionHandler: @escaping (Result<T?, Error>) -> ())
-    func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ())
+    func downloadImage(url: URL, completionHandler: @escaping (Result<UIImage, Error>) -> ())
     func cancelAllTasks()
 }
 
 class APIService: NetworkService {
-    private var urlSession: URLSession
-    var quality: PosterEndpoint
+    private var urlSession: URLSessionProtocol
+    private var quality: PosterEndpoint
     
-    init(quality: PosterEndpoint, urlSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)) {
+    init(quality: PosterEndpoint, urlSession: URLSessionProtocol = URLSession(configuration: URLSessionConfiguration.default)) {
         self.urlSession = urlSession
         self.quality = quality
     }
     
     func execute<T: Decodable>(url: URL, comletionHandler: @escaping (Result<T?, Error>) -> ()) {
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data, error == nil else {
-                comletionHandler(.failure(error!))
+        let dataTask = urlSession.dataTask(with: url) { data, response, error in
+            guard let httpUrlResponse = response as? HTTPURLResponse, let data = data else {
+                comletionHandler(.failure(NSError.makeError(withMessage: "Failed to get response")))
                 return
             }
-            do {
-                let movieJson = try JSONDecoder().decode(T.self, from: data)
-                DispatchQueue.main.async {
-                    comletionHandler(.success(movieJson))
+            if (200...299).contains(httpUrlResponse.statusCode) {
+                do {
+                    let convertedData = try JSONDecoder().decode(T.self, from: data)
+                    DispatchQueue.main.async { comletionHandler(.success(convertedData)) }
+                }
+                catch {
+                    DispatchQueue.main.async { comletionHandler(.failure(error)) }
                 }
             }
-            catch {
-                DispatchQueue.main.async {
-                    comletionHandler(.failure(error))
-                }
+            else {
+                let error = NSError.makeError(withMessage: "Request failed: code \(httpUrlResponse.statusCode)")
+                DispatchQueue.main.async { comletionHandler(.failure(error)) }
             }
-        }.resume()
+        }
+        dataTask.resume()
     }
     
-    func downloadImage(url: String, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
+    func downloadImage(url: URL, completionHandler: @escaping (Result<UIImage, Error>) -> ()) {
         guard let url = quality.makeNewQualityImageUrl(originalUrl: url) else {
+            completionHandler(.failure(NSError.makeError(withMessage: "Failed to generate request url")))
             return
         }
-        URLSession.shared.dataTask(with: url) { data, repsonse, error in
-            guard error == nil else {
-                DispatchQueue.main.async {
-                    completionHandler(.failure(error!))
-                }
+        let dataTask = urlSession.dataTask(with: url) { data, response, error in
+            guard let httpUrlResponse = response as? HTTPURLResponse, let data = data else {
+                completionHandler(.failure(NSError.makeError(withMessage: "Failed to get response")))
                 return
             }
-            if let data = data, let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    completionHandler(.success(image))
+            if (200...299).contains(httpUrlResponse.statusCode) {
+                guard let image = UIImage(data: data) else {
+                    DispatchQueue.main.async { completionHandler(.failure(NSError())) }
+                    return
                 }
+                DispatchQueue.main.async { completionHandler(.success(image)) }
+            }
+            else {
+                let error = NSError.makeError(withMessage: "Request failed: code \(httpUrlResponse.statusCode)")
+                DispatchQueue.main.async { completionHandler(.failure(error)) }
             }
         }
-        .resume()
+        dataTask.resume()
     }
     
     func cancelAllTasks() {
-        URLSession.shared.getAllTasks { tasks in
-            for task in tasks {
-                if task.state == .running {
-                    task.cancel()
-                }
-            }
-        }
+       
     }
 }

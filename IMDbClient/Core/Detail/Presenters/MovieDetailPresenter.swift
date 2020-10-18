@@ -84,12 +84,12 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     }
     
     private func downloadPoster(view: MovieDetailViewProtocol) {
-        guard let detail = movieDetail else { return }
+        guard let detail = movieDetail, let url = URL(string: detail.image) else { return }
         
-        networkService.downloadImage(url: detail.image) { (result: Result<UIImage?, Error>) in
+        networkService.downloadImage(url: url) { (result: Result<UIImage, Error>) in
             switch result {
                 case .success(let image):
-                    self.cache.addImage(image: image!, fromUrl: detail.image)
+                    self.cache.addImage(image: image, fromUrl: detail.image)
                     view.display(image: image)
                 case.failure:
                     view.display(image: nil)

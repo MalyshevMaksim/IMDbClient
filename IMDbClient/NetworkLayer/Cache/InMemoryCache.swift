@@ -13,28 +13,28 @@ class InMemoryCache: CacheGateway {
     private var movieCache: [String : Movie] = [:]
     private var movieCollection: [String : [Movie]] = [:]
     
-    func addImage(image: UIImage, fromUrl: String) {
-        imageCache.setObject(image, forKey: (fromUrl as NSString))
-    }
-    
     func addMovie(movie: Movie, forKey: String) {
         movieCache[forKey] = movie
-    }
-    
-    func addMovieCollection(forKey: String, collection: [Movie]) {
-        movieCollection[forKey] = collection
     }
     
     func fetchMovie(forKey: String) -> Movie? {
         return movieCache[forKey]
     }
     
+    func addMovieCollection(forKey: String, collection: [Movie]) {
+        movieCollection[forKey] = collection
+    }
+    
     func fetchMovieCollection(forKey: String) -> [Movie]? {
         return movieCollection[forKey]
     }
     
+    func addImage(image: UIImage, fromUrl: String) {
+        imageCache.setObject(image, forKey: (fromUrl as NSString))
+    }
+    
     func fetchImage(fromUrl: String) -> UIImage? {
-        return imageCache.object(forKey: fromUrl as NSString)
+        return UIImage()
     }
     
     func getCountOfMovies() -> Int {

@@ -10,13 +10,8 @@ import XCTest
 @testable import IMDbClient
 
 class URLSessionMock: URLSessionProtocol {
-    var dataTask = DataTaskMock()
-    var data: Data?
-    var error: Error?
-    
     func dataTask(with url: URL, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol {
-        completionHandler(data, successHttpResponse(url: url), error)
-        return dataTask
+        return DataTaskMock(completionHandler: completionHandler)
     }
     
     func successHttpResponse(url: URL) -> URLResponse {
@@ -24,10 +19,15 @@ class URLSessionMock: URLSessionProtocol {
     }
 }
 
-class DataTaskMock: URLSessionDataTaskProtocol {
+class DataTaskMock: URLSessionDataTask {
+    let completionHandler: (Data?, URLResponse?, Error?) -> Void
     var isResumeCalled = false
     
-    func resume() {
+    init(completionHandler: @escaping (Data?, URLResponse?, Error?) -> ()) {
+        self.completionHandler = completionHandler
+    }
+    
+    override func resume() {
         isResumeCalled = true
     }
 }
@@ -44,6 +44,23 @@ class NetworkServiceTest: XCTestCase {
     override func tearDown() {
         sut = nil
         super.tearDown()
+    }
+    
+    func testExecuteNon2xxResponseCode() {
+        let executeExpectation = expectation(description: "Completion handler expectation")
+        let url = URL(string: "https://google.com")!
+        
+        sut.execute(url: url) { (result: Result<MovieList?, Error>) in
+            
+            do {
+                let _ = try result.get()
+            } catch {
+                XCTFail("Err")
+            }
+            
+            executeExpectation.fulfill()
+        }
+        wait(for: [executeExpectation], timeout: 2)
     }
     
     func testResumeIsCalled() {
@@ -73,7 +90,7 @@ class NetworkServiceTest: XCTestCase {
             promise.fulfill()
         }.resume()
         
-        wait(for: [promise], timeout: 5)
+        wait(for: [promise], timeout: 2)
         XCTAssertEqual(errorMessage, "")
     }
 }

@@ -37,14 +37,14 @@ final class MovieDownloaderFacade {
         }
     }
     
-    func downloadPoster(posterUrl: String, completion: @escaping (_ image: UIImage?) -> ()) {
-        networkService.downloadImage(url: posterUrl) { [unowned self] result in
+    func downloadPoster(posterUrl: String, completion: @escaping (_ image: UIImage) -> ()) {
+        networkService.downloadImage(url: URL(string: posterUrl)!) { [unowned self] result in
             switch result {
                 case .success(let image):
-                    cache.addImage(image: image!, fromUrl: posterUrl)
+                    cache.addImage(image: image, fromUrl: posterUrl)
                     completion(image)
-                case .failure:
-                    fatalError("ERROR")
+                case .failure(let error):
+                    print(error)
             }
         }
     }

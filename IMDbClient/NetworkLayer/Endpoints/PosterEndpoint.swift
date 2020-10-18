@@ -13,9 +13,9 @@ enum PosterEndpoint {
     
     private var baseUrl: URL { return URL(string: "https://imdb-api.com/images")! }
     
-    func makeNewQualityImageUrl(originalUrl: String) -> URL? {
+    func makeNewQualityImageUrl(originalUrl: URL) -> URL? {
         let beginningPath = baseUrl.absoluteURL.absoluteString
-        let lastPath = (originalUrl as NSString).lastPathComponent
+        let lastPath = (originalUrl.absoluteString as NSString).lastPathComponent
         
         switch self {
             case .low:
