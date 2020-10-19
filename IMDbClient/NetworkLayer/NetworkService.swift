@@ -17,9 +17,9 @@ protocol NetworkService {
 
 class APIService: NetworkService {
     private var urlSession: URLSessionProtocol
-    private var quality: PosterEndpoint
+    private var quality: PosterQualityProtocol
     
-    init(quality: PosterEndpoint, urlSession: URLSessionProtocol = URLSession(configuration: URLSessionConfiguration.default)) {
+    init(quality: PosterQualityProtocol, urlSession: URLSessionProtocol = URLSession(configuration: URLSessionConfiguration.default)) {
         self.urlSession = urlSession
         self.quality = quality
     }
@@ -73,6 +73,12 @@ class APIService: NetworkService {
     }
     
     func cancelAllTasks() {
-       
+        urlSession.getAllTasks { tasks in
+            for task in tasks {
+                if task.state == .running {
+                    task.cancel()
+                }
+            }
+        }
     }
 }

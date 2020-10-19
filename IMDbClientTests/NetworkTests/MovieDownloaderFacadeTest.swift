@@ -19,7 +19,7 @@ class NetworkServiceMock: NetworkService {
         isCancelCalledBeforeExecute = isCancelCalled ? true : false
     }
     
-    func downloadImage(url: URL, completionHandler: @escaping (Result<UIImage?, Error>) -> ()) {
+    func downloadImage(url: URL, completionHandler: @escaping (Result<UIImage, Error>) -> ()) {
         
     }
     

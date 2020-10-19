@@ -25,6 +25,6 @@ class SearchFactory: AssemblyFactory {
     }
     
     func makeNetworkService() -> NetworkService {
-        return APIService(quality: .low)
+        return APIService(quality: PosterQualityEndpoint(quality: .low))
     }
 }

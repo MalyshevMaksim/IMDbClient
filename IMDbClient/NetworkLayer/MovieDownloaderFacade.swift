@@ -24,7 +24,6 @@ final class MovieDownloaderFacade {
             guard let url = request.urlRequest.url else {
                 break
             }
-           
             networkService.execute(url: url) { [unowned self] (result: Result<MovieList?, Error>) in
                 switch result {
                     case .success(let movies):

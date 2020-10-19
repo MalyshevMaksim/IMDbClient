@@ -11,18 +11,19 @@ import Foundation
 protocol URLSessionProtocol {
     typealias DataTaskResult = (Data?, URLResponse?, Error?) -> Void
     func dataTask(with request: URL, completionHandler: @escaping DataTaskResult) -> URLSessionDataTask
+    func getAllTasks(completionHandler: @escaping ([URLSessionTask]) -> Void)
 }
 
 extension URLSession: URLSessionProtocol { }
 
 extension URL {
-    static var defaultUrl: URL {
+    static var successUrl: URL {
         return URL(string: "https://www.google.com")!
     }
 }
 
 extension HTTPURLResponse {
     convenience init(statusCode: Int) {
-        self.init(url: URL.defaultUrl, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
+        self.init(url: URL.successUrl, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
     }
 }

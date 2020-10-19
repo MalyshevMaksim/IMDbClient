@@ -8,16 +8,30 @@
 
 import Foundation
 
-enum PosterEndpoint {
-    case low, normal, original
+protocol PosterQualityProtocol {
+    var baseUrl: URL? { get }
+    func makeNewQualityImageUrl(originalUrl: URL) -> URL?
+}
+
+class PosterQualityEndpoint: PosterQualityProtocol {
+    enum Quality {
+        case low
+        case normal
+        case original
+    }
     
-    private var baseUrl: URL { return URL(string: "https://imdb-api.com/images")! }
+    var baseUrl: URL? { return URL(string: "https://imdb-api.com/images") }
+    var quality: Quality
+    
+    init(quality: Quality) {
+        self.quality = quality
+    }
     
     func makeNewQualityImageUrl(originalUrl: URL) -> URL? {
-        let beginningPath = baseUrl.absoluteURL.absoluteString
+        let beginningPath = baseUrl!.absoluteURL.absoluteString
         let lastPath = (originalUrl.absoluteString as NSString).lastPathComponent
         
-        switch self {
+        switch quality {
             case .low:
                 return URL(string: beginningPath + "/144x198/" + lastPath)
             case .normal:
