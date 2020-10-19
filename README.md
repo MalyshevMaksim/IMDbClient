@@ -14,7 +14,7 @@ Implementing a mobile client for [IMDb](https://www.imdb.com/)
 - [x] Grand Central Dispatch (GCD)
 - [x] JSON parsing using `Codable`
 - [x] Programmatically UI (Auto Layout, Compositional Layout)
-- [x] XCTest (Unit)
+- [x] Unit tests
 
 ## Screenshots
 <p align="center">

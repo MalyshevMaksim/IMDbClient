@@ -9,59 +9,6 @@
 import XCTest
 @testable import IMDbClient
 
-typealias URLSessionCompletionHandlerResponse = (data: Data?, response: URLResponse?, error: Error?)
-
-class URLSessionMock: URLSessionProtocol {
-    var responses = [URLSessionCompletionHandlerResponse]()
-    var dataTask: DataTaskMock!
-    var sourceUrl: URL!
-    var countOfTasks = 0
-    var dataTasksStub = [DataTaskMock(stubResponse: nil, completionHandler: nil),
-                         DataTaskMock(stubResponse: nil, completionHandler: nil),
-                         DataTaskMock(stubResponse: nil, completionHandler: nil)]
-    
-    func enqueue(response: URLSessionCompletionHandlerResponse) {
-        responses.append(response)
-    }
-    
-    func getAllTasks(completionHandler: @escaping ([URLSessionTask]) -> Void) {
-        completionHandler(dataTasksStub)
-    }
-    
-    func dataTask(with url: URL, completionHandler: @escaping DataTaskResult) -> URLSessionDataTask {
-        self.dataTask = DataTaskMock(stubResponse: responses.removeFirst(), completionHandler: completionHandler)
-        self.sourceUrl = url
-        return dataTask
-    }
-}
-
-class DataTaskMock: URLSessionDataTask {
-    let completionHandler: ((Data?, URLResponse?, Error?) -> ())?
-    let stubHttpResponse: URLSessionCompletionHandlerResponse?
-    static var countCancelled = 0
-    
-    init(stubResponse: URLSessionCompletionHandlerResponse?, completionHandler: ((Data?, URLResponse?, Error?) -> ())?) {
-        self.stubHttpResponse = stubResponse
-        self.completionHandler = completionHandler
-    }
-    
-    override func cancel() {
-        DataTaskMock.countCancelled += 1
-    }
-    
-    override func resume() {
-        completionHandler!(stubHttpResponse?.data, stubHttpResponse?.response, stubHttpResponse?.error)
-    }
-}
-
-class PosterQualityMock: PosterQualityProtocol {
-    var baseUrl: URL? = URL.successUrl
-    
-    func makeNewQualityImageUrl(originalUrl: URL) -> URL? {
-        return baseUrl
-    }
-}
-
 class NetworkServiceTest: XCTestCase {
     var urlSessionMock = URLSessionMock()
     var posterQualityMock = PosterQualityMock()
@@ -179,7 +126,7 @@ class NetworkServiceTest: XCTestCase {
         wait(for: [responseFailureCompletionExpectation], timeout: 1)
     }
     
-    func testDownloadImageFailureGenerateURL() {
+    func testDownloadImageGenerateURLFailure() {
         let urlGenerateFailureCompletionExpectation = expectation(description: "Failure completion handler expectation")
         urlSessionMock.enqueue(response: (data: successExecuteDataStub, response: successResponseStub, error: nil))
         posterQualityMock.baseUrl = nil
@@ -211,7 +158,7 @@ class NetworkServiceTest: XCTestCase {
         XCTAssertEqual(errorMessage, "", errorMessage)
     }
     
-    func testAllCancelTask() {
+    func testAllTaskCancelled() {
         sut.cancelAllTasks()
         XCTAssertEqual(urlSessionMock.dataTasksStub.count, DataTaskMock.countCancelled, "Not all tasks have been canceled")
     }
