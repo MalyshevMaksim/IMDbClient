@@ -57,7 +57,7 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
         // We are trying to get information about the movie from the cache
         // If the movie is not cached, then download it from the network
         
-        guard let url = resource.urlRequest.url else { return }
+        guard let url = resource.urlRequest?.url else { return }
         
         if let movieDetail = cache.fetchMovie(forKey: url.absoluteString) {
             self.movieDetail = movieDetail

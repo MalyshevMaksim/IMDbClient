@@ -16,7 +16,7 @@ protocol NetworkService {
 }
 
 class APIService: NetworkService {
-    private var urlSession: URLSessionProtocol
+    internal var urlSession: URLSessionProtocol
     private var quality: PosterQualityProtocol
     
     init(quality: PosterQualityProtocol, urlSession: URLSessionProtocol = URLSession(configuration: URLSessionConfiguration.default)) {

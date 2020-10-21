@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MovieList: Decodable {
+struct MovieList: Codable {
     var items: [Movie]?
     var results: [Movie]?
     var errorMessage: String

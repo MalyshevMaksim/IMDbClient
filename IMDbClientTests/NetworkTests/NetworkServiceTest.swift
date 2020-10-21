@@ -35,7 +35,7 @@ class NetworkServiceTest: XCTestCase {
     // MARK: EXECUTE TESTS
     
     private func executeFailureExpected(expectation: XCTestExpectation) {
-        sut.execute(url: URL.successUrl) { (result: Result<ExecuteStubEntity?, Error>) in
+        sut.execute(url: URL.successUrl!) { (result: Result<ExecuteStubEntity?, Error>) in
             if (try? result.get()) != nil {
                 XCTFail("Expected status code error to be thrown")
             }
@@ -68,7 +68,7 @@ class NetworkServiceTest: XCTestCase {
         urlSessionMock.enqueue(response: (data: successExecuteDataStub, response: successResponseStub, error: nil))
         let parseCompletionExpectation = expectation(description: "Successful completion handler expectation")
         
-        sut.execute(url: URL.successUrl) { (result: Result<ExecuteStubEntity?, Error>) in
+        sut.execute(url: URL.successUrl!) { (result: Result<ExecuteStubEntity?, Error>) in
             guard let _ = try? result.get() else {
                 XCTFail("A successfull response should've been returned")
                 return
@@ -82,7 +82,7 @@ class NetworkServiceTest: XCTestCase {
     // MARK: DOWNLOAD IMAGE TESTS
     
     private func downloadImageFailureExpected(expectation: XCTestExpectation) {
-        sut.downloadImage(url: URL.successUrl) { (result: Result<UIImage, Error>) in
+        sut.downloadImage(url: URL.successUrl!) { (result: Result<UIImage, Error>) in
             if (try? result.get()) != nil {
                 XCTFail("Error was expected")
             }
@@ -95,7 +95,7 @@ class NetworkServiceTest: XCTestCase {
         let successDataStub = UIImage(systemName: "folder.fill")!.pngData()
         urlSessionMock.enqueue(response: (data: successDataStub, response: successResponseStub, error: nil))
         
-        sut.downloadImage(url: URL.successUrl) { (result: Result<UIImage, Error>) in
+        sut.downloadImage(url: URL.successUrl!) { (result: Result<UIImage, Error>) in
             guard let _ = try? result.get() else {
                 XCTFail("Successfull was expected")
                 return
@@ -153,8 +153,7 @@ class NetworkServiceTest: XCTestCase {
             errorMessage = convertedMovie.errorMessage
             promise.fulfill()
         }.resume()
-        
-        wait(for: [promise], timeout: 2)
+        wait(for: [promise], timeout: 1)
         XCTAssertEqual(errorMessage, "", errorMessage)
     }
     
@@ -164,7 +163,7 @@ class NetworkServiceTest: XCTestCase {
     }
 }
 
-private struct ExecuteStubEntity: Codable {
+struct ExecuteStubEntity: Codable {
     var SomeProperty: String
     
     var utf8String: String {

@@ -9,7 +9,7 @@
 import Foundation
 
 protocol APIRequest {
-    var urlRequest: URLRequest { get }
+    var urlRequest: URLRequest? { get }
 }
 
 class GETMovieRequest: APIRequest {
@@ -19,9 +19,9 @@ class GETMovieRequest: APIRequest {
         self.endpoint = endpoint
     }
     
-    var urlRequest: URLRequest {
+    var urlRequest: URLRequest? {
         guard let url = URL(string: endpoint.resourceUrl) else {
-            fatalError("Error")
+            return nil
         }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"

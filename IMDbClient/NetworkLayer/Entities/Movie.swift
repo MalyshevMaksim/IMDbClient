@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-struct Movie: Decodable, Hashable {
+struct Movie: Codable, Hashable {
     var id: String
     var title: String
     var image: String

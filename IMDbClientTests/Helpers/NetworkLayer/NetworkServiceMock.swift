@@ -7,11 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
-class PosterQualityMock: PosterQualityProtocol {
-    var baseUrl: URL? = URL.successUrl
-    
-    func makeNewQualityImageUrl(originalUrl: URL) -> URL? {
-        return baseUrl
-    }
-}
+
+

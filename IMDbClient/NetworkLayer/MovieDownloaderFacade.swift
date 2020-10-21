@@ -21,7 +21,8 @@ final class MovieDownloaderFacade {
     
     func download(completion: @escaping (_ error: Error?) -> ()) {
         for request in requests {
-            guard let url = request.urlRequest.url else {
+            guard let url = request.urlRequest?.url else {
+                completion(NSError.makeError(withMessage: "Invalid url request"))
                 break
             }
             networkService.execute(url: url) { [unowned self] (result: Result<MovieList?, Error>) in
@@ -36,28 +37,36 @@ final class MovieDownloaderFacade {
         }
     }
     
-    func downloadPoster(posterUrl: String, completion: @escaping (_ image: UIImage) -> ()) {
-        networkService.downloadImage(url: URL(string: posterUrl)!) { [unowned self] result in
+    func downloadPoster(posterUrl: String, completion: @escaping (_ image: UIImage?) -> ()) {
+        guard let url = URL(string: posterUrl) else {
+            completion(nil)
+            return
+        }
+        networkService.downloadImage(url: url) { [unowned self] result in
             switch result {
                 case .success(let image):
                     cache.addImage(image: image, fromUrl: posterUrl)
                     completion(image)
                 case .failure(let error):
                     print(error)
+                    completion(nil)
             }
         }
     }
     
     func search(searchText: String, completion: @escaping (_ movies: [Movie]?) -> ()) {
         networkService.cancelAllTasks()
-        let url = URL(string: requests.first!.urlRequest.url!.absoluteString + searchText)
-        
-        networkService.execute(url: url!) { (result: Result<MovieList?, Error>) in
+        guard let urlRequest = requests.first?.urlRequest, let url = URL(string: urlRequest.url!.absoluteString + searchText) else {
+            completion(nil)
+            return
+        }
+        networkService.execute(url: url) { (result: Result<MovieList?, Error>) in
             switch result {
                 case .success(let movies):
                     completion(movies?.result)
                 case .failure(let error):
                     print(error)
+                    completion(nil)
             }
         }
     }
@@ -70,7 +79,7 @@ final class MovieDownloaderFacade {
     }
     
     func getCachedMovies(fromSection: Int) -> [Movie]? {
-        guard let key = requests[fromSection].urlRequest.url?.absoluteString else {
+        guard let key = requests[fromSection].urlRequest?.url?.absoluteString else {
             return nil
         }
         return cache.fetchMovieCollection(forKey: key)
@@ -85,7 +94,7 @@ final class MovieDownloaderFacade {
     }
     
     func getCountOfMovies(fromSection: Int) -> Int {
-        guard let key = requests[fromSection].urlRequest.url?.absoluteString, let movies = cache.fetchMovieCollection(forKey: key) else {
+        guard let key = requests[fromSection].urlRequest?.url?.absoluteString, let movies = cache.fetchMovieCollection(forKey: key) else {
             return 0
         }
         return movies.count

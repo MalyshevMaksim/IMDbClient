@@ -9,7 +9,7 @@
 import Foundation
 
 extension NSError {
-    static func makeError(withMessage message: String) -> NSError {
+    static public func makeError(withMessage message: String) -> NSError {
         return NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: message])
     }
 }

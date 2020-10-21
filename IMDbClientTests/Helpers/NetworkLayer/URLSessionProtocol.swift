@@ -17,13 +17,17 @@ protocol URLSessionProtocol {
 extension URLSession: URLSessionProtocol { }
 
 extension URL {
-    static var successUrl: URL {
-        return URL(string: "https://www.google.com")!
+    static public var successUrl: URL? {
+        return URL(string: "https://www.google.com")
+    }
+    
+    static public var failureUrl: URL? {
+        return URL(string: "")
     }
 }
 
 extension HTTPURLResponse {
     convenience init(statusCode: Int) {
-        self.init(url: URL.successUrl, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
+        self.init(url: URL.successUrl!, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
     }
 }
