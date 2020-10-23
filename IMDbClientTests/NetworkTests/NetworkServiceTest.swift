@@ -11,7 +11,7 @@ import XCTest
 
 class NetworkServiceTest: XCTestCase {
     var urlSessionMock = URLSessionMock()
-    var posterQualityMock = PosterQualityMock()
+    var posterQualityStub = PosterQualityStub()
     var sut: NetworkService!
     
     var successResponseStub = HTTPURLResponse(statusCode: 200)
@@ -22,7 +22,7 @@ class NetworkServiceTest: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        sut = APIService(quality: posterQualityMock, urlSession: urlSessionMock)
+        sut = APIService(quality: posterQualityStub, urlSession: urlSessionMock)
     }
     
     override func tearDown() {
@@ -129,7 +129,7 @@ class NetworkServiceTest: XCTestCase {
     func testDownloadImageGenerateURLFailure() {
         let urlGenerateFailureCompletionExpectation = expectation(description: "Failure completion handler expectation")
         urlSessionMock.enqueue(response: (data: successExecuteDataStub, response: successResponseStub, error: nil))
-        posterQualityMock.baseUrl = nil
+        posterQualityStub.baseUrl = nil
         downloadImageFailureExpected(expectation: urlGenerateFailureCompletionExpectation)
         wait(for: [urlGenerateFailureCompletionExpectation], timeout: 1)
     }
@@ -153,7 +153,7 @@ class NetworkServiceTest: XCTestCase {
             errorMessage = convertedMovie.errorMessage
             promise.fulfill()
         }.resume()
-        wait(for: [promise], timeout: 1)
+        wait(for: [promise], timeout: 2)
         XCTAssertEqual(errorMessage, "", errorMessage)
     }
     

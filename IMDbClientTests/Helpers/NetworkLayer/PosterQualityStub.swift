@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class PosterQualityMock: PosterQualityProtocol {
+class PosterQualityStub: PosterQualityProtocol {
     var baseUrl: URL? = URL.successUrl
     
     func makeNewQualityImageUrl(originalUrl: URL) -> URL? {
@@ -22,7 +22,6 @@ class NetworkServiceMock: NetworkService {
     var isCancelCalledBeforeExecute = false
     var url: URL!
     var dataStub: Data?
-    
     
     init(dataStub: Data?) {
         self.dataStub = dataStub
@@ -74,5 +73,42 @@ class APIRequestMock: APIRequest {
             case .failure:
                 return nil
         }
+    }
+}
+
+class CacheGatewayMock: CacheGateway {
+    var isImageCached = false
+    var isMovieCollectionCached = false
+    
+    func addMovie(movie: Movie, forKey: String) {
+        
+    }
+    
+    func fetchMovie(forKey: String) -> Movie? {
+        return nil
+    }
+    
+    func addMovieCollection(forKey: String, collection: [Movie]) {
+        isMovieCollectionCached = true
+    }
+    
+    func fetchMovieCollection(forKey: String) -> [Movie]? {
+        return nil
+    }
+    
+    func addImage(image: UIImage, fromUrl: String) {
+        isImageCached = true
+    }
+    
+    func fetchImage(fromUrl: String) -> UIImage? {
+        return nil
+    }
+    
+    func getCountOfMovies() -> Int {
+        return 0
+    }
+    
+    func getCountOfCollections() -> Int {
+        return 0
     }
 }

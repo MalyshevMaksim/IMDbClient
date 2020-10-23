@@ -1,14 +1,14 @@
 //
-//  IMDbClientTests2.swift
-//  IMDbClientTests2
+//  MoviePresenterTest.swift
+//  IMDbClientTests
 //
-//  Created by Малышев Максим Алексеевич on 10/21/20.
+//  Created by Малышев Максим Алексеевич on 10/22/20.
 //  Copyright © 2020 Малышев Максим Алексеевич. All rights reserved.
 //
 
 import XCTest
 
-class IMDbClientTests2: XCTestCase {
+class MoviePresenterTest: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -25,7 +25,7 @@ class IMDbClientTests2: XCTestCase {
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
-        measure {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }

@@ -9,46 +9,9 @@
 import XCTest
 @testable import IMDbClient
 
-class CacheGatewayMock: CacheGateway {
-    var isImageCached = false
-    var isMovieCollectionCached = false
-    
-    func addMovie(movie: Movie, forKey: String) {
-        
-    }
-    
-    func fetchMovie(forKey: String) -> Movie? {
-        return nil
-    }
-    
-    func addMovieCollection(forKey: String, collection: [Movie]) {
-        isMovieCollectionCached = true
-    }
-    
-    func fetchMovieCollection(forKey: String) -> [Movie]? {
-        return nil
-    }
-    
-    func addImage(image: UIImage, fromUrl: String) {
-        isImageCached = true
-    }
-    
-    func fetchImage(fromUrl: String) -> UIImage? {
-        return nil
-    }
-    
-    func getCountOfMovies() -> Int {
-        return 0
-    }
-    
-    func getCountOfCollections() -> Int {
-        return 0
-    }
-}
-
 class MovieDownloaderFacadeTest: XCTestCase {
     var sut: MovieDownloaderFacade!
-    var cacheMock: CacheGatewayMock!
+    var cacheStub: CacheGatewayStub!
     
     var failureResourceStub = [APIRequestMock(state: .failure), APIRequestMock(state: .failure)]
     var successResourceStub = [APIRequestMock(state: .success), APIRequestMock(state: .success)]
@@ -59,13 +22,13 @@ class MovieDownloaderFacadeTest: XCTestCase {
     var successImageStub = UIImage(systemName: "folder.fill")!.pngData()
     
     override func setUp() {
-        cacheMock = CacheGatewayMock()
+        cacheStub = CacheGatewayStub()
         super.setUp()
     }
     
     override func tearDown() {
         APIRequestMock.numberOfRequests = 0
-        cacheMock = nil
+        cacheStub = nil
         sut = nil
         super.tearDown()
     }
@@ -75,14 +38,14 @@ class MovieDownloaderFacadeTest: XCTestCase {
     
     func testAllResourceDownloadSuccess() {
         let networkServiceMock = NetworkServiceMock(dataStub: successDataStub)
-        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheStub)
         sut.download { error in }
         XCTAssertEqual(successResourceStub.count, APIRequestMock.numberOfRequests, "Not all requests completed")
     }
     
     func testResourceDownloadRequestFailure() {
         let networkService = NetworkServiceMock(dataStub: successDataStub)
-        sut = MovieDownloaderFacade(requests: [APIRequestMock(state: .failure)], networkService: networkService, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: [APIRequestMock(state: .failure)], networkService: networkService, cacheGateway: cacheStub)
         let failureRequestExpectation = expectation(description: "Completion handler expectation")
         
         sut.download { error in
@@ -94,12 +57,12 @@ class MovieDownloaderFacadeTest: XCTestCase {
     
     func testDownloadResultSuccess() {
         let networkService = NetworkServiceMock(dataStub: successDataStub)
-        sut = MovieDownloaderFacade(requests: [APIRequestMock(state: .success)], networkService: networkService, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: [APIRequestMock(state: .success)], networkService: networkService, cacheGateway: cacheStub)
         let successResultExpectation = expectation(description: "Completion handler expectation")
         
         sut.download { error in
             XCTAssertNil(error, "Nil was expected")
-            XCTAssertTrue(self.cacheMock.isMovieCollectionCached, "")
+            XCTAssertTrue(self.cacheStub.isMovieCollectionCached, "")
             successResultExpectation.fulfill()
         }
         wait(for: [successResultExpectation], timeout: 1)
@@ -107,7 +70,7 @@ class MovieDownloaderFacadeTest: XCTestCase {
     
     func testDownloadResultFailure() {
         let networkServiceMock = NetworkServiceMock(dataStub: nil)
-        sut = MovieDownloaderFacade(requests: [APIRequestMock(state: .success)], networkService: networkServiceMock, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: [APIRequestMock(state: .success)], networkService: networkServiceMock, cacheGateway: cacheStub)
         let failureResultExpectation = expectation(description: "Completion handler expectation")
         
         sut.download { error in
@@ -122,7 +85,7 @@ class MovieDownloaderFacadeTest: XCTestCase {
     
     func testDownloadPosterResultSuccess() {
         let networkServiceMock = NetworkServiceMock(dataStub: successImageStub)
-        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheStub)
         let successResultExpectation = expectation(description: "Completion handler expectation")
         
         sut.downloadPoster(posterUrl: URL.successUrl!.absoluteString) { image in
@@ -130,12 +93,12 @@ class MovieDownloaderFacadeTest: XCTestCase {
             successResultExpectation.fulfill()
         }
         wait(for: [successResultExpectation], timeout: 1)
-        XCTAssertTrue(cacheMock.isImageCached, "Image is not cached")
+        XCTAssertTrue(cacheStub.isImageCached, "Image is not cached")
     }
     
     func testDownloadPosterResultFailure() {
         let networkServiceMock = NetworkServiceMock(dataStub: nil)
-        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheStub)
         let failureResultExpectation = expectation(description: "Completion handler expectation")
         
         sut.downloadPoster(posterUrl: URL.successUrl!.absoluteString) { image in
@@ -147,7 +110,7 @@ class MovieDownloaderFacadeTest: XCTestCase {
     
     func testDownloadPosterComposedQueryFailure() {
         let networkService = NetworkServiceMock(dataStub: successDataStub)
-        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkService, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkService, cacheGateway: cacheStub)
         let failureResultExpectation = expectation(description: "Completion handler expectation")
         
         sut.downloadPoster(posterUrl: "") { image in
@@ -162,7 +125,7 @@ class MovieDownloaderFacadeTest: XCTestCase {
     
     func testSearchResultSuccess() {
         let networkServiceMock = NetworkServiceMock(dataStub: successDataStub)
-        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheStub)
         let successResultExpectation = expectation(description: "Completion handler expectation")
         
         sut.search(searchText: "foo") { movies in
@@ -174,7 +137,7 @@ class MovieDownloaderFacadeTest: XCTestCase {
     
     func testSearchResultFailure() {
         let networkServiceMock = NetworkServiceMock(dataStub: nil)
-        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheStub)
         let failureResultExpectation = expectation(description: "Completion handler expectation")
         
         sut.search(searchText: "foo") { movies in
@@ -186,7 +149,7 @@ class MovieDownloaderFacadeTest: XCTestCase {
     
     func testComposedSearchQueryFailure() {
         let networkServiceMock = NetworkServiceMock(dataStub: successDataStub)
-        sut = MovieDownloaderFacade(requests: failureResourceStub, networkService: networkServiceMock, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: failureResourceStub, networkService: networkServiceMock, cacheGateway: cacheStub)
         let failureComposedSearchQueryExpectation = expectation(description: "Completion handler expectation")
         
         sut.search(searchText: "") { movies in
@@ -198,7 +161,7 @@ class MovieDownloaderFacadeTest: XCTestCase {
     
     func testComposedSearchQueryCorrectly() {
         let networkServiceMock = NetworkServiceMock(dataStub: successDataStub)
-        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheStub)
         sut.search(searchText: "foo") { movie in }
         let sourceSearchRequest = successResourceStub.first!.urlRequest!.url!.absoluteString
         let resultSearchRequest = networkServiceMock.url.absoluteString
@@ -207,7 +170,7 @@ class MovieDownloaderFacadeTest: XCTestCase {
     
     func testTasksСanceledСorrectly() {
         let networkServiceMock = NetworkServiceMock(dataStub: successDataStub)
-        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheMock)
+        sut = MovieDownloaderFacade(requests: successResourceStub, networkService: networkServiceMock, cacheGateway: cacheStub)
         sut.search(searchText: "foo") { movie in }
         XCTAssertEqual(networkServiceMock.isCancelCalled, true, "The cancellation method is not called")
         XCTAssertTrue(networkServiceMock.isCancelCalledBeforeExecute, "The cancellation method is called after execute")
