@@ -1,5 +1,5 @@
 //
-//  NetworkServiceMock.swift
+//  CacheGatewayStub.swift
 //  IMDbClient
 //
 //  Created by Малышев Максим Алексеевич on 10/23/20.
