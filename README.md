@@ -24,3 +24,8 @@ Implementing a mobile client for [IMDb](https://www.imdb.com/)
   <img src = "https://github.com/MalyshevMaksim/IMDbClient/raw/master/screenshots/Trends.png" width="250"/>
   <img src = "https://github.com/MalyshevMaksim/IMDbClient/raw/master/screenshots/Search.png" width="250"/>
 </p>
+
+## Build and Run
+1. Register on [IMDbAPI](https://imdb-api.com/) and get your API Key
+2. Enter your API Key in the info.plist of your project
+3. Run
