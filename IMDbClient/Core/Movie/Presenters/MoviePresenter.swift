@@ -10,23 +10,22 @@ import Foundation
 import UIKit
 
 class MoviePresenter: MoviePresenterProtocol {
-    var movieDownloader: MovieDownloaderFacade
+    var downloader: MovieDownloaderFacadeProtocol
     var view: ViewControllerProtocol
-    var router: Router
-    
-    private var filteredMovie: [Movie] = []
+    var router: RouterProtocol
+    var filteredMovie: [Movie] = []
     lazy var delegate: FilterMovieDelegate = self
     
-    init(view: ViewControllerProtocol, movieDownloader: MovieDownloaderFacade, router: Router) {
+    init(view: ViewControllerProtocol, movieDownloader: MovieDownloaderFacadeProtocol, router: RouterProtocol) {
         self.view = view
-        self.movieDownloader = movieDownloader
+        self.downloader = movieDownloader
         self.router = router
         downloadMovies()
     }
     
     func downloadMovies() {
-        movieDownloader.download { error in
-            (error == nil) ? self.view.success() : self.view.failure(error: error!)
+        downloader.download { error in
+            error == nil ? self.view.success() : self.view.failure(error: error!)
         }
     }
     
@@ -34,11 +33,11 @@ class MoviePresenter: MoviePresenterProtocol {
         guard let movie = getMovie(in: section, for: row) else {
             return
         }
-        
         DispatchQueue.main.async {
             cell.startActivity()
             cell.display(title: movie.title)
             cell.display(subtitle: movie.subtitle)
+            self.displayPoster(for: cell, url: movie.image)
             
             guard let imDbRating = movie.imDbRating, !imDbRating.isEmpty, let imDbRatingCount = movie.imDbRatingCount, !imDbRatingCount.isEmpty else {
                 cell.display(imDbRating: "⭐️ No ratings")
@@ -52,7 +51,9 @@ class MoviePresenter: MoviePresenterProtocol {
     
     private func getMovie(in section: Int, for row: Int) -> Movie? {
         if filteredMovie.isEmpty {
-            guard let movieCollection = movieDownloader.getCachedMovies(fromSection: section) else { return nil }
+            guard let movieCollection = downloader.getCachedMovies(fromSection: section) else {
+                return nil
+            }
             return movieCollection[row]
         }
         else {
@@ -61,39 +62,43 @@ class MoviePresenter: MoviePresenterProtocol {
     }
     
     private func displayPoster(for cell: MovieCellProtocol, url: String) {
-        if let image = movieDownloader.getCachedImage(for: url) {
+        if let image = downloader.getCachedImage(for: url) {
             cell.display(image: image)
         }
         else {
-            movieDownloader.downloadPoster(posterUrl: url) { image in
+            downloader.downloadPoster(posterUrl: url) { image in
                 cell.display(image: image)
-                cell.stopActivity()
             }
         }
+        cell.stopActivity()
     }
     
     func getCountOfMovies(section: Int) -> Int {
         if filteredMovie.isEmpty {
-            return movieDownloader.getCountOfMovies(fromSection: section)
+            return downloader.getCountOfMovies(fromSection: section)
         }
         return filteredMovie.count
     }
     
     func showDetail(fromSection: Int, forRow: Int) {
+        var movie: Movie
+        
         if filteredMovie.isEmpty {
-            guard let movie = movieDownloader.getCachedMovie(fromSection: fromSection, forRow: forRow) else { return }
-            router.showDetail(movieId: movie.id)
+            guard let cachedMovie = downloader.getCachedMovie(fromSection: fromSection, forRow: forRow) else {
+                return
+            }
+            movie = cachedMovie
         }
         else {
-            let movie = filteredMovie[forRow]
-            router.showDetail(movieId: movie.id)
+            movie = filteredMovie[forRow]
         }
+        router.showDetail(movieId: movie.id)
     }
 }
 
 extension MoviePresenter: FilterMovieDelegate {
     func filter(_ searchController: UISearchController, didChangeSearchText text: String, in section: Int) {
-        guard let movies = movieDownloader.getCachedMovies(fromSection: section) else {
+        guard let movies = downloader.getCachedMovies(fromSection: section) else {
             return
         }
         filteredMovie = movies.filter { movie -> Bool in

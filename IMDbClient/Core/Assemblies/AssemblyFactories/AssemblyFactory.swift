@@ -17,5 +17,5 @@ protocol AssemblyFactory {
     func makeRequests() -> [APIRequest]
     func makeViewController() -> ViewControllerProtocol
     func makeNetworkService() -> NetworkService
-    func makePresenter(view: ViewControllerProtocol, downloader: MovieDownloaderFacade, router: Router) -> MoviePresenterProtocol
+    func makePresenter(view: ViewControllerProtocol, downloader: MovieDownloaderFacade, router: RouterProtocol) -> MoviePresenterProtocol
 }

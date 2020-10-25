@@ -9,21 +9,9 @@
 import Foundation
 import UIKit
 
-class SearchMovieCell: UITableViewCell, MovieCellProtocol {
+class SearchMovieCell: UITableViewCell {
     static var reuseIdentifier = "MovieTableCell"
     var activityView: UIActivityIndicatorView = UIActivityIndicatorView(style: .medium)
-    
-    lazy var imDbRating: UILabel = {
-        return UILabel()
-    }()
-    
-    lazy var imDbRatingCount: UILabel = {
-        return UILabel()
-    }()
-    
-    lazy var poster: UIImageView = {
-        return UIImageView()
-    }()
     
     lazy var title: UILabel = {
         let label = UILabel()
@@ -69,5 +57,35 @@ class SearchMovieCell: UITableViewCell, MovieCellProtocol {
             
             contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: subtitle.lastBaselineAnchor, multiplier: 0)
         ])
+    }
+}
+
+extension SearchMovieCell: MovieCellProtocol {
+    func display(image: UIImage?) {
+        
+    }
+    
+    func display(title: String) {
+        self.title.text = title
+    }
+    
+    func display(subtitle: String) {
+        self.subtitle.text = subtitle
+    }
+    
+    func display(imDbRating: String) {
+        
+    }
+    
+    func display(imDbRatingCount: String) {
+        
+    }
+    
+    func startActivity() {
+        
+    }
+    
+    func stopActivity() {
+        
     }
 }

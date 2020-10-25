@@ -9,45 +9,11 @@
 import UIKit
 
 protocol MovieCellProtocol {
-    var activityView: UIActivityIndicatorView { get set }
-    var poster: UIImageView { get set }
-    var title: UILabel { get set }
-    var subtitle: UILabel { get set }
-    var imDbRating: UILabel { get set }
-    var imDbRatingCount: UILabel { get set }
-}
-
-extension MovieCellProtocol {
-    func display(image: UIImage?) {
-        UIView.transition(with: self.poster, duration: 0.5, options: .transitionCrossDissolve, animations: {
-            self.poster.image = image
-        })
-    }
-    
-    func display(title: String) {
-        self.title.text = title
-    }
-    
-    func display(subtitle: String) {
-        self.subtitle.text = subtitle
-    }
-    
-    func display(imDbRating: String) {
-        self.imDbRating.text = imDbRating
-    }
-    
-    func display(imDbRatingCount: String) {
-        self.imDbRatingCount.text = imDbRatingCount
-    }
-    
-    func startActivity() {
-        self.poster.addSubview(activityView)
-        activityView.hidesWhenStopped = true
-        activityView.center = poster.center
-        activityView.startAnimating()
-    }
-    
-    func stopActivity() {
-        activityView.stopAnimating()
-    }
+    func display(title: String)
+    func display(subtitle: String)
+    func display(imDbRating: String)
+    func display(imDbRatingCount: String)
+    func display(image: UIImage?)
+    func startActivity()
+    func stopActivity()
 }

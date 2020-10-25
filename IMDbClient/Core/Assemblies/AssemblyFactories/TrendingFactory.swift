@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class TrendingFactory: AssemblyFactory {
-    func makePresenter(view: ViewControllerProtocol, downloader: MovieDownloaderFacade, router: Router) -> MoviePresenterProtocol {
+    func makePresenter(view: ViewControllerProtocol, downloader: MovieDownloaderFacade, router: RouterProtocol) -> MoviePresenterProtocol {
         return MoviePresenter(view: view, movieDownloader: downloader, router: router)
     }
     

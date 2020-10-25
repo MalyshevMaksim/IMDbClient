@@ -24,5 +24,3 @@ Implementing a mobile client for [IMDb](https://www.imdb.com/)
   <img src = "https://github.com/MalyshevMaksim/IMDbClient/raw/master/screenshots/Trends.png" width="250"/>
   <img src = "https://github.com/MalyshevMaksim/IMDbClient/raw/master/screenshots/Search.png" width="250"/>
 </p>
-
-## Build and Running

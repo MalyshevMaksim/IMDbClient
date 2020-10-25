@@ -8,10 +8,22 @@
 
 import UIKit
 
-final class MovieDownloaderFacade {
-    private var requests: [APIRequest]
-    private var networkService: NetworkService
-    private var cache: CacheGateway
+protocol MovieDownloaderFacadeProtocol {
+    func download(completion: @escaping (_ error: Error?) -> ())
+    func downloadPoster(posterUrl: String, completion: @escaping (_ image: UIImage?) -> ())
+    func search(searchText: String, completion: @escaping (_ movies: [Movie]?) -> ())
+    
+    func getCachedMovie(fromSection: Int, forRow: Int) -> Movie?
+    func getCachedMovies(fromSection: Int) -> [Movie]?
+    func getCachedImage(for key: String) -> UIImage?
+    func getNumberOfSection() -> Int
+    func getCountOfMovies(fromSection: Int) -> Int
+}
+
+class MovieDownloaderFacade: MovieDownloaderFacadeProtocol {
+    internal var requests: [APIRequest]
+    internal var networkService: NetworkService
+    internal var cache: CacheGateway
     
     init(requests: [APIRequest], networkService: NetworkService, cacheGateway: CacheGateway) {
         self.requests = requests

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class MovieDetailViewController: UIViewController, DetailViewControllerProtocol, MovieDetailViewProtocol {
+class MovieDetailViewController: UIViewController {
     var presenter: MovieDetailPresenterProtocol!
     var activityIndicator = UIActivityIndicatorView(style: .large)
     
@@ -208,18 +208,51 @@ class MovieDetailViewController: UIViewController, DetailViewControllerProtocol,
     }
 }
 
-extension MovieDetailViewController {
+extension MovieDetailViewController: DetailViewControllerProtocol {
     func success() {
-        presenter.configureView(view: self)
-        for view in view.subviews {
-            UIView.transition(with: view, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                view.isHidden = false
-            })
+        DispatchQueue.main.async {
+            self.presenter.configureView(view: self)
+            for view in self.view.subviews {
+                UIView.transition(with: view, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    view.isHidden = false
+                })
+            }
+            self.activityIndicator.stopAnimating()
         }
-        activityIndicator.stopAnimating()
     }
     
     func failure(error: Error) {
         print(error)
+    }
+}
+
+extension MovieDetailViewController: MovieDetailViewProtocol {
+    func display(image: UIImage?) {
+        poster.image = image
+    }
+    
+    func display(title: String) {
+        movieTitle.text = title
+    }
+    
+    func display(imDbRating: String) {
+        self.imDbRating.text = imDbRating
+        self.starStack.rating = Double(imDbRating)
+    }
+    
+    func display(length: String) {
+        self.length.text = length
+    }
+    
+    func display(releaseDate: String) {
+        self.releaseDate.text = releaseDate
+    }
+    
+    func display(contentRating: String) {
+        self.contentRating.text = contentRating
+    }
+    
+    func display(plot: String) {
+        self.plot.text = plot
     }
 }

@@ -34,7 +34,7 @@ class InMemoryCache: CacheGateway {
     }
     
     func fetchImage(fromUrl: String) -> UIImage? {
-        return UIImage()
+        return imageCache.object(forKey: fromUrl as NSString)
     }
     
     func getCountOfMovies() -> Int {

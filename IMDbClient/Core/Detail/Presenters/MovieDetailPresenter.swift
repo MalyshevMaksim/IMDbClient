@@ -15,6 +15,7 @@ protocol MovieDetailPresenterProtocol {
     var view: DetailViewControllerProtocol { get set }
     
     func downloadMovieDetail()
+    func downloadPoster(view: MovieDetailViewProtocol)
     func configureView(view: MovieDetailViewProtocol)
 }
 
@@ -22,6 +23,7 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     var resource: APIRequest
     var networkService: NetworkService
     var view: DetailViewControllerProtocol
+    
     var cache: CacheGateway
     var movieDetail: Movie?
     
@@ -34,66 +36,64 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     }
     
     func configureView(view: MovieDetailViewProtocol) {
-        guard let detail = movieDetail else { return }
-        
-        DispatchQueue.main.async { [unowned self] in
-            view.display(title: detail.title)
-            view.display(imDbRating: detail.imDbRating!)
-            view.display(length: "⏱ \(detail.runtimeStr!)")
-            view.display(contentRating: "🔞 \(detail.contentRating!)")
-            view.display(releaseDate: "🗓 \(detail.year!)")
-            view.display(plot: detail.plot!)
-            
-            if let image = cache.fetchImage(fromUrl: detail.image) {
-                view.display(image: image)
-            }
-            else {
-                downloadPoster(view: view)
-            }
+        guard let movie = movieDetail else {
+            return
         }
+        view.display(title: movie.title)
+        view.display(imDbRating: movie.imDbRating!)
+        view.display(length: movie.runtimeStr ?? "Unknown")
+        view.display(contentRating: movie.contentRating!)
+        view.display(releaseDate: movie.year!)
+        view.display(plot: movie.plot!)
+        downloadPoster(view: view)
     }
     
     func downloadMovieDetail() {
-        // We are trying to get information about the movie from the cache
-        // If the movie is not cached, then download it from the network
-        
-        guard let url = resource.urlRequest?.url else { return }
-        
-        if let movieDetail = cache.fetchMovie(forKey: url.absoluteString) {
-            self.movieDetail = movieDetail
-            DispatchQueue.main.async {
-                self.view.success()
-            }
+        guard let url = resource.urlRequest?.url else {
+            return
+        }
+        if let movie = isMovieCached(from: url) {
+            self.movieDetail = movie
+            self.view.success()
         }
         else {
-            executeDetailMovie(from: url)
-        }
-    }
-    
-    private func executeDetailMovie(from url: URL) {
-        networkService.execute(url: url) { (result: Result<Movie?, Error>) in
-            switch result {
-                case .success(let movieDetail):
-                    self.movieDetail = movieDetail
-                    self.cache.addMovie(movie: self.movieDetail!, forKey: url.absoluteString)
-                    self.view.success()
-                case .failure(let error):
-                    print(error)
+            networkService.execute(url: url) { (result: Result<Movie?, Error>) in
+                switch result {
+                    case .success(let movieDetail):
+                        self.movieDetail = movieDetail
+                        self.cache.addMovie(movie: self.movieDetail!, forKey: url.absoluteString)
+                        self.view.success()
+                    case .failure(let error):
+                        self.view.failure(error: error)
+                }
             }
         }
     }
     
-    private func downloadPoster(view: MovieDetailViewProtocol) {
-        guard let detail = movieDetail, let url = URL(string: detail.image) else { return }
-        
-        networkService.downloadImage(url: url) { (result: Result<UIImage, Error>) in
-            switch result {
-                case .success(let image):
-                    self.cache.addImage(image: image, fromUrl: detail.image)
-                    view.display(image: image)
-                case.failure:
-                    view.display(image: nil)
+    func downloadPoster(view: MovieDetailViewProtocol) {
+        guard let movie = movieDetail, let url = URL(string: movie.image) else {
+            return
+        }
+        if let image = cache.fetchImage(fromUrl: movie.image) {
+            view.display(image: image)
+        }
+        else {
+            networkService.downloadImage(url: url) { (result: Result<UIImage, Error>) in
+               switch result {
+                   case .success(let image):
+                       self.cache.addImage(image: image, fromUrl: movie.image)
+                       view.display(image: image)
+                   case.failure:
+                       view.display(image: nil)
+                }
             }
         }
+    }
+    
+    private func isMovieCached(from url: URL) -> Movie? {
+        guard let movie = cache.fetchMovie(forKey: url.absoluteString) else {
+            return nil
+        }
+        return movie
     }
 }

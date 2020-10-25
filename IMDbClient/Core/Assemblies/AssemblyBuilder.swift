@@ -13,7 +13,7 @@ import UIKit
 // allows you to avoid duplicating the code of presenters
 
 protocol AssemblyBuilder {
-    func makeMainViewController(assemblyFactory: AssemblyFactory, navigationController: UINavigationController, router: Router) -> UIViewController
+    func makeMainViewController(assemblyFactory: AssemblyFactory, navigationController: UINavigationController, router: RouterProtocol) -> UIViewController
     func makeDetailViewController(movieId: String) -> UIViewController
 }
 
@@ -22,7 +22,7 @@ class MovieAssembly: AssemblyBuilder {
     // but there must be a single cache for all detailed information about the movies
     private static var detailMovieCache = InMemoryCache()
     
-    func makeMainViewController(assemblyFactory: AssemblyFactory, navigationController: UINavigationController, router: Router) -> UIViewController {
+    func makeMainViewController(assemblyFactory: AssemblyFactory, navigationController: UINavigationController, router: RouterProtocol) -> UIViewController {
         let view = assemblyFactory.makeViewController()
         let resources = assemblyFactory.makeRequests()
         let networkService = assemblyFactory.makeNetworkService()

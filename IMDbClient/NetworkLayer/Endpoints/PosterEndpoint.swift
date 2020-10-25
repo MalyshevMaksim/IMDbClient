@@ -28,6 +28,10 @@ class PosterQualityEndpoint: PosterQualityProtocol {
     }
     
     func makeNewQualityImageUrl(originalUrl: URL) -> URL? {
+        if originalUrl.absoluteURL.absoluteString.contains("amazon") {
+            // if the image fetch was cached
+            return originalUrl
+        }
         let beginningPath = baseUrl!.absoluteURL.absoluteString
         let lastPath = (originalUrl.absoluteString as NSString).lastPathComponent
         

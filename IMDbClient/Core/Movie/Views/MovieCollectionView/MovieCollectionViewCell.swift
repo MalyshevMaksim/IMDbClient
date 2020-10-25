@@ -9,17 +9,9 @@
 import Foundation
 import UIKit
 
-class MovieCollectionViewCell: UICollectionViewCell, MovieCellProtocol {
+class MovieCollectionViewCell: UICollectionViewCell {
     var activityView = UIActivityIndicatorView(style: .medium)
     static var reuseIdentifier = "MovieTableCell"
-    
-    lazy var imDbRating: UILabel =  {
-        return UILabel()
-    }()
-    
-    lazy var imDbRatingCount: UILabel = {
-        return UILabel()
-    }()
     
     lazy var poster: UIImageView = {
         let imageView = UIImageView()
@@ -77,5 +69,40 @@ class MovieCollectionViewCell: UICollectionViewCell, MovieCellProtocol {
             subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10),
             subtitle.trailingAnchor.constraint(equalTo: title.trailingAnchor),
         ])
+    }
+}
+
+extension MovieCollectionViewCell: MovieCellProtocol {
+    func display(image: UIImage?) {
+        UIView.transition(with: self.poster, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.poster.image = image
+        })
+    }
+    
+    func display(title: String) {
+        self.title.text = title
+    }
+    
+    func display(subtitle: String) {
+        self.subtitle.text = subtitle
+    }
+    
+    func display(imDbRating: String) {
+        
+    }
+    
+    func display(imDbRatingCount: String) {
+        
+    }
+    
+    func startActivity() {
+        self.poster.addSubview(activityView)
+        activityView.hidesWhenStopped = true
+        activityView.center = poster.center
+        activityView.startAnimating()
+    }
+    
+    func stopActivity() {
+        activityView.stopAnimating()
     }
 }

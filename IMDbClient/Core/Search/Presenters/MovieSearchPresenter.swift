@@ -10,49 +10,48 @@ import Foundation
 import UIKit
 
 class MovieSearchPresenter: MoviePresenterProtocol {
-    var movieDownloader: MovieDownloaderFacade
+    var downloader: MovieDownloaderFacadeProtocol
     var view: ViewControllerProtocol
-    var router: Router
+    var router: RouterProtocol
     lazy var delegate: FilterMovieDelegate = self
     
-    private var foundMovies: [Movie] = []
+    internal var filteredMovie: [Movie] = []
     private var searchText: String = ""
     
-    init(view: ViewControllerProtocol, movieDownloader: MovieDownloaderFacade, router: Router) {
+    init(view: ViewControllerProtocol, movieDownloader: MovieDownloaderFacadeProtocol, router: RouterProtocol) {
         self.view = view
-        self.movieDownloader = movieDownloader
+        self.downloader = movieDownloader
         self.router = router
     }
     
+    func downloadMovies() {
+        downloader.search(searchText: searchText) { [unowned self] movies in
+            movies != nil ? filteredMovie = movies! : filteredMovie.removeAll()
+            view.success()
+        }
+    }
+    
     func displayCell(cell: MovieCellProtocol, in section: Int, for row: Int) {
-        let movie = foundMovies[row]
-        
+        let movie = filteredMovie[row]
         DispatchQueue.main.async {
             cell.display(title: movie.title)
             cell.display(subtitle: movie.subtitle)
         }
     }
     
-    func showDetail(fromSection: Int, forRow: Int) {
-        let movie = foundMovies[forRow]
-        router.showDetail(movieId: movie.id)
-    }
-    
     func getCountOfMovies(section: Int) -> Int {
-        return foundMovies.count
+        return filteredMovie.count
     }
     
-    func downloadMovies() {
-        movieDownloader.search(searchText: searchText) { [unowned self] movies in
-            movies != nil ? foundMovies = movies! : foundMovies.removeAll()
-            view.success()
-        }
+    func showDetail(fromSection: Int, forRow: Int) {
+        let movie = filteredMovie[forRow]
+        router.showDetail(movieId: movie.id)
     }
 }
 
 extension MovieSearchPresenter: FilterMovieDelegate {
     func filter(_ searchController: UISearchController, didChangeSearchText text: String, in section: Int) {
-        self.searchText = text
+        self.searchText = text.replacingOccurrences(of: " ", with: "")
         downloadMovies()
     }
 }

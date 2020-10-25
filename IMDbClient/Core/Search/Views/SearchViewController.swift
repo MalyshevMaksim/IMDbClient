@@ -61,8 +61,10 @@ class SearchViewController: UITableViewController {
 
 extension SearchViewController: ViewControllerProtocol {
     func success() {
-        self.activityIndicator.stopAnimating()
-        self.tableView.reloadData()
+        DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
+            self.tableView.reloadData()
+        }
     }
     
     func failure(error: Error) {
@@ -79,7 +81,7 @@ extension SearchViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchMovieCell.reuseIdentifier) as? SearchMovieCell else {
             return UITableViewCell()
         }
-        presenter.displayCell(cell: cell, in: indexPath.section, for: indexPath.row)
+        self.presenter.displayCell(cell: cell, in: indexPath.section, for: indexPath.row)
         return cell
     }
     

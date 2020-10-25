@@ -13,11 +13,11 @@ struct Movie: Codable, Hashable {
     var id: String
     var title: String
     var image: String
-    var imDbRating: String?
-    var imDbRatingCount: String?
     var crew: String?
     var plot: String?
     var description: String?
+    var imDbRating: String?
+    var imDbRatingCount: String?
     var runtimeStr: String?
     var year: String?
     var releaseDate: String?

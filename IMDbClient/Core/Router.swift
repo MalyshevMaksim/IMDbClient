@@ -11,7 +11,12 @@ import UIKit
 // The class responsible for navigating the application
 // For example, to show detailed information about a movie
 
-class Router {
+protocol RouterProtocol {
+    func initialNavigationController()
+    func showDetail(movieId: String)
+}
+
+class Router: RouterProtocol {
     private var assembly: AssemblyBuilder
     private var assemblyFactory: AssemblyFactory
     private var rootNavigationController: UINavigationController

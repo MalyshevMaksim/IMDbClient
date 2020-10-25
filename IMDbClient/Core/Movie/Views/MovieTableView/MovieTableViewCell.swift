@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class MovieTableViewCell: UITableViewCell, MovieCellProtocol {
+class MovieTableViewCell: UITableViewCell {
     static var reuseIdentifier = "MovieTableCell"
     var activityView = UIActivityIndicatorView(style: .medium)
     
@@ -101,5 +101,40 @@ class MovieTableViewCell: UITableViewCell, MovieCellProtocol {
             
             contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: poster.lastBaselineAnchor, multiplier: 0)
         ])
+    }
+}
+
+extension MovieTableViewCell: MovieCellProtocol {
+    func display(image: UIImage?) {
+        UIView.transition(with: self.poster, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.poster.image = image
+        })
+    }
+    
+    func display(title: String) {
+        self.title.text = title
+    }
+    
+    func display(subtitle: String) {
+        self.subtitle.text = subtitle
+    }
+    
+    func display(imDbRating: String) {
+        self.imDbRating.text = imDbRating
+    }
+    
+    func display(imDbRatingCount: String) {
+        self.imDbRatingCount.text = imDbRatingCount
+    }
+    
+    func startActivity() {
+        poster.addSubview(activityView)
+        activityView.center = poster.center
+        activityView.hidesWhenStopped = true
+        activityView.startAnimating()
+    }
+    
+    func stopActivity() {
+        activityView.stopAnimating()
     }
 }
