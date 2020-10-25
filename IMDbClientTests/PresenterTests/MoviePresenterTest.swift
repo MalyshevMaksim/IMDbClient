@@ -47,32 +47,6 @@ class MoviePresenterTest: XCTestCase {
         XCTAssertNil(cellStub.image)
     }
     
-    func testDisplayCellWithRating() {
-        sut.filteredMovie = filteredMovieStub
-        let movie = filteredMovieStub[1]
-        let cellStub = MovieCellStub()
-        sut.displayCell(cell: cellStub, in: 0, for: 1)
-        
-        XCTAssertEqual(cellStub.imDbRating, "⭐️ \(movie.imDbRating!) IMDb")
-        XCTAssertEqual(cellStub.imtDbRatingCount, "based on \(movie.imDbRatingCount!) user ratings")
-        XCTAssertTrue(cellStub.isActivityStarted)
-        XCTAssertTrue(cellStub.isActivityStopped)
-    }
-    
-    func testDisplayCellWithoutRating() {
-        sut.filteredMovie = filteredMovieStub
-        let movie = filteredMovieStub.first
-        let cellStub = MovieCellStub()
-        sut.displayCell(cell: cellStub, in: 0, for: 0)
-        
-        XCTAssertEqual(cellStub.title, movie?.title)
-        XCTAssertEqual(cellStub.subtitle, movie?.subtitle)
-        XCTAssertEqual(cellStub.imDbRating, "⭐️ No ratings")
-        XCTAssertEqual(cellStub.imtDbRatingCount, "Ratings for this movie are not yet available")
-        XCTAssertTrue(cellStub.isActivityStarted)
-        XCTAssertTrue(cellStub.isActivityStopped)
-    }
-    
     func testGetCountOfMoviesWithFiltered() {
         sut.filteredMovie = filteredMovieStub
         let count = sut.getCountOfMovies(section: 0)

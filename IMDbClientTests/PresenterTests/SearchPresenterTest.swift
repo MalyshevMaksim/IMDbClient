@@ -46,13 +46,4 @@ class SearchPresenterTest: XCTestCase {
         sut.downloadMovies()
         XCTAssertTrue(viewStub.isSuccessCalled)
     }
-    
-    func testDisplayCell() {
-        let movie = filteredMovieStub.first
-        let cellStub = MovieCellStub()
-        sut.filteredMovie = filteredMovieStub
-        sut.displayCell(cell: cellStub, in: 0, for: 0)
-        XCTAssertEqual(cellStub.title, movie?.title)
-        XCTAssertEqual(cellStub.subtitle, movie?.subtitle)
-    }
 }

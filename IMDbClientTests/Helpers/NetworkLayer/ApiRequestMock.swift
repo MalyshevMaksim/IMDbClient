@@ -7,3 +7,28 @@
 //
 
 import Foundation
+
+class APIRequestMock: APIRequest {
+    enum URLState {
+        case success
+        case failure
+    }
+    
+    static var numberOfRequests = 0
+    var state: URLState
+    
+    init(state: URLState) {
+        self.state = state
+    }
+    
+    var urlRequest: URLRequest? {
+        APIRequestMock.numberOfRequests += 1
+        
+        switch state {
+            case .success:
+                return URLRequest(url: URL.successUrl!)
+            case .failure:
+                return nil
+        }
+    }
+}

@@ -22,12 +22,12 @@ class MovieDownloaderFacadeTest: XCTestCase {
     var successImageStub = UIImage(systemName: "folder.fill")!.pngData()
     
     override func setUp() {
+        APIRequestMock.numberOfRequests = 0
         cacheStub = CacheGatewayStub()
         super.setUp()
     }
     
     override func tearDown() {
-        APIRequestMock.numberOfRequests = 0
         cacheStub = nil
         sut = nil
         super.tearDown()

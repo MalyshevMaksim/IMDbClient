@@ -153,7 +153,7 @@ class NetworkServiceTest: XCTestCase {
             errorMessage = convertedMovie.errorMessage
             promise.fulfill()
         }.resume()
-        wait(for: [promise], timeout: 2)
+        wait(for: [promise], timeout: 1)
         XCTAssertEqual(errorMessage, "", errorMessage)
     }
     

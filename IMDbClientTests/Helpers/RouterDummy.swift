@@ -7,3 +7,15 @@
 //
 
 import Foundation
+
+class RouterDummy: RouterProtocol {
+    var isDetailShowing = false
+    
+    func initialNavigationController() {
+        
+    }
+    
+    func showDetail(movieId: String) {
+        isDetailShowing = true
+    }
+}
